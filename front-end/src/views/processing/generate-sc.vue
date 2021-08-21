@@ -41,7 +41,7 @@
                     <div class="col-3 title">Context</div>
                     <div class="col-7 list">
                         <div v-if="context.length > 0">
-                            <div v-for="con in context" :key="con">{{con.name}}</div>
+                            <div v-for="con in context" :key="con">{{con.context}}</div>
                         </div>
                         <div v-else>No selected Context, please click Add New</div>
                     </div>

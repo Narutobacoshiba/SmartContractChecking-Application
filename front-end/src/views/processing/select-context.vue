@@ -7,7 +7,7 @@
             <p>Context of the SCs</p>
           </div>
           <div class="col-6">
-            <select class="form-select" aria-label="Default select example" v-model="contextSC">
+            <select class="form-select" aria-label="Default select example" v-model="contextSC" @change="setContext()">
               <option v-for="c in contexts" :key="c" :value="c">{{c.context}}</option>
             </select>
           </div>
@@ -72,6 +72,12 @@ export default {
     loadContext(){
             this.showComponents = true
         },
+    setContext(){
+            var arr = [];
+            arr.push(this.contextSC);
+            this.$store.commit("data/SetSelectedContext", arr);
+          
+    }
   },
   computed:{
     getShowComponents(){

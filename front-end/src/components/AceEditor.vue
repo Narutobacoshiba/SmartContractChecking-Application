@@ -34,7 +34,7 @@ export default {
 
 <style scoped>
 #ace-editor {
-  width: 600px;
+  /* width: 600px; */
   height: 400px;
 }
 .tool-bar {
