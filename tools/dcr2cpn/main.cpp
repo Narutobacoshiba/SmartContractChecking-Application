@@ -1,5 +1,3 @@
-//Updated on 15/8
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -7,13 +5,14 @@
 #include "CLI11.hpp"
 #include "rapidxml.hpp"
 #include <set>
-
+#include "LNA.cpp"
 
 using namespace std;
 using namespace rapidxml;
 xml_document<> doc;
 xml_node<> * root_node = NULL;
 using namespace DCR;
+using namespace LNA;
 bool isSubOf2(string ParentNameInput, string EventNameInput, vector<Event> listEvent);
 //This function return if a Event is a sub Event of A Nesting Event
 // This function using basic Backtracking Algorithm
@@ -38,20 +37,119 @@ bool isSubOf2(string ParentNameInput, string EventNameInput, vector<Event> listE
     }
     return false;
 };
-int main(int argc, char** argv)
-{
-    
-    CLI::App app{"Solidity2CPN tool"};
 
-    std::string DCR_XML_FILE;
-    app.add_option("--xml", DCR_XML_FILE, "DCR Graph")
-        ->required()
-        ->check(CLI::ExistingFile);
-     CLI11_PARSE(app, argc, argv);  
+
+string removeNoneAlnum(string inp_string)
+{
+    string s = inp_string;
+    for (int i = 0; i < s.size(); i++) {
+        if ((s[i] < 'A' || s[i] > 'Z') &&
+            (s[i] < 'a' || s[i] > 'z') && 
+            (s[i] < '0' || s[i] > '9'))
+        {  
+            s.erase(i, 1);
+            i--;
+        }
+    }
+    return s;
+}
+
+class TranslatorDCR2LNA{
+    private:
+        vector<Event> EventInDCR;
+        vector<ERE> EREinDCR;
+        string name;
+
+    public:
+        TranslatorDCR2LNA(vector<Event> EventInDCR, vector<ERE> EREinDCR, string name){
+            this->EventInDCR = EventInDCR;
+            this->EREinDCR = EREinDCR;
+            this->name = name;
+        }
+
+        map<string, string> translate(){
+            map<string, string> ret;
+
+            LNABodyCode* lbcode = new LNABodyCode(this->name);
+            FixedDcr2LnaCode fxcode(this->EventInDCR.size());
+
+            int id = 0;
+            for(auto it = this->EventInDCR.begin(); it != this->EventInDCR.end(); it++) {
+                lbcode->addTransition(removeNoneAlnum(it->getID()),id);
+                id++;
+            }
+            
+            this->translateRelation2LNA(lbcode);
+            
+            string cdeadloc = this->generateCDeadlockLNA(lbcode,fxcode);
+            ret["deadlock"] = cdeadloc;
+
+            return ret;
+        }
+
+        void translateRelation2LNA(LNABodyCode *lbcode) {
+            map<string, bool> events_self_response;
+            for(auto it = this->EventInDCR.begin(); it != this->EventInDCR.end(); it++) {
+                events_self_response[removeNoneAlnum(it->getID())] = false;
+            }
+
+            for(auto it = this->EREinDCR.begin(); it != this->EREinDCR.end(); it++) {
+                string eventSource = removeNoneAlnum(it->getSource().getID());
+                string eventDest = removeNoneAlnum(it->getTarget().getID());
+                vector<string> listRelation = it->getLisRelation();
+                for(auto rel = listRelation.begin(); rel != listRelation.end(); rel++){
+                    string param = "{";
+                    if((*rel).compare("include") == 0){
+                        param = param + lbcode->getEventId(eventDest)+",1}";
+                        lbcode->getTransitionName(eventSource)->addOutArcsParams("marking","include",param);
+                    }
+                    if((*rel).compare("exclude") == 0){
+                        param = param + lbcode->getEventId(eventDest)+",0}";
+                        lbcode->getTransitionName(eventSource)->addOutArcsParams("marking","include",param);
+                    }
+                    if((*rel).compare("response") == 0){
+                        if(eventSource.compare(eventDest) == 0){
+                            events_self_response[eventSource] = true;
+                        }
+                        param = param + lbcode->getEventId(eventDest)+",1}";
+                        lbcode->getTransitionName(eventSource)->addOutArcsParams("marking","response",param);
+                    }
+                    if((*rel).compare("condition") == 0){
+                        param = param + "include[" + lbcode->getEventId(eventSource) + "],execute[" + lbcode->getEventId(eventSource) + "]}";
+                        lbcode->getTransitionName(eventDest)->addConditionGuard(param);
+                    }
+                    if((*rel).compare("milestone") == 0){
+                        param = param + "response[" + lbcode->getEventId(eventSource) + "],execute[" + lbcode->getEventId(eventSource) + "]}";
+                        lbcode->getTransitionName(eventDest)->addMilestoneGuard(param);
+                    }
+                }
+            }
+
+            for(auto it = events_self_response.begin(); it != events_self_response.end(); it++){
+                if(!(it->second)){
+                    string param = "{";
+                    param = param + lbcode->getEventId(it->first)+",0}";
+                    lbcode->getTransitionName(it->first)->addOutArcsParams("marking","response",param);
+                }
+            }
+        }
+
+        string generateCDeadlockLNA(LNABodyCode* lbcode, FixedDcr2LnaCode fxcode) {
+            lbcode->addType(fxcode.getDefaultTypeCode());
+            lbcode->addPlace(fxcode.getMarkingPlaceCode());
+            lbcode->addFunction(fxcode.getDefaultFunctionsCode());
+            lbcode->addFunction(fxcode.getResponseExistFunctionCode());
+            lbcode->addProposition(fxcode.getDeadlockFreeProp());
+
+            return lbcode->getCode();    
+        }
+};
+
+DCRClass readDCRFromXML(string DCR_XML_FILE){
+
 
     vector<Event> listEvent;
     vector<Relation> listRelation;
-    cout << "\nParsing my students data (sample.xml)....." << endl;
    
     // Read the xml file
     ifstream theFile (DCR_XML_FILE);
@@ -139,7 +237,7 @@ int main(int argc, char** argv)
     }
     // for(auto itr = listRelation.begin(); itr!= listRelation.end();itr++){
     //         Relation rel = *itr;
-    //        std::cout<<"Relation :"<<rel.getType()<<" "<<rel.getSource()<<" "<<rel.getTarget()<<" "<<rel.getGuard()<<" "<<rel.getDE()<<"\n"; 
+    //        cout<<"Relation :"<<rel.getType()<<" "<<rel.getSource()<<" "<<rel.getTarget()<<" "<<rel.getGuard()<<" "<<rel.getDE()<<"\n"; 
     // };
     vector<ERE> listERE;
 
@@ -208,7 +306,6 @@ int main(int argc, char** argv)
                     }
                     
                 }
-                cout<<"}\n"; 
             }
             //Check if one of 2 Event is nesting 
             else if(source.getType()=="nesting"){
@@ -244,7 +341,7 @@ int main(int argc, char** argv)
     //         continue;
     //     }
         
-    //     std::cout<<s.getID()<<" "<<t.getID();
+    //     cout<<s.getID()<<" "<<t.getID();
     //     vector<string> rel = itr->getLisRelation();
     //     for(auto itr2 = rel.begin(); itr2!=rel.end(); itr2++){
     //             string a = *itr2;
@@ -257,51 +354,25 @@ int main(int argc, char** argv)
     vector<Event> Response;
     Marking initMarking(Exclude,listEvent,Response); 
     DCRClass myDCRClass(listEvent,initMarking,listERE);
+    return myDCRClass;
+}
+int main(int argc, char** argv)
+{   
+    CLI::App app{"Solidity2CPN tool"}; 
+    string DCR_XML_FILE;
+    app.add_option("--xml", DCR_XML_FILE, "DCR Graph")
+        ->required()
+        ->check(CLI::ExistingFile);
+     CLI11_PARSE(app, argc, argv); 
+    DCRClass dcrClass =  readDCRFromXML(DCR_XML_FILE);
+    vector<Event> EventInDCR = dcrClass.getListEvent();
+    vector<ERE> EREinDCR = dcrClass.getERE();
+    TranslatorDCR2LNA translator(EventInDCR,EREinDCR,"test");
+    map<string, string> code = translator.translate();
     
-    Marking mark = myDCRClass.getMarking();
-    Exclude = mark.getExclude();
-    Response = mark.getReponse();
-    vector<Event> Include = mark.getInclude();
-    std::cout<<"=========================Initial Marking====================\n";
-    cout<<"Exclude { \n";
-    for( auto itr = Exclude.begin();itr != Exclude.end(); itr++){
-        cout<<"      "<<itr->getID()<<"\n";
-    }
-    cout<<"   }\n";
-    cout<<"Include { \n";
-    for( auto itr = Include.begin();itr != Include.end(); itr++){
-        cout<<"      "<<itr->getID()<<"\n";
-    }
-    cout<<"   }\n";
-    cout<<"Reponse { \n";
-    for( auto itr = Response.begin();itr != Response.end(); itr++){
-        cout<<"      "<<itr->getID()<<"\n";
-    }
-    cout<<"   }\n";
-    std::cout<<"=========================List Event====================\n";
-    vector<Event> EventInDCR = myDCRClass.getListEvent();
-    cout<<"Event { \n";
-    for( auto itr = EventInDCR.begin();itr != EventInDCR.end(); itr++){
-        cout<<"      "<<itr->getID()<<"\n";
-    }
-    cout<<"  }\n";
-    
-
-    std::cout<<"=========================E  R  E====================\n";
-    vector<ERE> EREinDCR = myDCRClass.getERE();
-    cout<<"ERE { \n";
-    for(auto itr = EREinDCR.begin(); itr!=EREinDCR.end() ; itr++){
-        if(itr->getTest() != "")
-        {
-            cout<<itr->getSource().getID()<<"-------> "<<itr->getTarget().getID()<<" HAVE : [";
-            vector<string> rel = itr->getLisRelation();
-            for(auto itr2 = rel.begin(); itr2!=rel.end(); itr2++){
-                string a = *itr2;
-                if(a!="") cout<<a<<", ";
-        }
-        cout<<" ]\n";
-        }
-    }
-    cout<<"}";
-    
+    ofstream myfile;
+    myfile.open ("./deadlock.lna");
+    myfile << code["deadlock"];
+    myfile.close();
+    return 0;
 }
