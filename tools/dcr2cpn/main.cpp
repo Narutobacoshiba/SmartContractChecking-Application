@@ -70,7 +70,7 @@ class TranslatorDCR2LNA{
         map<string, string> translate(){
             map<string, string> ret;
 
-            LNABodyCode* lbcode = new LNABodyCode(this->name);
+            LNABodyCode* lbcode = new LNABodyCode(this->name,this->EventInDCR.size());
             FixedDcr2LnaCode fxcode(this->EventInDCR.size());
 
             int id = 0;
@@ -101,26 +101,26 @@ class TranslatorDCR2LNA{
                     string param = "{";
                     if((*rel).compare("include") == 0){
                         param = param + lbcode->getEventId(eventDest)+",1}";
-                        lbcode->getTransitionName(eventSource)->addOutArcsParams("marking","include",param);
+                        lbcode->getTransition(eventSource)->addOutArcsParams("marking","include",param);
                     }
                     if((*rel).compare("exclude") == 0){
                         param = param + lbcode->getEventId(eventDest)+",0}";
-                        lbcode->getTransitionName(eventSource)->addOutArcsParams("marking","include",param);
+                        lbcode->getTransition(eventSource)->addOutArcsParams("marking","include",param);
                     }
                     if((*rel).compare("response") == 0){
                         if(eventSource.compare(eventDest) == 0){
                             events_self_response[eventSource] = true;
                         }
                         param = param + lbcode->getEventId(eventDest)+",1}";
-                        lbcode->getTransitionName(eventSource)->addOutArcsParams("marking","response",param);
+                        lbcode->getTransition(eventSource)->addOutArcsParams("marking","response",param);
                     }
                     if((*rel).compare("condition") == 0){
                         param = param + "include[" + lbcode->getEventId(eventSource) + "],execute[" + lbcode->getEventId(eventSource) + "]}";
-                        lbcode->getTransitionName(eventDest)->addConditionGuard(param);
+                        lbcode->getTransition(eventDest)->addConditionGuard(param);
                     }
                     if((*rel).compare("milestone") == 0){
-                        param = param + "response[" + lbcode->getEventId(eventSource) + "],execute[" + lbcode->getEventId(eventSource) + "]}";
-                        lbcode->getTransitionName(eventDest)->addMilestoneGuard(param);
+                        param = param + "include[" + lbcode->getEventId(eventSource) + "],response[" + lbcode->getEventId(eventSource) + "]}";
+                        lbcode->getTransition(eventDest)->addMilestoneGuard(param);
                     }
                 }
             }
@@ -129,7 +129,7 @@ class TranslatorDCR2LNA{
                 if(!(it->second)){
                     string param = "{";
                     param = param + lbcode->getEventId(it->first)+",0}";
-                    lbcode->getTransitionName(it->first)->addOutArcsParams("marking","response",param);
+                    lbcode->getTransition(it->first)->addOutArcsParams("marking","response",param);
                 }
             }
         }
@@ -329,40 +329,25 @@ DCRClass readDCRFromXML(string DCR_XML_FILE){
                     }
                 }     
             }
-            
-
-
     }
 
-    // for(auto itr = listERE.begin(); itr != listERE.end(); itr++){
-    //     Event s = itr->getSource();
-    //     Event t = itr->getTarget();
-    //     if(itr->getTest()==""){
-    //         continue;
-    //     }
-        
-    //     cout<<s.getID()<<" "<<t.getID();
-    //     vector<string> rel = itr->getLisRelation();
-    //     for(auto itr2 = rel.begin(); itr2!=rel.end(); itr2++){
-    //             string a = *itr2;
-    //             cout<<"~~"<<a;
-    //     }
-    //     // cout<<" Rel : "<<itr->getTest();
-    //     cout<<"\n";
-    // }
     vector<Event> Exclude;
     vector<Event> Response;
     Marking initMarking(Exclude,listEvent,Response); 
     DCRClass myDCRClass(listEvent,initMarking,listERE);
     return myDCRClass;
 }
+
+
 int main(int argc, char** argv)
 {   
     CLI::App app{"Solidity2CPN tool"}; 
     string DCR_XML_FILE;
+    string OUT_FILE_NAME = "";
     app.add_option("--xml", DCR_XML_FILE, "DCR Graph")
         ->required()
         ->check(CLI::ExistingFile);
+    app.add_option("--out_file", OUT_FILE_NAME, "DCR Graph");
      CLI11_PARSE(app, argc, argv); 
     DCRClass dcrClass =  readDCRFromXML(DCR_XML_FILE);
     vector<Event> EventInDCR = dcrClass.getListEvent();
@@ -371,7 +356,12 @@ int main(int argc, char** argv)
     map<string, string> code = translator.translate();
     
     ofstream myfile;
-    myfile.open ("./deadlock.lna");
+    if(OUT_FILE_NAME.compare("") == 0){
+        myfile.open (DCR_XML_FILE.substr(0, DCR_XML_FILE.find('.'))+".lna");
+    }else{
+        myfile.open (OUT_FILE_NAME+".lna");
+    }
+    
     myfile << code["deadlock"];
     myfile.close();
     return 0;
