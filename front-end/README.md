@@ -2,8 +2,9 @@
 
 ## Project setup
 ```
-npm install
+npm install --save brace
 ```
+chuyển file solidity.js sang node_modules\brace > mode
 
 ### Compiles and hot-reloads for development
 ```
