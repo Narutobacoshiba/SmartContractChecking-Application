@@ -1,0 +1,305 @@
+test(N := 20,M := 19){
+
+	/* ------ type definition ------- */
+
+	type bools: range 0 .. 1;
+	type count: range 0 .. N;
+	subtype event_id: count range 0 .. M;
+	type marking_value: list [event_id] of bools with capacity N;
+	type mvalue: struct {event_id id; bools vl;};
+	type vchange: list [event_id] of mvalue with capacity N;
+	type cvalue: struct {bools cv1; bools cv2;};
+	type vcondition: list [event_id] of cvalue with capacity N;
+
+
+	/* ------ place definition ------- */
+
+	place marking{
+		dom: marking_value*marking_value*marking_value;
+		init: <(|0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0|,|1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1|,|0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0|)>;
+	}
+
+
+	/* ------ function definition ------- */
+
+	function cvalue(marking_value mv, vchange lc) -> marking_value{
+		marking_value m := empty;
+		for(v in mv){
+			m := m & v;
+		}
+		for(v in lc){
+			m[v.id] := v.vl;
+		}
+		return m;
+	}
+	function confirm_condition(vcondition vc) -> bools{
+		bools ret := 1;
+		for(v in vc){
+			if(v.cv1 = 1 and v.cv2 = 0) ret := 0;
+		}
+		return ret;
+	}
+	function confirm_milestone(vcondition vc) -> bools{
+		bools ret := 1;
+		for(v in vc){
+			if(v.cv1 = 1 and v.cv2 = 1) ret := 0;
+		}
+		return ret;
+	}
+
+	function response_exists(marking_value m) -> bool {
+		for(v in m){
+			if(v = 1) return true;
+		}
+		return false;
+	}
+
+
+	/* ------ transition definition ------- */
+
+
+	transition AcceptPrescription{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{14,1}|),include,cvalue(response,|{15,1},{14,0}|))>;
+		}
+
+		guard: (include[14] = 1) and (confirm_condition(|{include[8],execute[8]}|) = 1) and (confirm_milestone(|{include[8],response[8]}|) = 1);
+	}
+
+
+	transition AdministerMedicine{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{3,1}|),include,cvalue(response,|{3,0}|))>;
+		}
+
+		guard: (include[3] = 1) and (confirm_milestone(|{include[2],response[2]},{include[8],response[8]}|) = 1);
+	}
+
+
+	transition Cancel{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{6,1}|),cvalue(include,|{0,0},{1,0},{2,0},{3,0},{4,0},{5,0},{7,0},{8,0},{9,0},{10,0},{11,0},{12,0},{13,0},{14,0},{15,0},{16,0},{17,0},{18,0},{19,0}|),cvalue(response,|{6,0}|))>;
+		}
+
+		guard: (include[6] = 1);
+	}
+
+
+	transition DontTrustPreparationCP{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{18,1}|),include,cvalue(response,|{16,1},{18,0}|))>;
+		}
+
+		guard: (include[18] = 1) and (confirm_condition(|{include[8],execute[8]},{include[16],execute[16]}|) = 1) and (confirm_milestone(|{include[8],response[8]}|) = 1);
+	}
+
+
+	transition DontTrustPreparationN{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{19,1}|),include,cvalue(response,|{17,1},{19,0}|))>;
+		}
+
+		guard: (include[19] = 1) and (confirm_condition(|{include[8],execute[8]},{include[17],execute[17]}|) = 1) and (confirm_milestone(|{include[8],response[8]}|) = 1);
+	}
+
+
+	transition DontTrustPrescriptionCP{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{13,1}|),include,cvalue(response,|{8,1},{13,0}|))>;
+		}
+
+		guard: (include[13] = 1) and (confirm_condition(|{include[8],execute[8]}|) = 1) and (confirm_milestone(|{include[8],response[8]}|) = 1);
+	}
+
+
+	transition DontTrustPrescriptionN{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{9,1}|),include,cvalue(response,|{8,1},{9,0}|))>;
+		}
+
+		guard: (include[9] = 1);
+	}
+
+
+	transition Edit{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{5,1}|),include,cvalue(response,|{8,1},{5,0}|))>;
+		}
+
+		guard: (include[5] = 1);
+	}
+
+
+	transition GiveMedicine{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{10,1}|),include,cvalue(response,|{10,0}|))>;
+		}
+
+		guard: (include[10] = 1) and (confirm_condition(|{include[4],execute[4]},{include[11],execute[11]},{include[12],execute[12]}|) = 1) and (confirm_milestone(|{include[8],response[8]},{include[13],response[13]},{include[14],response[14]},{include[15],response[15]},{include[16],response[16]},{include[17],response[17]},{include[18],response[18]},{include[19],response[19]}|) = 1);
+	}
+
+
+	transition MakePreparation{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{15,1}|),include,cvalue(response,|{16,1},{17,1},{15,0}|))>;
+		}
+
+		guard: (include[15] = 1) and (confirm_condition(|{include[8],execute[8]},{include[14],execute[14]}|) = 1) and (confirm_milestone(|{include[8],response[8]},{include[14],response[14]}|) = 1);
+	}
+
+
+	transition ManagePrescription{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{1,1}|),include,cvalue(response,|{1,0}|))>;
+		}
+
+		guard: (include[1] = 1);
+	}
+
+
+	transition MedicinePreparation{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{2,1}|),include,cvalue(response,|{2,0}|))>;
+		}
+
+		guard: (include[2] = 1) and (confirm_condition(|{include[8],execute[8]}|) = 1) and (confirm_milestone(|{include[8],response[8]}|) = 1);
+	}
+
+
+	transition PrescribeMedicine{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{7,1}|),cvalue(include,|{1,1},{5,1},{6,1}|),cvalue(response,|{8,1},{10,1},{7,0}|))>;
+		}
+
+		guard: (include[7] = 1);
+	}
+
+
+	transition SignCP{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{17,1}|),include,cvalue(response,|{4,1},{11,1},{12,1},{17,0}|))>;
+		}
+
+		guard: (include[17] = 1) and (confirm_condition(|{include[8],execute[8]},{include[16],execute[16]}|) = 1) and (confirm_milestone(|{include[8],response[8]},{include[16],response[16]}|) = 1);
+	}
+
+
+	transition SignDoctor{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{8,1}|),include,cvalue(response,|{3,1},{4,1},{9,1},{10,1},{11,1},{12,1},{14,1},{8,0}|))>;
+		}
+
+		guard: (include[8] = 1) and (confirm_condition(|{include[7],execute[7]}|) = 1);
+	}
+
+
+	transition SignNurseI{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{11,1}|),include,cvalue(response,|{11,0}|))>;
+		}
+
+		guard: (include[11] = 1) and (confirm_milestone(|{include[8],response[8]},{include[13],response[13]},{include[14],response[14]},{include[15],response[15]},{include[16],response[16]},{include[17],response[17]},{include[18],response[18]},{include[19],response[19]}|) = 1);
+	}
+
+
+	transition SignNurseII{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{12,1}|),include,cvalue(response,|{12,0}|))>;
+		}
+
+		guard: (include[12] = 1) and (confirm_milestone(|{include[8],response[8]},{include[13],response[13]},{include[14],response[14]},{include[15],response[15]},{include[16],response[16]},{include[17],response[17]},{include[18],response[18]},{include[19],response[19]}|) = 1);
+	}
+
+
+	transition SignPA{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{16,1}|),include,cvalue(response,|{16,0}|))>;
+		}
+
+		guard: (include[16] = 1) and (confirm_condition(|{include[8],execute[8]},{include[15],execute[15]}|) = 1) and (confirm_milestone(|{include[8],response[8]},{include[15],response[15]}|) = 1);
+	}
+
+
+	transition Treatment{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{0,1}|),include,cvalue(response,|{0,0}|))>;
+		}
+
+		guard: (include[0] = 1);
+	}
+
+
+	transition Trust{
+		in {
+			marking: <(execute,include,response)>;
+		}
+		out {
+			marking: <(cvalue(execute,|{4,1}|),include,cvalue(response,|{4,0}|))>;
+		}
+
+		guard: (include[4] = 1) and (confirm_milestone(|{include[8],response[8]},{include[13],response[13]},{include[14],response[14]},{include[15],response[15]},{include[16],response[16]},{include[17],response[17]},{include[18],response[18]},{include[19],response[19]}|) = 1);
+	}
+
+
+	/* ------ proposition definition ------- */
+
+	proposition deadlock_free:
+		exists (v in marking | response_exists(v->3)) = false;
+}
