@@ -26,13 +26,13 @@ class FixedDcr2LnaCode {
         std::string getDefaultTypeCode() {
             std::string source_code = "";
             source_code = source_code + "\n\ttype bools: range 0 .. 1;" +
-                                        "\n\ttype count: range 0 .. "+this->event_num_str+";"+
-                                        "\n\tsubtype event_id: count range 0 .. "+this->event_num_str+";"+
-                                        "\n\ttype marking_value: list [event_id] of bools with capacity "+this->event_num_str+";"+
+                                        "\n\ttype count: range 0 .. N;"+
+                                        "\n\tsubtype event_id: count range 0 .. M;"+
+                                        "\n\ttype marking_value: list [event_id] of bools with capacity N;"+
                                         "\n\ttype mvalue: struct {event_id id; bools vl;};"+
-                                        "\n\ttype vchange: list [event_id] of mvalue with capacity "+this->event_num_str+";"+
+                                        "\n\ttype vchange: list [event_id] of mvalue with capacity N;"+
                                         "\n\ttype cvalue: struct {bools cv1; bools cv2;};"+
-                                        "\n\ttype vcondition: list [event_id] of cvalue with capacity "+this->event_num_str+";";
+                                        "\n\ttype vcondition: list [event_id] of cvalue with capacity N;";
             return source_code;
         }
 
@@ -332,6 +332,7 @@ class LNATransition {
 
 class LNABodyCode {
     private:
+        int events_num;
         std::map<std::string, std::string> events_id;
         std::map<std::string, LNATransition*> events_transition;
         std::string name;
@@ -341,8 +342,9 @@ class LNABodyCode {
         std::vector<std::string> proposition;
 
     public:
-        LNABodyCode(std::string name){
+        LNABodyCode(std::string name, int events_num){
             this->name = name;
+            this->events_num = events_num;
         }
 
         void addTransition(std::string transition_name, int transition_id) {
@@ -350,7 +352,7 @@ class LNABodyCode {
             this->events_transition[transition_name] = new LNATransition(transition_name,transition_id);
         }
 
-        LNATransition* getTransitionName(std::string transition_name){
+        LNATransition* getTransition(std::string transition_name){
             return this->events_transition[transition_name];
         }
 
@@ -377,7 +379,8 @@ class LNABodyCode {
         std::string getCode() {
             std::ostringstream code;
 
-            code << this->name << "{" << "\n\n\t/* ------ type definition ------- */";
+            code << this->name << "(N := " << to_string(this->events_num) << ",M := " <<  to_string(this->events_num-1)
+            << "){" << "\n\n\t/* ------ type definition ------- */";
             for(auto it = this->types.begin(); it != this->types.end(); it++) {
                 code << "\n" << *it;
             }
