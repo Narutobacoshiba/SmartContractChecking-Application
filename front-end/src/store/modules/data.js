@@ -89,8 +89,8 @@ const state = {
     addGVSInfor(state, {id, data}){
       state.data.selectedSCInfor[id].list_gvs = data
     },
-    addLVSInfor(state, {id, data}){
-      state.data.selectedSCInfor[id].list_lvs = data
+    addLVSInfor(state, {id, func_name, data}){
+      state.data.selectedSCInfor[id].list_lvs[func_name] = data
     },
 
     /* -- view -- */

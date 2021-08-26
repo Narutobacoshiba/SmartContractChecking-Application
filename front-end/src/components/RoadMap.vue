@@ -8,8 +8,12 @@
         <c>Step {{current_page}} of 6: </c><b>{{pages[current_page-1].name}}</b>
       </div>
       <div id="ps-roadmap">
-        <li v-for="page in pages" :key="page.id" :class="{ active: page.id <= road_page , choosen: page.id == current_page}">
+        <li v-for="page in pages" :key="page.id" :class="{ active: page.id <= road_page , chosen: page.id == current_page}" @click="routing(page)">
+          <span class="ttip">
+                {{page.name}}
+          </span>
         </li>
+        
       </div>
     </div>
     <div id="icon-section">
@@ -19,7 +23,7 @@
       <div id="ic-separator"></div>
       <div id="roadmap-icon" class="ic-icon" @click="goRoadMap">
         <i class="material-icons">map</i>
-      </div>
+      </div> 
     </div>
   </div>
 </template>
@@ -29,13 +33,14 @@ export default {
   data() {
     return {
       pages: [
-        { id: 1, name: "Select Smart Contracts", view: "selected-sc"},
-        { id: 2, name: "Select Context", view: "context-sc"},
-        { id: 3, name: "Choose Vulnerabilities", view: "property-coptions"},
-        { id: 4, name: "Generate SC to CPN",view: "selected-home"},
-        { id: 5, name: "Check the SCs",view: "selected-home" },
-        { id: 6, name: "Finish",view: "selected-home"},
+        { id: 1, name: "Select Smart Contracts", view: "sc-selection"},
+        { id: 2, name: "Select Context", view: "select-context"},
+        { id: 3, name: "Choose Vulnerabilities", view: "choose-vul"},
+        { id: 4, name: "Generate SC to CPN",view: "generate-sc2cpn"},
+        { id: 5, name: "Check the SCs",view: "check-sc" },
+        { id: 6, name: "Finish",view: "finish"},
       ],
+      hover: true,
     };
   },
    methods: {
@@ -46,18 +51,26 @@ export default {
       this.$router.push("/list-sc")
     },
     goRoadMap(){
-      this.$$router.push("/road-map")
+      this.$router.push("/roadmap")
+    }, 
+    routing(page){
+      if(page.id <= this.road_page){
+        this.$store.commit("data/SetProcessView",page.view)
+      }
     }
   },
   computed: {
-      road_page(){
-          return this.$store.getters["views/GetRoadPage"]
-      },
       current_page(){
-          /* return this.$store.getters["views/GetCurrentPage"] */
-          return 1
+            var view = this.$store.getters["data/GetProcessView"]
+            var id = this.pages.filter(item => {
+            return item.view == view;
+          })[0].id
+          return id
+        },
+      road_page(){
+        return this.$store.getters["data/GetRoadPage"]
       }
-  }
+  },
 };
 </script>
 
@@ -157,8 +170,33 @@ export default {
   left: -50%;
   z-index: -1;
 }
+#ps-roadmap li.active:before {
+  border-color: #5fb8ee;
+  background-color: #5fb8ee;
+  color: white;
+}
+#ps-roadmap li.active:after, #ps-roadmap li.chosen:after {
+  background-color: #5fb8ee;
+}
 #ps-roadmap li:first-child:after {
   content: none;
+}
+#ps-roadmap li .ttip{
+  display: none;
+}
+#ps-roadmap li:hover .ttip{
+  display: inline-block;
+  background-color: black;
+  opacity: 0.8;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  margin: 0;
+}
+#ps-roadmap li.chosen:before {
+  border-color: #3a7694;
+  background-color: #3a7694;
+  color: white;
 }
 /* ---- section III ---- */
 #icon-section{

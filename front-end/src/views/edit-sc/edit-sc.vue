@@ -37,6 +37,7 @@ export default {
     clickHandler(param){
       if(param == "save"){
         UpdateSmartContractCode(this.$route.params.sc_id, this.code)
+        this.$router.push(this.$route.params.parent_path);
       }
       if(param == "back"){
         this.$router.push(this.$route.params.parent_path);

@@ -15,10 +15,10 @@ export class AuthService {
    * @API
    ******************************
    */
-
-  static async makeLogin({ username, password }) {
+  
+  static async makeLogin ({ username, password }) {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, { username, password }, { useCredentails: true })
+      const response = await axios.post(`${API_URL}/auth/login`,{username, password}, {useCredentails: true})
       _setAuthData({
         accessToken: response.data.accessToken,
         exp: _parseTokenData(response.data.accessToken).exp

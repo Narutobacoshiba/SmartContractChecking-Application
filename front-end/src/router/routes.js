@@ -3,6 +3,8 @@ import ListSc from "../views/List-sc.vue"
 import EditSc from "../views/Edit-Sc.vue"
 import AddSc from "../views/Add-Sc.vue"
 import Processing from "../views/Processing.vue"
+import CreateCsp from "../views/Create-Csp.vue"
+import RoadMap from "../views/RoadMap.vue"
 import Login from "../views/Login"
 
 import { DOMAIN_TITLE } from '../.env'
@@ -45,5 +47,19 @@ export const routes = [
     name: "Processing",
     component: Processing,
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | processing` },
-  }
+  },
+  {
+    path: "/create-csp",
+    name: "CreateCsp",
+    component: CreateCsp,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | create contract-specific property` },
+    props: true
+  },
+  {
+    path: "/roadmap",
+    name: "RoadMap",
+    component: RoadMap,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | RoadMap` },
+    props: true
+  },
 ]

@@ -11,7 +11,7 @@
                 </div>
                 <div id="sscs-table">
                     <div v-if="isSelectSomeThing != true" class="noneHandler">
-                        <p>Please click on the <a id="link-text">Add Smart Contracts</a> to select your Smart Contracts for checking!</p>
+                        <p>Please click on the <a id="link-text" @click="addSmartContract">Add Smart Contracts</a> to select your Smart Contracts for checking!</p>
                     </div>
                     <div v-else>
                         <div v-for="(sc,idx) in selectedSc" :key="idx" class="table-row"> 
@@ -102,7 +102,7 @@ export default ({
                 this.$router.push("/")
             }
             if(param == "next"){
-                this.$store.commit("data/SetProcessView","choose-vul")
+                this.$store.commit("data/SetProcessView","select-context")
             }
         },
         editSC(sc_id,sc_name){
@@ -121,6 +121,7 @@ export default ({
             {
                 if(confirm("Are you sure to remove all selected smart contracts?")){
                     this.list_selected_sc = []
+                    this.$store.commit("data/SetSelectedSC", this.list_selected_sc);
                     this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
                 }
             }
@@ -345,4 +346,6 @@ export default ({
     align-items: center;
     justify-content: center;
 }
+
+
 </style>

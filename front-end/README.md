@@ -3,7 +3,11 @@
 ## Project setup
 ```
 npm install
+
+npm install --save brace
 ```
+chuyển file solidity.js sang node_modules\brace > mode
+
 
 ### Compiles and hot-reloads for development
 ```
@@ -57,6 +61,8 @@ get help
 ```
 
 
+=======
+>>>>>>> cec1788c9bde36e03093920be64332d13cb49861
 ### Cấu trúc project
 
 ### `src`

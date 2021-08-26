@@ -1,7 +1,7 @@
 <template>
     <nav>
         <div class='nav__left'>
-          <div class="name">Solidity</div>
+          <div class="name" @click="goHome()">Solidity</div>
           <div class='nav__search'>
             <span class="material-icons">search</span>
             <input type='text' placeholder="Search Solidity"/>

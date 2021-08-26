@@ -11,7 +11,7 @@
         </svg>
         <div class="message-box">
             <h1>Solidity To CPN</h1>
-            <p>check for vulnerabilities in smart contracts</p>
+            <p>Check for vulnerabilities in smart contracts</p>
             <div class="buttons-con">
                 <div class="action-link-wrap">
                 <a @click="routing('check')" class="link-button">Check smart contracts</a>
@@ -33,6 +33,18 @@
 
 <script>
 export default ({
+  data(){
+    return{
+      pages: [
+                    { id: 1, name: "Select Smart Contracts", view: "sc-selection"},
+                    { id: 2, name: "Select Context", view: "select-context"},
+                    { id: 3, name: "Choose Vulnerabilities", view: "choose-vul"},
+                    { id: 4, name: "Generate SC to CPN",view: "generate-sc2cpn"},
+                    { id: 5, name: "Check the SCs",view: "check-sc" },
+                    { id: 6, name: "Finish",view: "finish"},
+                ],
+    }
+  },
   computed: {
     haveProcess(){
       return this.$store.state.data.used
@@ -65,7 +77,7 @@ export default ({
           }
       },
       resumeProcess(){
-        this.$store.commit("data/SetProcessView","sc-selection")
+        this.$store.commit("data/SetProcessView",this.pages[this.$store.getters["data/GetRoadPage"]-1].view)
         this.$router.push("/process")
       },
       getCPDateModified(){
