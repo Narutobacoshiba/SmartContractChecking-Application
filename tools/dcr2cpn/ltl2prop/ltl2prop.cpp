@@ -69,7 +69,7 @@ string converLTL2LNAProp(string str){
     for(auto it = ret.begin(); it != ret.end(); it++){
         s << *it;
     }
-    return s.str();
+    return s.str());
 }
 
 int main(){

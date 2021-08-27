@@ -186,3 +186,45 @@ export function DetectLTLFormatError(ltl_code){
 
     return error
 }
+
+export function extractTokensTag(ltl_code) {
+    var listTokens = []
+    var temp = ""
+    var st_id = 0
+
+    for(let i=0; i<ltl_code.length; i++){
+        if(ltl_code[i] == '('){
+            listTokens.push(['opl',i,i+1])
+            if(temp.length > 0){
+                listTokens.push(['opr',st_id,i])
+                temp = ""
+                st_id = i+1 
+            }           
+        }else if(ltl_code[i] == ')'){
+            listTokens.push(['opl',i,i+1])
+            if(temp.length > 0){
+                listTokens.push(['opr',st_id,i])
+                temp = ""
+                st_id = i+1 
+            } 
+        }else if(ltl_code[i] in NATokens){
+            listTokens.push(['opt',i,i+1])
+            if(temp.length > 0){
+                listTokens.push(['opr',st_id,i])
+                temp = ""
+                st_id = i+1 
+            }
+        }else if(ltl_code[i] in ATokens && (ltl_code[i+1] == ' ' || ltl_code[i+1] == '(')){
+            listTokens.push(['opt',i,i+1])
+        }else if(ltl_code[i] == ' ' || i == ltl_code.length - 1){
+            if(temp.length > 0){
+                listTokens.push(['opr',st_id,i])
+                temp = ""
+                st_id = i+1 
+            }
+        }else{
+            temp = temp + ltl_code[i]
+        }
+    }
+    return listTokens
+}
