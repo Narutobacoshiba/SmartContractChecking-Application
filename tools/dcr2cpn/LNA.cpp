@@ -27,7 +27,7 @@ class FixedDcr2LnaCode {
             std::string source_code = "";
             source_code = source_code + "\n\ttype bools: range 0 .. 1;" +
                                         "\n\ttype count: range 0 .. N;"+
-                                        "\n\tsubtype event_id: count range 0 .. M;"+
+                                        "\n\tsubtype event_id: count range 0 .. (count'last-1);"+
                                         "\n\ttype marking_value: list [event_id] of bools with capacity N;"+
                                         "\n\ttype mvalue: struct {event_id id; bools vl;};"+
                                         "\n\ttype vchange: list [event_id] of mvalue with capacity N;"+
@@ -379,7 +379,7 @@ class LNABodyCode {
         std::string getCode() {
             std::ostringstream code;
 
-            code << this->name << "(N := " << to_string(this->events_num) << ",M := " <<  to_string(this->events_num-1)
+            code << this->name << "(N := " << to_string(this->events_num) <<
             << "){" << "\n\n\t/* ------ type definition ------- */";
             for(auto it = this->types.begin(); it != this->types.end(); it++) {
                 code << "\n" << *it;
