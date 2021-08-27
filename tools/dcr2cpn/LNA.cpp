@@ -379,8 +379,8 @@ class LNABodyCode {
         std::string getCode() {
             std::ostringstream code;
 
-            code << this->name << "(N := " << to_string(this->events_num) <<
-            << "){" << "\n\n\t/* ------ type definition ------- */";
+            code << this->name << "(N := " << to_string(this->events_num)
+             << "){" << "\n\n\t/* ------ type definition ------- */";
             for(auto it = this->types.begin(); it != this->types.end(); it++) {
                 code << "\n" << *it;
             }
