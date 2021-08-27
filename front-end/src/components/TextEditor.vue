@@ -2,13 +2,8 @@
   <div id="editor">
     <div class="body">
       <div class="title">
-        <p>
-          <b>Edit the </b>
-          <span>{{ name }}</span>
-        </p>
       </div>
       <div class="btn">
-        <button class="save" @click="isSaved = true">Save</button>
         <button class="clear" @click="clear()">Clear</button>
       </div>
       <div class="box-code">
@@ -19,13 +14,11 @@
             cols="30"
             rows="10"
             wrap="soft"
-            v-model="code"
-            @keyup="$emit('update:code', code)"
+            v-model="ltlcode"
+            @keyup="$emit('update', ltlcode)"
           >
           </textarea>
-          <div class="save-check" v-show="!isSaved"></div>
         </section>
-        <p>{{ code }} {{ isSaved }}</p>
       </div>
     </div>
   </div>
@@ -36,18 +29,12 @@ export default {
   name: "editor",
   data() {
     return {
-      text: "This is Code",
+      ltlcode: "",
     };
-  },
-  computed: {},
-  props: {
-    name: String,
-    code: String,
-    isSaved: Boolean,
   },
   methods: {
     clear() {
-       this.code = "";
+       this.ltlcode = "";
        this.isSaved = false;
     },
   },
