@@ -26,6 +26,7 @@ var listCommonSmartContracts = [
   {id: 9, name: "Build Web Apps with Vue JS 3 & Firebase 2nd", date_modified: 1608130465663, type: "common"},
   {id: 10, name: "Advanced Techniques for Modeling and Verification 2nd", date_modified: 1608130765663, type: "common"},
 ]
+
 var listPrivateSmartContracts = [
   {id: 11, name: "Blind Action",date_modified: 1609110465663, type: "private"},
   {id: 12, name: "Property 2: Fairness what's up", date_modified: 1608130765663, type: "private"},
@@ -34,6 +35,7 @@ var listPrivateSmartContracts = [
   {id: 15, name: "Property 2: Fairness what's up 2nd", date_modified: 1608130765663, type: "private"},
   {id: 16, name: "Modules CPNC 2nd", date_modified: 1607110465663, type: "private"},
 ]
+
 var listPendingSmartContracts =[
   {id: 17, name: "alabama ola", date_modified: 1607110465663, type: "pending"},
   {id: 18, name: "perry the platypus", date_modified: 1608130465663, type: "pending"},

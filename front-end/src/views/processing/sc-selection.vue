@@ -23,7 +23,7 @@
                             </div>
                             <div class="action-cell table-cell">
                                 <i class="material-icons" @click="editSC(sc.id,sc.name)">build</i>
-                                <i class="material-icons" @click="removeSC(idx,sc.name)">delete</i>
+                                <i class="material-icons" @click="removeSC(sc)">delete</i>
                             </div>
                         </div>
                     </div>
@@ -42,28 +42,41 @@
                         <div id="ssc-next" @click="routing('next')">Next</div>
                     </div>
                 </div>
+                
                 <div id="showComponents" v-if="getShowComponents">
-                    <div id="components-holder">
+                    <div>
                         <AddSc @closeComponents="cComponents" v-if="getSelectComponents=='add'"/>
                         <UpLoadItems @closeComponents="cComponents" v-if="getSelectComponents=='upload'"/>
                     </div>
                 </div>
+                <div id="showConfirmation" v-if="showConfirmation">
+                <div id="removeAll-holder" v-if="confirmation == 'removeAll'">
+                    <confirm @cancel="closeConfirm" @confirm="cfRemoveAll" :dialog="dialog" />
+                </div>
+                <div id="removeSC-holder"  v-if="confirmation == 'removeSC'">
+                    <confirm @cancel="closeConfirm" @confirm="cfRemoveSC(idxSC)" :dialog="dialog"/>
+                </div>
+                </div>
+            </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
 import AddSc from "./sc-selection/add-multi-sc.vue"
 import UpLoadItems from "./sc-selection/upload-data.vue"
-
+import ConfirmationDialog from "../../components/ConfirmationDialog.vue"
 export default ({
-    components: {AddSc,UpLoadItems},
+    components: {AddSc,UpLoadItems, 'confirm': ConfirmationDialog},
     data(){
         return {
             list_selected_sc: [],
             showComponents: false,
             selectComponents: '',
+            showConfirmation: false,
+            dialog: {},
+            confirmation: '',
+            idxSC: null
         }
     },
     mounted(){
@@ -91,11 +104,15 @@ export default ({
         inc(value){
             return value+1
         },
-        removeSC(idx,sc_name){
-            if(confirm("Are you sure to remove the Smart Contract named: '"+sc_name+"' ?")){
-                this.list_selected_sc.splice(idx,1)
-                this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
-            }
+        removeSC(sc){
+            this.dialog = {title: 'Remove Smart Contract', message: "Are you sure to remove '"+sc.name+"' ?", confirmbtn: 'Remove'}
+            this.confirmation = 'removeSC'
+            this.showConfirmation = true
+        },
+        cfRemoveSC(idx){
+            this.list_selected_sc.splice(idx,1)
+            this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
+            this.closeConfirm()
         },
         routing(param){
             if(param == "back"){
@@ -118,13 +135,20 @@ export default ({
         },
         removeAllSc(){
             if(this.list_selected_sc.length > 0)
-            {
-                if(confirm("Are you sure to remove all selected smart contracts?")){
-                    this.list_selected_sc = []
-                    this.$store.commit("data/SetSelectedSC", this.list_selected_sc);
-                    this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
-                }
+            {   
+                this.confirmation = 'removeAll'
+                this.dialog = {title: 'Remove All', message: 'Are you sure to remove all selected smart contracts?', confirmbtn: 'Remove All'}
+                this.showConfirmation = true
             }
+        },
+        cfRemoveAll(){
+            this.list_selected_sc = []
+            this.$store.commit("data/SetSelectedSC", this.list_selected_sc);
+            this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
+            this.closeConfirm();
+        },
+        closeConfirm(){
+            this.showConfirmation = false
         }
     }
 })
@@ -169,8 +193,6 @@ export default ({
 #sscs-header #rma-button{
     width: 100px;
     height: 24px;
-    display: inline-block;
-
     float: right;
     border: 1px solid #4b97bd;
     border-radius: 2px;
@@ -346,6 +368,24 @@ export default ({
     align-items: center;
     justify-content: center;
 }
-
+ /*---- showConfirmation */
+ #showConfirmation{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+    z-index: 1;
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+}
+#removeSC-holder{
+    margin-top: 200px;
+}
+#removeAll-holder{
+    margin-top: 50px;
+}
 
 </style>
