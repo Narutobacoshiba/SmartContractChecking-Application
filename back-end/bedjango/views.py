@@ -52,33 +52,33 @@ def loginpage(request):
         try:
             # print(request.POST.getall())
 
-            # print(request.POST.get('Pwd'))
-            # from json import loads
-            # body_unicode = request.body.decode('utf-8')
-            # print(body_unicode)
-            # #body = json.loads(body_unicode)
-            # json = loads(body_unicode)
-            #
-            # p = json['Pwd']
-            # print(p)
-            # print(json['Username'])
-            # Userdetails = Newuser.objects.get(
-            #     Username=json['Username'], Password=json['Pwd'])
+            print(request.POST.get('Pwd'))
+            from json import loads
+            body_unicode = request.body.decode('utf-8')
+            print(body_unicode)
+            #body = json.loads(body_unicode)
+            json = loads(body_unicode)
+            
+            p = json['Pwd']
+            print(p)
+            print(json['Username'])
+            Userdetails = Newuser.objects.get(
+                Username=json['Username'], Password=json['Pwd'])
 
-            # data = {
-            #     'id': Userdetails.id,
-            #     'Username': Userdetails.Username,
-            #     'Password': Userdetails.Password,
-            #     'Realname': Userdetails.Realname,
-            #     'Role': Userdetails.Role,
-            # }
             data = {
-                'id': '1',
-                'Username': 'sa',
-                'Password': '1',
-                'Realname': 'Hanh Ng',
-                'Role': 'user',
+                'id': Userdetails.id,
+                'Username': Userdetails.Username,
+                'Password': Userdetails.Password,
+                'Realname': Userdetails.Realname,
+                'Role': Userdetails.Role,
             }
+            # data = {
+            #     'id': '1',
+            #     'Username': 'sa',
+            #     'Password': '1',
+            #     'Realname': 'Hanh Ng',
+            #     'Role': 'user',
+            # }
 
             payload = {
                 'id': data["id"],
