@@ -8,7 +8,7 @@
                     <p>Common Smart Contracts</p>
                 </div>
                 <div class="select-box" :class="{chosen_box: chosen_table == 'private'}" @click="ChooseTable('private')">
-                    <p>Priviate Smart Contracts</p>
+                    <p>Private Smart Contracts</p>
                 </div>
                 <div class="select-box" :class="{chosen_box: chosen_table == 'pending'}" @click="ChooseTable('pending')" v-if="isSuperior">
                     <p>Pending Smart Contracts</p>
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div id="table-content">
-                        <div v-for="(sc,idx) in list_smart_contracts[chosen_table]" :key="idx" class="table-row">
+                        <div v-for="(sc,idx) in getShowList" :key="idx" class="table-row">
                             <div class="index-cell table-cell">
                                 {{inc(idx)}}
                             </div>
@@ -60,8 +60,21 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
+            <div id="amsb-footer">
+            <div id="itb-entries">
+                Show {{numOfRecod}}/{{numOfItems}} entries
+            </div>
+            <div id="itb-cnpage">
+                <i class="material-icons" id="itb-first-page-icon" @click="goPage(1)">first_page</i>
+                <i class="material-icons" id="itb-pre-page-icon" @click="goPage(pageNum > 1 ? (pageNum-1):1)">chevron_left</i>
+                <div id="itb-cnpage-count" >{{countPageNum}}</div>
+                <i class="material-icons" id="itb-next-page-icon" @click="goPage(pageNum < numOfPage ? (pageNum+1):numOfPage)">chevron_right</i>
+                <i class="material-icons" id="itb-last-page-icon" @click="goPage(numOfPage)">last_page</i>
+            </div>
+        </div>
         </div>
     </div>
 </template>
@@ -80,14 +93,17 @@ export default ({
                 common: [],
                 private: [],
                 pending: []
-            }
+            },
+
+            num_of_record: 7,
+            num_of_page: 0,
+            pageNum: 1,
         }
     },
     mounted(){
         this.list_smart_contracts.common = GetCommonSmartContracts()
         this.list_smart_contracts.private = GetPrivateSmartContracts()
         this.list_smart_contracts.pending = GetPendingSmartContracts()
-
     },
     computed: {
         GetTableName(){
@@ -108,6 +124,30 @@ export default ({
         },
         isSuperior(){
             return this.$store.state.user.currentUser.role == 'admin'
+        },
+        getShowList(){
+            let ret = []
+            for(let i = 0; i<this.list_smart_contracts[this.chosen_table].length; i++){
+                if(((this.pageNum-1)*this.num_of_record <= i) && (this.pageNum*this.num_of_record > i)){
+                    ret.push(this.list_smart_contracts[this.chosen_table][i])
+                }
+            }
+            return ret
+        },
+        countPageNum(){
+            return ""+this.pageNum+"/"+this.numOfPage
+        },
+        numOfItems(){
+            return this.list_smart_contracts[this.chosen_table].length
+        },
+        numOfRecod(){
+            if(this.list_smart_contracts[this.chosen_table].length < this.num_of_record*this.pageNum){
+                return this.list_smart_contracts[this.chosen_table].length-this.num_of_record*(this.pageNum-1)
+            }
+            return this.num_of_record
+        },
+        numOfPage(){
+            return Math.ceil(this.numOfItems/this.num_of_record)
         }
     },
     methods: {
@@ -143,7 +183,15 @@ export default ({
         acceptPendingSC(sc_id, sc_name){
             AddNewSmartContractsInfor(sc_id,sc_name,"common")
             DeleteSmartContracts(sc_id,"pending")
+        },
+        goPage(value){
+            this.pageNum = value
         }
+    },
+    watch: {
+        chosen_table: function(){
+            this.pageNum = 1
+        },
     }
 })
 </script>
@@ -207,7 +255,7 @@ export default ({
 
 #table-section{
     width: 100%;
-    height: 600px;
+    height: 560px;
 
     background-color: white;
     border: 1px solid #d8d7d7;
@@ -303,5 +351,36 @@ export default ({
 /* --- box --- */
 .chosen_box{
     background-color: #e4ecfa;
+}
+/* ---- amsb-footer ---- */
+#amsb-footer{
+    width: 100%;
+    height: 50px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    display: flex;
+}
+
+#itb-entries{
+    font-size: 14px;
+    margin-top: 10px;
+    margin-left: 2%;
+}
+#itb-cnpage{
+    margin-left: auto;
+    order: 2;
+    margin-top:10px;
+    margin-right: 2%;
+    display: flex;
+}
+
+#itb-cnpage i {
+    margin-top: 1px;
+    font-size: 22px;
+    color: #636262;
+    cursor: pointer;
+}
+#itb-cnpage i:hover{
+    color: #424141;
 }
 </style>

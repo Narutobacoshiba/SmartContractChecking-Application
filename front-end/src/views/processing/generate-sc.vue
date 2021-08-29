@@ -1,5 +1,13 @@
 <template>
         <div id="body">
+            <div id="showConfirmation" v-if="showConfirmation">
+                    <div id="removeAll-holder" v-if="confirmation == 'removeAll'">
+                        <confirm @cancel="closeConfirm" @confirm="cfRemoveAll" :dialog="dialog" />
+                    </div>
+                    <div id="removeSC-holder"  v-if="confirmation == 'removeSC'">
+                        <confirm @cancel="closeConfirm" @confirm="cfRemoveSC(idxSC)" :dialog="dialog"/>
+                    </div>
+            </div>
             <div id="header">
                 <p>Selected Smart Contracts</p>
             </div>
@@ -18,7 +26,7 @@
                             <div class="name-cell table-cell">{{sc.name}}</div>
                             <div class="action-cell table-cell">
                                 <i class="material-icons" @click="editSC(sc.id,sc.name)">build</i>
-                                <i class="material-icons" @click="removeSC(idx,sc.name)">delete</i>
+                                <i class="material-icons" @click="removeSC(sc)">delete</i>
                             </div>
                         </div>
                     </div>
@@ -41,7 +49,7 @@
                     <div class="col-3 title">Context</div>
                     <div class="col-7 list">
                         <div v-if="context.length > 0">
-                            <div v-for="con in context" :key="con">{{con.name}}</div>
+                            <div v-for="con in context" :key="con">{{con.context}}</div>
                         </div>
                         <div v-else>No selected Context, please click Add New</div>
                     </div>
@@ -91,7 +99,9 @@
 
 
 <script>
+    import ConfirmationDialog from "../../components/ConfirmationDialog.vue"
     export default {
+        components:{'confirm': ConfirmationDialog},
         data() {
             return {
                 list_selected_sc: [],
@@ -101,7 +111,11 @@
                 step: 'initial',
                 error: true,
                 view: '',
-                results: ['Result 1', 'Result 2', 'Result 3']
+                results: ['Result 1', 'Result 2', 'Result 3'],
+                showConfirmation: false,
+                dialog: {},
+                confirmation: '',
+                idxSC: null
             };
         },
         methods: {
@@ -149,25 +163,35 @@
             inc(value){
                 return value+1
             },
-            removeSC(idx,sc_name){
-                if(confirm("Are you sure to remove the Smart Contract named: '"+sc_name+"' ?")){
-                    this.list_selected_sc.splice(idx,1)
-                    this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
-                }
+            removeSC(sc){
+                this.dialog = {title: 'Remove Smart Contract', message: "Are you sure to remove '"+sc.name+"' ?", confirmbtn: 'Remove'}
+                this.confirmation = 'removeSC'
+                this.showConfirmation = true
+            },
+            cfRemoveSC(idx){
+                this.list_selected_sc.splice(idx,1)
+                this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
+                this.closeConfirm()
             },
             editSC(sc_id,sc_name){
                 this.$router.push({name: "EditSc", params: {sc_id: sc_id, name: sc_name, parent_path: "/process"}})
             },
-            
             removeAllSc(){
                 if(this.list_selected_sc.length > 0)
-                {
-                    if(confirm("Are you sure to remove all selected smart contracts?")){
-                        this.list_selected_sc = []
-                        this.$store.commit("data/SetSelectedSC", this.list_selected_sc);
-                        this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
-                    }
+                {   
+                    this.confirmation = 'removeAll'
+                    this.dialog = {title: 'Remove All', message: 'Are you sure to remove all selected smart contracts?', confirmbtn: 'Remove All'}
+                    this.showConfirmation = true
                 }
+            },
+            cfRemoveAll(){
+                this.list_selected_sc = []
+                this.$store.commit("data/SetSelectedSC", this.list_selected_sc);
+                this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
+                this.closeConfirm();
+            },
+            closeConfirm(){
+                this.showConfirmation = false
             }
         },
         mounted() {
@@ -367,5 +391,23 @@
 }
 #generated, #checked{
     margin-top: 100px;
+} 
+/*---- showConfirmation */
+ #showConfirmation{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+}
+#removeSC-holder{
+    margin-top: 200px;
+}
+#removeAll-holder{
+    margin-top: 50px;
 }
 </style>

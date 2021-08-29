@@ -23,19 +23,23 @@
             </div>
         </div>
 
-        <div class="nav__right" v-show="checkUser()">
-            <a href='#' class="avatar">
+        <div class="nav__right" v-if="checkUser">
+            <a class="avatar">
                 <img class='avatar__img' src='../assets/avata.jpg' />
-                <span><strong>{{getUserName()}}</strong></span>
+                <span><strong>{{getUserName}}</strong></span>
             </a>
             <div class="buttons">
-                <a href="#"><i class='material-icons'>notifications</i></a>
+                <a><i class='material-icons'>notifications</i></a>
             </div>
             <div class="buttons">
-                <a href="#"><i v-on:click="showDia= !showDia" class='material-icons'>arrow_drop_down
-                   <ProDia v-show="showDia"/>
-                    </i></a>
+                <a><i @click="toggleProfile" class='material-icons'>arrow_drop_down</i>
+                <ProDia v-show="showDia"/>
+                    </a>
             </div>
+        </div>
+        <div class="nav__right" v-if="!checkUser">
+            <button @click="goLogin()" id="login-btn">Login</button>
+            <button id="register-btn">Register</button>
         </div>
     </nav>
 </template>
@@ -52,12 +56,17 @@ export default ({
             showDia: false
         }
     },
-    methods: {
+    computed:{
+        checkUser(){
+          return this.$store.state.user.currentUser.id
+        },
         getUserName() {
             return this.$store.state.user.currentUser.name
         },
-        checkUser(){
-          return this.$store.state.user.currentUser.id
+    },
+    methods: {
+        toggleProfile(){
+            this.showDia = !this.showDia
         },
         goHome() {
           this.goURL("/")
@@ -67,6 +76,9 @@ export default ({
         },
         goRoadMap() {
           this.goURL("/roadmap")
+        },
+        goLogin(){
+            this.goURL("/login")
         },
         goURL(url){
             if(this.$route.path != url)
@@ -189,7 +201,26 @@ nav {
 .material-icons{
     color: #616264;
 }
-
+a{
+    cursor: pointer;
+}
+#login-btn{
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+}
+#login-btn:hover{
+    color: blue;
+    text-decoration: underline;
+}
+#register-btn{
+    font-size: 20px;
+    border: none;
+    margin-left: 10px;
+    margin-right: 30px;
+    background-color: #5fb8ee;
+    border-radius: 5px;
+}
 @media only screen and (max-width:720px) {
     .nav__mid {
         display: none;

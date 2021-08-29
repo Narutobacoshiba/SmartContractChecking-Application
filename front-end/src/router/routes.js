@@ -5,6 +5,8 @@ import AddSc from "../views/Add-Sc.vue"
 import Processing from "../views/Processing.vue"
 import CreateCsp from "../views/Create-Csp.vue"
 import RoadMap from "../views/RoadMap.vue"
+import Login from "../views/Login.vue"
+import Register from "../views/Register.vue"
 import { DOMAIN_TITLE } from '../.env'
 
 export const routes = [
@@ -13,6 +15,18 @@ export const routes = [
     name: "Index",
     component: Index,
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | home` },
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | login` },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | register` },
   },
   {
     path: "/list-sc",

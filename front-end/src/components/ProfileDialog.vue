@@ -13,7 +13,7 @@
       <div class="setting-option op"><span>Setting</span></div>
     </div>
     <div class="down-side side">
-      <div class="signout-option op" @click="signout"><span>Signout</span></div>
+      <div class="signout-option op" @click="logout"><span>Logout</span></div>
     </div>
   </div>
 </template>
@@ -24,9 +24,10 @@ import { AuthService } from "@/services/auth";
 export default {
   name: "profiledialog",
   methods: {
-    async signout() {
+    async logout() {
       await AuthService.makeLogout();
     },
+    
   },
   computed: {
     name(){
