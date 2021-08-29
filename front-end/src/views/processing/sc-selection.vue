@@ -50,12 +50,12 @@
                     </div>
                 </div>
                 <div id="showConfirmation" v-if="showConfirmation">
-                <div id="removeAll-holder" v-if="confirmation == 'removeAll'">
-                    <confirm @cancel="closeConfirm" @confirm="cfRemoveAll" :dialog="dialog" />
-                </div>
-                <div id="removeSC-holder"  v-if="confirmation == 'removeSC'">
-                    <confirm @cancel="closeConfirm" @confirm="cfRemoveSC(idxSC)" :dialog="dialog"/>
-                </div>
+                    <div id="removeAll-holder" v-if="confirmation == 'removeAll'">
+                        <confirm @cancel="closeConfirm" @confirm="cfRemoveAll" :dialog="dialog" />
+                    </div>
+                    <div id="removeSC-holder"  v-if="confirmation == 'removeSC'">
+                        <confirm @cancel="closeConfirm" @confirm="cfRemoveSC(idxSC)" :dialog="dialog"/>
+                    </div>
                 </div>
             </div>
             </div>
@@ -377,7 +377,6 @@ export default ({
     height: 100%;
     background-color: rgba(0,0,0,0.2);
     z-index: 1;
-    /* display: flex; */
     align-items: center;
     justify-content: center;
 }
