@@ -5,7 +5,7 @@
                         <confirm @cancel="closeConfirm" @confirm="cfRemoveAll" :dialog="dialog" />
                     </div>
                     <div id="removeSC-holder"  v-if="confirmation == 'removeSC'">
-                        <confirm @cancel="closeConfirm" @confirm="cfRemoveSC(idxSC)" :dialog="dialog"/>
+                        <confirm @cancel="closeConfirm" @confirm="cfRemoveSC(currentSC)" :dialog="dialog"/>
                     </div>
             </div>
             <div id="header">
@@ -115,7 +115,7 @@
                 showConfirmation: false,
                 dialog: {},
                 confirmation: '',
-                idxSC: null
+                currentSC: null
             };
         },
         methods: {
@@ -166,10 +166,15 @@
             removeSC(sc){
                 this.dialog = {title: 'Remove Smart Contract', message: "Are you sure to remove '"+sc.name+"' ?", confirmbtn: 'Remove'}
                 this.confirmation = 'removeSC'
+                this.currentSC = sc.id
                 this.showConfirmation = true
             },
-            cfRemoveSC(idx){
-                this.list_selected_sc.splice(idx,1)
+            cfRemoveSC(id){
+                for( var i = 0; i < this.list_selected_sc.length; i++){ 
+                    if ( this.list_selected_sc[i].id === id) { 
+                        this.list_selected_sc.splice(i, 1); 
+                    }
+                }
                 this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
                 this.closeConfirm()
             },

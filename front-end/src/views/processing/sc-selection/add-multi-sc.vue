@@ -98,7 +98,7 @@
 
 <script>
 import ConfirmationDialog from "../../../components/ConfirmationDialog.vue"
-import { GetPrivateSmartContracts, GetCommonSmartContracts } from "../../../services/data.js";
+import { GetPrivateSmartContracts, GetCommonSmartContracts, GetSmartContractFunctionInfor} from "../../../services/data.js";
 export default ({
     components:{
         'confirm': ConfirmationDialog
@@ -129,7 +129,6 @@ export default ({
         this.list_sc = GetPrivateSmartContracts().concat(GetCommonSmartContracts())
         this.selected_sc = this.$store.getters["data/GetSelectedSC"];
         this.filtername_items = this.list_sc
-
         this.filterListItems()
         this.sortItems(this.sort_selection)
     },
@@ -165,7 +164,7 @@ export default ({
                 return this.selection_items.length-this.num_of_record*(this.pageNum-1)
             }
             return this.num_of_record
-        }
+        },
     },
     methods: {
         filterByName(){
@@ -244,12 +243,13 @@ export default ({
         updateSCs(){
             var store_gvs = this.$store.state.data.data.selectedSCInfor;
             var new_update = this.selected_sc
+            var sc_info = this.getSelectedSCsInfo(new_update)
+            // console.log(sc_info)
             for (let idx = 0; idx < new_update.length; idx++) {
                 if (!(new_update[idx].id in store_gvs)) {
-                this.$store.commit(
-                    "data/NewSCSelectedInfor",
-                    new_update[idx].id
-                    );
+                    this.$store.commit(
+                        "data/NewSCSelectedInfor",
+                            {sc_id: new_update[idx].id, sc_info: sc_info[new_update[idx].id]});
                 }
             }
             this.$store.commit("data/SetSelectedSC", new_update);
@@ -261,6 +261,10 @@ export default ({
         },
         goPage(value){
             this.pageNum = value
+        },
+        
+        getSelectedSCsInfo(selected_sc){
+            return GetSmartContractFunctionInfor(selected_sc)
         }
     }
 })
