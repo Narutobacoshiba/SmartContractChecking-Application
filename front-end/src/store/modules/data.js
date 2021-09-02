@@ -101,7 +101,7 @@ const state = {
         var info = {list_gvs: list_gvs, list_lvs: list_lvs}
         for(let i = 0; i< vuls.length; i++){
           var vid = vuls[i].id
-          if(!(vid in obj)){
+          if(!(vid in obj) || Object.keys(obj[vid]).length === 0){
             obj[vid] = info
         }
         }
