@@ -1,0 +1,23 @@
+BlindAuction {
+type ADDRESS : range 0 .. 100;
+type ETH : range 0 .. 1000;
+type USER : struct { ADDRESS adr;ETH balance;};
+subtype BID_VALUE : ETH range 0 .. 25;
+type LIST_VALUES : list [nat] of BID_VALUE with capacity 100;
+type BLIND_BID : range 0 .. 1000;
+type LIST_BB : list [nat] of BLIND_BID with capacity 100;
+type SECRET_KEY : range 0 .. 100;
+type LIST_KEYS : list [nat] of SECRET_KEY with capacity 100;
+subtype DEPOSIT : ETH range 0 .. 25;
+type LIST_DEPOSIT : list [nat] of DEPOSIT with capacity 100;
+type LAST_BID : struct { ADDRESS bidder; ETH bidValue;};
+type FULL_BID : struct { ADDRESS bidder; BLIND_BID blindBid; ETH deposit; BID_VALUE revealedBid; SECRET_KEY secret;};
+type FULL_BIDDER : struct { ADDRESS bidder; ETH balance; LIST_BB blindBids; LIST_DEPOSIT deposits; LIST_VALUES revealedBids; LIST_KEYS secrets;};
+type LIST_FB : struct { ADDRESS bidder; LIST_BB blindBids; LIST_DEPOSIT deposits; LIST_VALUES revealedBids; LIST_KEYS secrets;};
+type Bid : struct { bytes32 blindedBid;uint deposit;};
+type struct_bids : struct { address key;Bid[] value;};
+type list_bids : list[nat] of struct_bids with capacity 100;
+type struct_pendingReturns : struct { address key;uint value;};
+type list_pendingReturns : list[nat] of struct_pendingReturns with capacity 100;
+
+}
