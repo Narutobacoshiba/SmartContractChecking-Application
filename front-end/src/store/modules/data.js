@@ -97,7 +97,7 @@ const state = {
       
       if(vuls.length > 0){
         var obj = {}
-        if(state.data.selectedSCInfor[sc_id]) obj = state.data.selectedSCInfor[sc_id];
+        if(Object.keys(state.data.selectedSCInfor[sc_id]).length > 0) obj = state.data.selectedSCInfor[sc_id];
         var info = {list_gvs: list_gvs, list_lvs: list_lvs}
         for(let i = 0; i< vuls.length; i++){
           var vid = vuls[i].id
