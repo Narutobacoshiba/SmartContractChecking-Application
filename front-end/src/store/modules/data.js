@@ -94,10 +94,9 @@ const state = {
         var name = list_funcs[i].name
         list_lvs[name] = lvs
       }
-      if(sc_id in state.data.selectedSCInfor){
         if(vuls.length > 0){
           var obj = {}
-          if(state.data.selectedSCInfor[sc_id]) obj = state.data.selectedSCInfor[sc_id];
+          if(sc_id in state.data.selectedSCInfor) obj = state.data.selectedSCInfor[sc_id];
           var info = {list_gvs: list_gvs, list_lvs: list_lvs}
           for(let i = 0; i< vuls.length; i++){
             var vid = vuls[i].id
@@ -108,9 +107,6 @@ const state = {
         }else{
           state.data.selectedSCInfor[sc_id] = {}
         }
-      }else{
-        state.data.selectedSCInfor[sc_id] = {}
-      }
       console.log(state.data.selectedSCInfor)
     },
     RemoveSCSelectedInfor(state, expriedkey) {
