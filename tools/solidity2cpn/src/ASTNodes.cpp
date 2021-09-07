@@ -1,13 +1,8 @@
-// Copyright (c) 2019 chao
-// 
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
-
 #include "../include/ASTNodes.hpp"
-#include "../include/ASTVisitor.hpp"
 
 namespace SOL2CPN {
 
+/* ------- Indentation ------- */
 Indentation::Indentation(const Indentation& _indentation) {
     tab_width = _indentation.tab_width;
     use_spaces = _indentation.use_spaces;
@@ -52,6 +47,7 @@ std::string Indentation::str() const {
     return result;
 }
 
+/*  */
 std::ostream& operator<<(std::ostream& _os, const Indentation& _indentation) {
     _os << _indentation.str();
     return _os;
@@ -67,24 +63,9 @@ std::string operator+(const Indentation& _indentation, const std::string& _str) 
     return result;
 }
 
+/* ------- ASTNode ------- */
 NodeType ASTNode::get_node_type() const {
     return node_type;
-}
-
-void ASTNode::insert_text_before(const std::string& _text) {
-    text_before = _text;
-}
-
-void ASTNode::insert_text_after(const std::string& _text) {
-    text_after = _text;
-}
-
-std::string ASTNode::get_added_text_before() const {
-    return text_before;
-}
-
-std::string ASTNode::get_added_text_after() const {
-    return text_after;
 }
 
 void ASTNode::append_sub_node(const ASTNodePtr& _node) {
@@ -111,33 +92,8 @@ ASTNodePtr ASTNode::operator[] (const unsigned int& x) {
     return ast_nodes[x];
 }
 
-std::string RootNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::stringstream result;
-    result << text_before << pragma << "\n" << import << "\n";
-    for (auto it = ast_nodes.begin(); it != ast_nodes.end(); ++it) {
-        result << (*it)->source_code(_indentation);
-    }
-    result << text_after;
-    return result.str();
-}
 
-void RootNode::set_import(const std::string& _import) {
-    import = _import;
-}
-
-std::string RootNode::get_import() const{
-    return import;
-}
-
-void RootNode::set_pragma(const std::string& _pragma) {
-    pragma = _pragma;
-}
-
-std::string RootNode::get_pragma() const{
-    return pragma;
-}
-
+/* ------- RootNode ------- */
 void RootNode::add_field(const ASTNodePtr& _node) {
     append_sub_node(_node);
 }
@@ -162,11 +118,6 @@ ASTNodePtr RootNode::get_field(const unsigned int& x) {
     return get_sub_node(x);
 }
 
-std::string PragmaDirectiveNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string result = text_before + _indentation + "pragma " + literals[0] + " " + literals[1] + literals[2] + literals[3] + ";" + text_after;
-    return result;
-}
 
 void PragmaDirectiveNode::set_literals(const Literals& _literals) {
     literals = _literals;
@@ -208,30 +159,6 @@ std::string ImportDirectiveNode::get_original() {
     return original;
 }
 
-std::string ImportDirectiveNode::source_code(Indentation& _indentation) {
-    visit(this);
-    if (original != "") {
-        return text_before + _indentation + original + text_after;
-    }
-    std::string result = text_before;
-    if (unit_alias == "") {
-        result = _indentation+ "import \"" + file + "\";";
-    } else {
-        if (symbol_aliases == "") {
-            result = _indentation + "import * as " + unit_alias + " from \"" + file + "\"";
-        } else {
-            result = _indentation + "import " + symbol_aliases + " as " + unit_alias + " from \"" + file + "\"";
-        }
-    }
-    result = result + text_after;
-    return result;
-}
-
-std::string UsingForDirectiveNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string result = text_before + _indentation + "using " + A + " for " + B + ";" + text_after;
-    return result;
-}
 
 void UsingForDirectiveNode::set_using(const std::string& _using) {
     A = _using;
@@ -247,19 +174,6 @@ std::string UsingForDirectiveNode::get_using() {
 
 std::string UsingForDirectiveNode::get_for() {
     return B;
-}
-
-std::string VariableDeclarationNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string result = text_before;
-    Indentation empty_indentation(0);
-    if (initial_value != nullptr) {
-        result = _indentation + type->source_code(empty_indentation) + " " + variable_name + " = " + initial_value->source_code(empty_indentation);
-    } else {
-        result = _indentation + type->source_code(empty_indentation) + " " + variable_name;
-    }
-    result = result + text_after;
-    return result;
 }
 
 void VariableDeclarationNode::set_type(const ASTNodePtr& _type) {
@@ -294,18 +208,6 @@ ASTNodePtr VariableDeclarationNode::get_initial_value() {
     return initial_value;
 }
 
-std::string VariableDeclarationStatementNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string result = text_before;
-    Indentation empty_indentation(0);
-    if (value == nullptr) {
-        result = result + _indentation + decl->source_code(empty_indentation) + ";";
-    } else {
-        result = result + _indentation + decl->source_code(empty_indentation) + " = " + value->source_code(empty_indentation) + ";";
-    }
-    result = result + text_after;
-    return result;
-}
 
 VariableDeclarationNodePtr VariableDeclarationStatementNode::get_decl() const {
     return decl;
@@ -323,10 +225,6 @@ void VariableDeclarationStatementNode::set_value(const ASTNodePtr& _value) {
     value = _value;
 }
 
-std::string IdentifierNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + name + text_after;
-}
 
 std::string IdentifierNode::get_name() const {
     return name;
@@ -336,17 +234,6 @@ void IdentifierNode::set_name(const std::string& _name) {
     name = _name;
 }
 
-std::string StructDefinitionNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string result = text_before + _indentation +  "struct " + name + " {\n";
-    ++_indentation;
-    for (auto it = ast_nodes.begin(); it != ast_nodes.end(); ++it) {
-        result = result + (*it)->source_code(_indentation) + ";\n";
-    }
-    --_indentation;
-    result = result + _indentation + "}\n" + text_after;
-    return result;
-}
 
 std::string StructDefinitionNode::get_name() const {
     return name;
@@ -380,17 +267,6 @@ ASTNodePtr StructDefinitionNode::get_field(const unsigned int& x) {
     return get_sub_node(x);
 }
 
-std::string ParameterListNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    if (ast_nodes.size() == 0) return text_before + _indentation + "()" + text_after;
-    std::string result = text_before + _indentation + "(";
-    for (auto it = ast_nodes.begin(); it != ast_nodes.end(); ++it) {
-        result = result + (*it)->source_code(empty_indentation) + ", ";
-    }
-    result = result.substr(0, result.length()-2) + ")" + text_after;
-    return result;
-}
 
 void ParameterListNode::add_parameter(const ASTNodePtr& _node) {
     append_sub_node(_node);
@@ -424,12 +300,8 @@ ParameterListNodePtr EventDefinitionNode::get_argument_list() const {
     return argument_list;
 }
 
-std::string EventDefinitionNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation + "event " + name + argument_list->source_code(empty_indentation) + ";\n" + text_after;
-    return result;
-}
+
+
 
 std::string EventDefinitionNode::get_name() const {
     return name;
@@ -439,11 +311,6 @@ void EventDefinitionNode::set_name(const std::string& _name) {
     name = _name;
 }
 
-std::string ExpressionStatementNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    return text_before + _indentation + expression->source_code(empty_indentation) + ";" + text_after;
-}
 
 ASTNodePtr ExpressionStatementNode::get_expression() const {
     return expression;
@@ -453,11 +320,7 @@ void ExpressionStatementNode::set_expression(const ASTNodePtr& _expression) {
     expression = _expression;
 }
 
-std::string EmitStatementNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    return text_before + _indentation + "emit " + event_call -> source_code(empty_indentation) + ";" + text_after;
-}
+
 
 ASTNodePtr EmitStatementNode::get_event_call() const {
     return event_call;
@@ -467,11 +330,6 @@ void EmitStatementNode::set_event_call(const ASTNodePtr& _event_call) {
     event_call = _event_call;
 }
 
-std::string IndexAccessNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    return text_before + _indentation + identifier->source_code(empty_indentation) + "[" + index_value->source_code(empty_indentation) + "]" + text_after;
-}
 
 ASTNodePtr IndexAccessNode::get_identifier() const {
     return identifier;
@@ -489,16 +347,6 @@ void IndexAccessNode::set_index_value(const ASTNodePtr& _index_value) {
     index_value = _index_value;
 }
 
-std::string BinaryOperationNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation
-                        + left_hand_operand->source_code(empty_indentation) 
-                        + " " + op + " " 
-                        + right_hand_operand->source_code(empty_indentation)
-                        + text_after;
-    return result;
-}
 
 std::string BinaryOperationNode::get_return_type_str() const {
     return return_type_str;
@@ -532,19 +380,6 @@ void BinaryOperationNode::set_right_hand_operand(const ASTNodePtr& _operand) {
     right_hand_operand = _operand;
 }
 
-std::string UnaryOperationNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    if (is_prefix) {
-        if (op == "delete") {
-            return text_before + _indentation + op + " " + operand->source_code(empty_indentation) + text_after;
-        } else {
-            return text_before + _indentation + op + operand->source_code(empty_indentation) + text_after;
-        }
-    } else {
-        return text_before + _indentation + operand->source_code(empty_indentation) + op + text_after;
-    }
-}
 
 std::string UnaryOperationNode::get_operator() const {
     return op;
@@ -570,10 +405,6 @@ void UnaryOperationNode::operation_is_prefix(bool _boolean) {
     is_prefix = _boolean;
 }
 
-std::string LiteralNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + literal + text_after;
-}
 
 void LiteralNode::set_literal(const std::string& _literal) {
     literal = _literal;
@@ -583,16 +414,6 @@ std::string LiteralNode::get_literal() const {
     return literal;
 }
 
-std::string TupleExpressionNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation + "(";
-    for (auto it = ast_nodes.begin(); it != ast_nodes.end(); ++it) {
-        result = result + (*it)->source_code(empty_indentation) + ", ";
-    }
-    result = result.substr(0, result.length()-2) + ")" + text_after;
-    return result;
-}
 
 void TupleExpressionNode::add_member(const ASTNodePtr& _node) {
     append_sub_node(_node);
@@ -618,17 +439,6 @@ ASTNodePtr TupleExpressionNode::operator[] (const unsigned int& x) {
     return get_sub_node(x);
 }
 
-std::string BlockNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string result = text_before + "{\n";
-    _indentation++;
-    for (auto it = ast_nodes.begin(); it != ast_nodes.end(); ++it) {
-        result = result + (*it)->source_code(_indentation) + "\n";
-    }
-    _indentation--;
-    result = result + _indentation + "}" + text_after;
-    return result;
-}
 
 void BlockNode::add_statement(const ASTNodePtr& _node) {
     append_sub_node(_node);
@@ -654,18 +464,7 @@ ASTNodePtr BlockNode::operator[] (const unsigned int& x) {
     return get_sub_node(x);
 }
 
-std::string ReturnNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation + "return";
-    if (operand) {
-        result = result + " " + operand->source_code(empty_indentation) + ";";
-    } else {
-        result = result + ";";
-    }
-    result = result + text_after;
-    return result;
-}
+
 
 ASTNodePtr ReturnNode::get_operand() const {
     return operand;
@@ -675,16 +474,6 @@ void ReturnNode::set_operand(const ASTNodePtr& _operand) {
     operand = _operand;
 }
 
-std::string ModifierDefinitionNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string params_str;
-    Indentation empty_indentation(0);
-    if (params == nullptr) params_str = "()";
-    else params_str = params->source_code(empty_indentation);
-    std::string result = text_before + _indentation + "modifier " + name + params_str + " ";
-    result = result + body->source_code(_indentation) + text_after;
-    return result;
-}
 
 std::string ModifierDefinitionNode::get_name() const {
     return name;
@@ -710,20 +499,7 @@ void ModifierDefinitionNode::set_body(const ASTNodePtr& _body) {
     body = _body;
 }
 
-std::string ModifierInvocationNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    if (ast_nodes.size() == 0) {
-        return text_before + _indentation + name + "()" + text_after;
-    } else {
-        std::string result = text_before + _indentation + name + "(";
-        for (auto it = ast_nodes.begin(); it != ast_nodes.end(); ++it) {
-            result = result + (*it)->source_code(empty_indentation) + ", ";
-        }
-        result = result.substr(0, result.length()-2) + ")" + text_after;
-        return result;
-    }
-}
+
 
 std::string ModifierInvocationNode::get_name() const {
     return name;
@@ -757,34 +533,7 @@ ASTNodePtr ModifierInvocationNode::operator[] (const unsigned int& x) {
     return get_sub_node(x);
 }
 
-std::string FunctionDefinitionNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string result = text_before + _indentation + "";
-    Indentation empty_indentation(0);
-    if (name == "") {
-        if (is_constructor) {
-            result = result + "constructor" + params->source_code(empty_indentation);
-        } else {
-            result = result + "function " + params->source_code(empty_indentation);
-        }
-    } else {
-        result = result + "function " + name + params->source_code(empty_indentation);
-    }
-    if (qualifier != "") result = result + " " + qualifier;
-    if (modifier_invocation.size() != 0) {
-        for (auto it = modifier_invocation.begin(); it != modifier_invocation.end(); ++it) {
-            result = result + " " + (*it)->source_code(empty_indentation);
-        }
-    }
-    if (returns->num_parameters() != 0) result = result + " returns" + returns->source_code(empty_indentation);
-    if (function_body == nullptr) {
-        result = result + ";";
-    } else {
-        result = result + " " + function_body->source_code(_indentation) + "\n";
-    }
-    result = result + text_after;
-    return result;
-}
+
 
 void FunctionDefinitionNode::add_modifier_invocation(const ModifierInvocationNodePtr& _node) {
     modifier_invocation.push_back(_node);
@@ -854,20 +603,7 @@ bool FunctionDefinitionNode::function_is_constructor() const {
     return is_constructor;
 }
 
-std::string FunctionCallNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    if (ast_nodes.size()) {
-        std::string result = text_before + _indentation + callee->source_code(empty_indentation) + "(";
-        for (auto it = ast_nodes.begin(); it != ast_nodes.end(); ++it) {
-            result = result + (*it)->source_code(empty_indentation) + ", ";
-        }
-        result = result.substr(0, result.length()-2) + ")" + text_after;
-        return result;
-    } else {
-        return text_before + callee->source_code(empty_indentation) + "()" + text_after;
-    }
-}
+
 
 void FunctionCallNode::add_argument(const ASTNodePtr& _node) {
     append_sub_node(_node);
@@ -897,11 +633,7 @@ ASTNodePtr FunctionCallNode::get_callee() const {
     return callee;
 }
 
-std::string MemberAccessNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    return text_before + identifier->source_code(empty_indentation) + "." + member + text_after;
-}
+
 
 void MemberAccessNode::set_identifier(const ASTNodePtr& _identifier) {
     identifier = _identifier;
@@ -919,10 +651,7 @@ std::string MemberAccessNode::get_member() const {
     return member;
 }
 
-std::string ElementaryTypeNameExpressionNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + name + text_after;
-}
+
 
 std::string ElementaryTypeNameExpressionNode::get_name() const {
     return name;
@@ -932,35 +661,7 @@ void ElementaryTypeNameExpressionNode::set_name(const std::string& _name) {
     name = _name;
 }
 
-std::string ContractDefinitionNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string result = text_before;
-    if (is_library) {
-        result = _indentation + "library " + name;
-    } else {
-        result = _indentation + "contract " + name;
-    }
-    if (inherit_from.size()) {
-        auto it = inherit_from.begin();
-        result = result + " is " + *it;
-        ++it;
-        while (it != inherit_from.end()) {
-            result = result + ", " + *it;
-            ++it;
-        }
-    }
-    result = result + " {\n";
-    ++_indentation;
-    for (auto it = ast_nodes.begin(); it != ast_nodes.end(); ++it) {
-        std::string sub_source_code = (*it)->source_code(_indentation);
-        if ((*it)->get_node_type() == NodeTypeVariableDeclaration) sub_source_code = sub_source_code + ";"; // varibale declared in contract-level needs a ';'
-        sub_source_code = sub_source_code + "\n";
-        result = result + sub_source_code;
-    }
-    --_indentation;
-    result = _indentation + result + "}\n" + text_after;
-    return result;
-}
+
 
 void ContractDefinitionNode::add_inherit_from(const std::string& _inherit_from) {
     inherit_from.push_back(_inherit_from);
@@ -1026,15 +727,7 @@ ASTNodePtr ContractDefinitionNode::operator[] (const unsigned int& x) {
     return get_sub_node(x);
 }
 
-std::string IfStatementNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation + "if (" + condition->source_code(empty_indentation) + ") " + if_then->source_code(_indentation);
-    if (if_else != nullptr) result = result + " else " + if_else->source_code(_indentation) + "\n";
-    else result = result  + "\n";
-    result = result + text_after;
-    return result; 
-}
+
 
 void IfStatementNode::set_condition(const ASTNodePtr& _condition){
     condition = _condition;
@@ -1060,12 +753,6 @@ ASTNodePtr IfStatementNode::get_else() const{
     return if_else;
 }
 
-std::string DoWhileStatementNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation + "do " + loop_body->source_code(_indentation) + " while (" + condition->source_code(empty_indentation) + ");\n" + text_after;
-    return result;
-}
 
 void DoWhileStatementNode::set_condition(const ASTNodePtr& _condition){
     condition = _condition;
@@ -1083,12 +770,7 @@ ASTNodePtr DoWhileStatementNode::get_loop_body() const{
     return loop_body;
 }
 
-std::string WhileStatementNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation + "while(" + condition->source_code(empty_indentation) + ") " + loop_body->source_code(_indentation) + "\n" + text_after;
-    return result;
-}
+
 
 void WhileStatementNode::set_condition(const ASTNodePtr& _condition){
     condition = _condition;
@@ -1106,39 +788,7 @@ ASTNodePtr WhileStatementNode::get_loop_body() const{
     return loop_body;
 }
 
-std::string ForStatementNode::source_code(Indentation& _indentation) {
-    visit(this);
-    std::string condition_str = "; ";
-    Indentation empty_indentation(0);
-    if (condition != nullptr) condition_str = condition->source_code(empty_indentation) + "; ";
 
-    std::string init_str = "; ";
-    if (init != nullptr) init_str = init->source_code(empty_indentation) + " ";
-
-    std::string increment_str = "";
-    if (increment != nullptr) {
-        increment_str = increment->source_code(empty_indentation);
-        size_t increment_str_len = increment_str.length();
-        for (int i = increment_str.length() - 1; i >= 0; --i) {
-            char ch = increment_str[i];
-            if (ch == ' ' || ch == '\n') {
-                --increment_str_len;
-            } else if (ch == ';') {
-                --increment_str_len;
-                break;
-            } else {
-                break;
-            }
-        }
-        increment_str = increment_str.substr(0, increment_str_len);
-    }
-
-    std::string result = text_before 
-                         + _indentation + "for (" + init_str + condition_str + increment_str + ") " 
-                         + body->source_code(_indentation) + "\n"
-                         + text_after;
-    return result;
-}
 
 ASTNodePtr ForStatementNode::get_init() const{
     return init;
@@ -1172,16 +822,7 @@ void ForStatementNode::set_body(const ASTNodePtr& _body){
     body = _body;
 }
 
-std::string ConditionalNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before
-                         + condition->source_code(empty_indentation) 
-                         + " ? " + yes->source_code(empty_indentation) 
-                         + ", " + no->source_code(empty_indentation)
-                         + text_after;
-    return result;
-}
+
 
 ASTNodePtr ConditionalNode::get_condition() const{
     return condition;
@@ -1207,16 +848,7 @@ void ConditionalNode::set_no(const ASTNodePtr& _no){
     no = _no;
 }
 
-std::string AssignmentNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before
-                         + left_hand_operand->source_code(empty_indentation) 
-                         + " " + op + " " 
-                         + right_hand_operand->source_code(empty_indentation)
-                         + text_after;
-    return result;
-}
+
 
 std::string AssignmentNode::get_operator() const {
     return op;
@@ -1242,21 +874,7 @@ void AssignmentNode::set_right_hand_operand(const ASTNodePtr& _operand) {
     right_hand_operand = _operand;
 }
 
-std::string BreakNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + "break;" + text_after;
-}
 
-std::string ContinueNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + "continue;" + text_after;
-}
-
-std::string NewExpresionNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    return text_before + _indentation + "new " + type_name->source_code(empty_indentation) + text_after;
-}
 
 void NewExpresionNode::set_type_name(const ASTNodePtr& _type_name){
     type_name = _type_name;
@@ -1266,16 +884,6 @@ ASTNodePtr NewExpresionNode::get_type_name() const{
     return type_name;
 }
 
-std::string EnumDefinitionNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation + "enum " + name + "{";
-    for (auto it = ast_nodes.begin(); it != ast_nodes.end(); ++it) {
-        result = result + (*it)->source_code(empty_indentation) + ", ";
-    }
-    result = result.substr(0, result.length()-2) + "}" + text_after;
-    return result;
-}
 
 void EnumDefinitionNode::add_member(const ASTNodePtr& _node) {
     append_sub_node(_node);
@@ -1305,10 +913,7 @@ std::string EnumDefinitionNode::get_name() const {
     return name;
 }
 
-std::string EnumValueNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + name + text_after;
-}
+
 
 std::string EnumValueNode::get_name() const {
     return name;
@@ -1318,15 +923,6 @@ void EnumValueNode::set_name(const std::string& _name) {
     name = _name;
 }
 
-std::string ThrowNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + "throw;" + text_after;
-}
-
-std::string PlaceHolderStatement::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + placeholder + ";" + text_after;
-}
 
 std::string PlaceHolderStatement::get_placeholder() const {
     return placeholder;
@@ -1336,15 +932,6 @@ void PlaceHolderStatement::set_placeholder(const std::string& _placeholder) {
     placeholder = _placeholder;
 }
 
-std::string MappingNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation 
-                         + "mapping(" + key_type->source_code(empty_indentation) 
-                         + " => " + value_type->source_code(empty_indentation) + ")"
-                         + text_after;
-    return result;
-}
 
 ASTNodePtr MappingNode::get_key_type() const{
     return key_type;
@@ -1362,10 +949,6 @@ void MappingNode::set_value_type(const ASTNodePtr& _value_type){
     value_type = _value_type;
 }
 
-std::string ElementaryTypeNameNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + type_name + text_after;
-}
 
 void ElementaryTypeNameNode::set_type_name(const std::string& _type_name){
     type_name = _type_name;
@@ -1375,10 +958,6 @@ std::string ElementaryTypeNameNode::get_type_name() const{
     return type_name;
 }
 
-std::string UserDefinedTypeNameNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + type_name + text_after;
-}
 
 void UserDefinedTypeNameNode::set_type_name(const std::string& _type_name){
     type_name = _type_name;
@@ -1388,14 +967,6 @@ std::string UserDefinedTypeNameNode::get_type_name() const{
     return type_name;
 }
 
-std::string FunctionTypeNameNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation + "function" + params->source_code(empty_indentation);
-    if (returns->size()) result = result + " returns" + returns->source_code(empty_indentation);
-    result = result + text_after;
-    return result;
-}
 
 ASTNodePtr FunctionTypeNameNode::get_params() const{
     return params;
@@ -1413,16 +984,6 @@ void FunctionTypeNameNode::set_returns(const ASTNodePtr& _returns){
     returns = _returns;
 }
 
-std::string ArrayTypeNameNode::source_code(Indentation& _indentation) {
-    visit(this);
-    Indentation empty_indentation(0);
-    std::string result = text_before + _indentation + base_type->source_code(empty_indentation);
-    if (size != nullptr) result = result + "[" + size->source_code(empty_indentation) + "]";
-    else result = result + "[]";
-    result = result + text_after;
-    return result;
-
-}
 
 ASTNodePtr ArrayTypeNameNode::get_base_type() const{
     return base_type;
@@ -1440,10 +1001,6 @@ void ArrayTypeNameNode::set_size(const ASTNodePtr& _size){
     size = _size;
 }
 
-std::string InlineAssemblyNode::source_code(Indentation& _indentation) {
-    visit(this);
-    return text_before + _indentation + source + text_after;
-}
 
 void InlineAssemblyNode::set_source(std::string& _source) {
     source = _source;
@@ -1453,7 +1010,5 @@ void InlineAssemblyNode::set_source(std::string& _source) {
 std::string InlineAssemblyNode::get_source() {
     return source;
 }
-
-
 
 }

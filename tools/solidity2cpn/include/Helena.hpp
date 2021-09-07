@@ -13,10 +13,17 @@
 
 //#include "Utils.hpp"
 #include <vector>
+#include <map>
 
 using namespace std;
 
 namespace SOL2CPN {
+
+const string PlaceTypeNone = "0";
+const string PlaceTypeData = "1";
+const string PlaceTypeControlFlow = "2";
+const string PlaceTypeTempData = "3";
+const string PlaceTypeWaitData = "4";
 
 //reserved
 const string ASSERT_TOKEN      = "assert";
@@ -334,7 +341,8 @@ enum LnaNodeType {
     LnaNodeTypeName,
     LnaNodeTypeA_String,
     LnaNodeTypeNumber,
-    LnaNodeTypeList
+    LnaNodeTypeList,
+    LnaNodeTypeSubNet
 };
 
 class LnaNode;
@@ -342,6 +350,15 @@ typedef shared_ptr<LnaNode> LnaNodePtr;
 
 class ColorNode;
 typedef shared_ptr<ColorNode> ColorNodePtr;
+
+class PlaceNode;
+typedef shared_ptr<PlaceNode> PlaceNodePtr;
+
+class FunctionNode;
+typedef shared_ptr<FunctionNode> FunctionNodePtr;
+
+class TransitionNode;
+typedef shared_ptr<TransitionNode> TransitionNodePtr;
 
 class LnaNode {
 public:
@@ -381,6 +398,8 @@ private:
 };
 typedef std::shared_ptr<ParameterNode> ParameterNodePtr;
 
+
+
 class NetNode : public LnaNode {
 public:
     NetNode() : LnaNode(LnaNodeTypeNet) {}
@@ -401,10 +420,29 @@ public:
     void add_color(const ColorNodePtr& _color);
     ColorNodePtr get_color_by_name(const string& _name);
 
+    void add_place(const PlaceNodePtr& _place);
+    PlaceNodePtr get_place_by_name(const string& _name);
+
+    void add_transition(const TransitionNodePtr& _transition);
+    TransitionNodePtr get_transiton_by_name(const string& _name);
+
+    void add_state_color(const ColorNodePtr& _color, std::string);
+    ColorNodePtr get_state_color_by_name(const string& _name);
+
+    void add_func_color(const ColorNodePtr& _color);
+    ColorNodePtr get_func_color_by_name(const string& _name);
+
+    void add_function(const FunctionNodePtr& _func);
+    FunctionNodePtr get_function_by_name(const string& _name);
 private:
     std::string name;
     std::vector<ParameterNodePtr> param_nodes;
-    std::vector<ColorNodePtr> color_nodes;    
+    std::vector<ColorNodePtr> color_nodes;
+    std::map<std::string,ColorNodePtr> state_color;
+    std::vector<ColorNodePtr> func_color;
+    std::vector<PlaceNodePtr> place_nodes;
+    std::vector<TransitionNodePtr> transition_nodes;    
+    std::vector<FunctionNodePtr> function_nodes;
 };
 typedef std::shared_ptr<NetNode> NetNodePtr;
 
@@ -545,6 +583,7 @@ public:
     std::string get_returnType() const;
 
     void add_parameter(const ParamNodePtr& _node);
+    ParamNodePtr get_parameter(const unsigned int& x);
 
     void set_body(const std::string& _body);
     std::string get_body() const;
@@ -559,7 +598,7 @@ typedef std::shared_ptr<FunctionNode> FunctionNodePtr;
 
 class PlaceNode : public LnaNode {
 public:
-    PlaceNode() : LnaNode(LnaNodeTypePlace) {}
+    PlaceNode() : LnaNode(LnaNodeTypePlace), place_type(PlaceTypeNone){}
     std::string source_code();
 
     void set_name(const std::string& _name);
@@ -576,12 +615,16 @@ public:
 
     void set_type(const std::string& _type);
     std::string get_type() const;
+
+    void set_place_type(const std::string& _type);
+    std::string get_place_type() const;
 private:
     std::string name;
     std::string domain;
     std::string init;
     std::string capacity;
     std::string type;
+    std::string place_type;
 };
 typedef std::shared_ptr<PlaceNode> PlaceNodePtr;
 

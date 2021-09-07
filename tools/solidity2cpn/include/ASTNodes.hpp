@@ -1,8 +1,3 @@
-// Copyright (c) 2019 Chao Peng
-// 
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
-
 #ifndef SOL2CPN_ASTNODES_H_
 #define SOL2CPN_ASTNODES_H_
 
@@ -16,10 +11,7 @@
 #include <string>
 #include <vector>
 
-#include "Utils.hpp"
-
 namespace SOL2CPN {
-
 const std::string TokenSourceUnit = "SourceUnit";
 const std::string TokenPragmaDirective = "PragmaDirective";
 const std::string TokenImportDirective = "ImportDirective";
@@ -202,7 +194,6 @@ enum NodeType {
     NodeTypeFunctionTypeName,
     NodeTypeArrayTypeName
 };
-
 typedef std::vector<std::string> Literals;
 
 class Indentation {
@@ -234,14 +225,9 @@ typedef std::shared_ptr<ASTNode> ASTNodePtr;
 
 class ASTNode {
 public:
-    explicit ASTNode(NodeType _node_type) : node_type(_node_type), text_before(""), text_after("") {}
-    virtual std::string source_code(Indentation& _indentation) = 0;
+    explicit ASTNode(NodeType _node_type) : node_type(_node_type){}
     NodeType get_node_type() const;
     size_t size();
-    void insert_text_before(const std::string& _text);
-    void insert_text_after(const std::string& _text);
-    std::string get_added_text_before() const;
-    std::string get_added_text_after() const;
 
 protected:
     void append_sub_node(const ASTNodePtr& _node);
@@ -250,22 +236,14 @@ protected:
     ASTNodePtr get_sub_node(const unsigned int& x) const;
     ASTNodePtr operator[] (const unsigned int& x);
 
-    
 
     NodeType node_type;
     std::vector<ASTNodePtr> ast_nodes;
-    std::string text_before;
-    std::string text_after;
 };
 
 class RootNode : public ASTNode {
 public:
-    RootNode() : ASTNode(NodeTypeRoot), import(""), pragma("") {}
-    std::string source_code(Indentation& _indentation);
-    void set_import(const std::string& _import);
-    std::string get_import() const;
-    void set_pragma(const std::string& _pragma);
-    std::string get_pragma() const;
+    RootNode() : ASTNode(NodeTypeRoot) {}
 
     void add_field(const ASTNodePtr& _node);
     void delete_field(const unsigned int& x);
@@ -273,11 +251,10 @@ public:
     ASTNodePtr get_field(const unsigned int& x);
     size_t num_fields();
     ASTNodePtr operator[] (const unsigned int& x);
-private:
-    std::string import;
-    std::string pragma;
+
 };
 typedef std::shared_ptr<RootNode> RootNodePtr;
+
 
 class PragmaDirectiveNode : public ASTNode {
 public:
@@ -929,5 +906,4 @@ private:
 typedef std::shared_ptr<InlineAssemblyNode> InlineAssemblyNodePtr;
 
 }
-
-#endif //SOL2CPN_ASTNODES_H_
+#endif

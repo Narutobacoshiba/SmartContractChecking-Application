@@ -54,6 +54,7 @@ int main(int argc, char** argv){
 
     if (ast_json_content != "") {
         nlohmann::json ast_json = nlohmann::json::parse(ast_json_content);
+     
         ASTAnalyser ast_analyser(ast_text_stream, ast_json, true, sol_name, "");
 
         RootNodePtr root_node = ast_analyser.analyse();
@@ -62,19 +63,15 @@ int main(int argc, char** argv){
 
         NetNodePtr net_node = nettranslator.translate();
 
-       
-     
         string new_source = net_node->source_code();
         if (output_file_name != "") {
             ofstream output_file_stream(output_file_name);
+            output_file_stream<<new_source;
             output_file_stream.close();
             cout << "lna file generated in test_files directory: SUCESS" << endl;
         } else {
             cout << "lna file generated in test_files directory: FAILURE" << endl;
         }
-
-
-
     }
     
     ast_json_file_stream.close();

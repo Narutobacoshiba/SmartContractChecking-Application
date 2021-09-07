@@ -2,6 +2,16 @@
 
 namespace SOL2CPN {
 namespace Utils {
+    bool isInteger(const std::string & s)
+    {
+        if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false;
+
+        char * p;
+        strtol(s.c_str(), &p, 10);
+
+        return (*p == 0);
+    }
+
     void debug_info(const std::string& _info) {
         if (std::getenv("SIF_DEBUG") != nullptr) {
             std::cerr << "[SIF_DEBUG_INFO]" << _info << "\n";

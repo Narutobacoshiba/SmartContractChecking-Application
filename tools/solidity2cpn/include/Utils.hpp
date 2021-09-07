@@ -41,6 +41,8 @@ namespace Utils {
     //from https://stackoverflow.com/questions/3418231/replace-part-of-a-string-with-another-string
     void str_replace_all(std::string& _str, const std::string& _from, const std::string& _to);
 
+    bool isInteger(const std::string & s);
+
     std::map<std::string, std::string> parse_visitor_args(const std::string& _args);
 }
 }

@@ -26,6 +26,9 @@ size_t LnaNode::size() {
     return lna_nodes.size();
 }
 
+
+
+
 std::string NetNode::source_code() {
     std::stringstream result;
     result << name;
@@ -39,6 +42,36 @@ std::string NetNode::source_code() {
         result << ")";        
     }
     result << " {\n";
+    result << "\n------- Color definition -------\n\n";
+    for (auto it = color_nodes.begin(); it != color_nodes.end(); ++it) {
+        result << (*it)->source_code();
+    }
+    result << "\n------- State color definition -------\n\n";
+    StructColorNodePtr state = std::make_shared<StructColorNode>();
+    state->set_name("STATE");
+    for (auto it = state_color.begin(); it != state_color.end(); ++it) {
+        ComponentNodePtr component = std::make_shared<ComponentNode>();
+        component->set_name(it->first);
+        component->set_type((it->second)->get_name());
+        state->add_component(component);
+    }
+    result << state->source_code();
+    for (auto it = func_color.begin(); it != func_color.end(); ++it) {
+        result << (*it)->source_code();
+    }
+    result << "\n------- Function definition -------\n\n";
+    for (auto it = function_nodes.begin(); it != function_nodes.end(); ++it) {
+        result << (*it)->source_code();
+    }
+    result << "\n------- Place definition -------\n\n";
+    for (auto it = place_nodes.begin(); it != place_nodes.end(); ++it) {
+        result << (*it)->source_code();
+    }
+    result << "\n------- Transition definition -------\n\n";
+    for (auto it = transition_nodes.begin(); it != transition_nodes.end(); ++it) {
+        result << (*it)->source_code();
+    }
+    result << "\n------- Another definition -------\n\n";
     for (auto it = lna_nodes.begin(); it != lna_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
@@ -79,14 +112,80 @@ size_t NetNode::num_members() {
 }
 
 void NetNode::add_color(const ColorNodePtr& _color) {
-    add_member(_color);
-    color_nodes.push_back(_color);
+    if(get_color_by_name(_color->get_name()) == nullptr){
+        color_nodes.push_back(_color);
+    }
 }
 
 ColorNodePtr NetNode::get_color_by_name(const string& _color) {
     for (auto it = color_nodes.begin(); it != color_nodes.end(); ++it)
             if ((*it)->get_name() == _color)
                 return (*it);
+    return nullptr;
+}
+
+void NetNode::add_place(const PlaceNodePtr& _place){
+    if(get_place_by_name(_place->get_name()) == nullptr){
+        place_nodes.push_back(_place);
+    }
+}
+
+PlaceNodePtr NetNode::get_place_by_name(const string& _name){
+    for (auto it = place_nodes.begin(); it != place_nodes.end(); ++it)
+            if ((*it)->get_name() == _name)
+                return (*it);
+    return nullptr;
+}
+
+void NetNode::add_transition(const TransitionNodePtr& _transition){
+    if(get_transiton_by_name(_transition->get_name()) == nullptr){
+        transition_nodes.push_back(_transition);
+    }
+}
+
+TransitionNodePtr NetNode::get_transiton_by_name(const string& _name){
+    for (auto it = transition_nodes.begin(); it != transition_nodes.end(); ++it)
+            if ((*it)->get_name() == _name)
+                return (*it);
+    return nullptr;
+}
+
+void NetNode::add_state_color(const ColorNodePtr& _color, std::string _name){
+    if(get_state_color_by_name(_name) == nullptr){
+        state_color[_name] = _color;
+    }
+}
+
+ColorNodePtr NetNode::get_state_color_by_name(const string& _name){
+    if ( state_color.find(_name) != state_color.end() ) {
+        return state_color[_name];
+    } 
+    return nullptr;
+}
+
+void NetNode::add_func_color(const ColorNodePtr& _color){
+    if(get_func_color_by_name(_color->get_name()) == nullptr){
+        func_color.push_back(_color);
+    }
+}
+
+ColorNodePtr NetNode::get_func_color_by_name(const string& _name){
+    for (auto it = func_color.begin(); it != func_color.end(); ++it)
+            if ((*it)->get_name() == _name)
+                return (*it);
+    return nullptr;
+}
+
+void NetNode::add_function(const FunctionNodePtr& _func){
+    if(get_function_by_name(_func->get_name()) == nullptr){
+        function_nodes.push_back(_func);
+    }
+}
+
+FunctionNodePtr NetNode::get_function_by_name(const string& _name){
+    for (auto it = function_nodes.begin(); it != function_nodes.end(); ++it)
+        if ((*it)->get_name() == _name)
+            return (*it);
     return nullptr;
 }
 
@@ -298,6 +397,11 @@ std::string FunctionNode::get_name() const {
     return name;
 }
 
+ParamNodePtr FunctionNode::get_parameter(const unsigned int& x){
+    if(x < parameters_spec.size())
+        return parameters_spec[x];
+}
+
 void FunctionNode::set_returnType(const std::string& _returnType) {
     returnType = _returnType;
 }
@@ -318,14 +422,15 @@ std::string FunctionNode::get_body() const {
 }
 
 std::string PlaceNode::source_code() {
-    std::string result = "place " + name + " {\ndom : " + domain + ";";
+    std::string result = "place " + name + " {\n\tdom : " + domain + ";";
     if (init != "")
-        result += "\ninit : " + init + ";";
+        result += "\n\tinit : " + init + ";";
     if (capacity != "")
-        result += "\ncapacity : " + capacity + ";";
+    if (capacity != "")
+        result += "\n\tcapacity : " + capacity + ";";
     if (type != "")
-        result += "\ntype : " + type + ";";
-    result += "\n}";
+        result += "\n\ttype : " + type + ";";
+    result += "\n}\n";
     return result;
 }
 
@@ -364,6 +469,14 @@ std::string PlaceNode::get_type() const {
     return type;
 }
 
+void PlaceNode::set_place_type(const std::string& _type){
+    place_type = _type;
+}
+
+std::string PlaceNode::get_place_type() const{
+    return place_type;
+}
+
 std::string ArcNode::source_code() {
     std::string result = placeName + " : " + label + ";";
     return result;
@@ -384,28 +497,28 @@ std::string ArcNode::get_label() const {
 }
 
 std::string TransitionNode::source_code() {
-    std::string result = "transition " + name + " {\nin {\n";
+    std::string result = "transition " + name + " {\n\tin {\n";
     for (auto it = inArcs.begin(); it != inArcs.end(); ++it)
-        result += (*it)->source_code() + "\n";
-    result += "}\nout {\n";
+        result += "\t\t" + (*it)->source_code() + "\n";
+    result += "\t}\n\tout {\n";
     for (auto it = outArcs.begin(); it != outArcs.end(); ++it)
-        result += (*it)->source_code() + "\n";
-    result += "}\n";
+        result += "\t\t" + (*it)->source_code() + "\n";
+    result += "\t}\n";
     if (inhibitArcs.size() != 0) {
-        result += "inhibit {\n";
+        result += "\tinhibit {\n";
         for (auto it = inhibitArcs.begin(); it != inhibitArcs.end(); ++it)
-            result += (*it)->source_code() + "\n";
-        result += "}\n";
+            result += "\t\t" + (*it)->source_code() + "\n";
+        result += "\t}\n";
     }
     if (guard != "")
-        result += "guard : " + guard + "\n";
+        result += "\tguard : " + guard + "\n";
     if (priority != "")
-        result += "priority : " + priority + "\n";
+        result += "\tpriority : " + priority + "\n";
     if (description != "")
-        result += "description : " + description + "\n";
+        result += "\tdescription : " + description + "\n";
     if (safe != "")
-        result += "safe\n";
-    result += "}";
+        result += "\tsafe\n";
+    result += "}\n";
     return result;
 }
 

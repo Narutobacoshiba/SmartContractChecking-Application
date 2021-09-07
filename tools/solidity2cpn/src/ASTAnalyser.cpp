@@ -5,7 +5,6 @@
 #include <string>
 
 #include "../include/ASTAnalyser.hpp"
-#include "../include/ASTVisitor.hpp"
 
 namespace SOL2CPN {
 
@@ -36,28 +35,25 @@ void ASTAnalyser::set_do_not_produce_source(bool _do_not_produce_source) {
 }
 
 RootNodePtr ASTAnalyser::analyse() {
-    before(visitor_arg);
-    std::stringstream import, pragma;
     std::string line;
     while (ptr_ast_line != ast_lines.end()) {
         std::string keyword = Utils::retrieve_string_element(*ptr_ast_line, 0, " ");
-        //std::cout<<keyword<<" ---- "; 
+        
         Utils::debug_info("Contract-level ast line handling: " + *ptr_ast_line);
-        if (keyword == TokenPragmaDirective) {
-            // visitor function and class yet implemented
-            // using original source
+        /* if (keyword == TokenPragmaDirective) {
+
             get_next_token(TokenSource);
             line = Utils::substr_by_edge(*ptr_ast_line, "Source: \"", "\"");
             remove_escapes(line);
             pragma << line;
-        } else if (keyword == TokenImportDirective ) {
-            // same as TokenPragmaDirective
-            // using original source
+        } else 
+        if (keyword == TokenImportDirective ) {
             get_next_token(TokenSource);
             line = Utils::substr_by_edge(*ptr_ast_line, "Source: \"", "\"");
             remove_escapes(line); 
             import << line;
-        } else if (keyword == TokenContractDefinition ) {
+        } else */ 
+        if (keyword == TokenContractDefinition ) {
             std::string contract_name = Utils::retrieve_string_element(*ptr_ast_line, 1, " ");
             contract_name = Utils::substr_by_edge(contract_name, "\"", "\"");
             ContractDefinitionNodePtr contract(new ContractDefinitionNode(contract_name));
@@ -249,26 +245,19 @@ RootNodePtr ASTAnalyser::analyse() {
         }
         if (ptr_ast_line == ast_lines.end()) break;
         ++ptr_ast_line;
-    }
-
+    } 
     Utils::debug_info("File processing finished");
 
     RootNodePtr ast_root = std::make_shared<RootNode>();
-    ast_root->set_import(import.str());
-    ast_root->set_pragma(pragma.str());
 
     if (!do_not_produce_source) {
-        Indentation indentation;
         for (auto it_contract = contracts.begin(); it_contract != contracts.end(); ++it_contract) {
             ast_root->add_field(*it_contract);
-            // result << (*it_contract)->source_code(indentation);
         }
 
         Utils::debug_info("New code generated");
     }
-    SOL2CPN::Indentation indentation;
-    ast_root->source_code(indentation);
-    after();
+    
     return ast_root;
 }
 
@@ -392,31 +381,27 @@ BlockNodePtr ASTAnalyser::handle_block() {
     std::string token = get_next_token();
     BlockNodePtr block = std::make_shared<BlockNode>();
     while (token != "" && ptr_ast_line != ast_lines.end() && indentation < get_current_indentation()) {
-        ASTNodePtr block_node_ptr = get_unknown(token);
-        block->add_statement(block_node_ptr);
-        /*
-        block->append_subnode(get_statement_equivalent_node());
         if (token == TokenExpressionStatement) {
             ExpressionStatementNodePtr expression = handle_expression_statament();
-            block->append_subnode(expression);
+            block->add_statement(expression);
         } else if (token == TokenEmitStatement) {
             EmitStatementNodePtr emit_stmt = handle_emit_statement();
-            block->append_subnode(emit_stmt);
+            block->add_statement(emit_stmt);
         } else if (token == TokenIfStatement) {
-            block->append_subnode(handle_if_statement());
+            block->add_statement(handle_if_statement());
         } else if (token == TokenForStatement) {
-            block->append_subnode(handle_for_statement());
+            block->add_statement(handle_for_statement());
         } else if (token == TokenWhileStatement) {
             //block->append_subnode(handle_while_statement());
         } else if (token == TokenDoWhileStatement) {
             //block->append_subnode(handle_do_while_statament());
         } else if (token == TokenVariableDeclarationStatement) {
             VariableDeclarationStatementNodePtr variable_decl_stmt = handle_variable_declaration_statament();
-            block->append_subnode(variable_decl_stmt);
+            block->add_statement(variable_decl_stmt);
         } else if (token == TokenReturn) {
             ReturnNodePtr return_node = handle_return();
-            block->append_subnode(return_node);
-        }*/
+            block->add_statement(return_node);
+        }
         token = get_next_token();
     }
     --ptr_ast_line;
