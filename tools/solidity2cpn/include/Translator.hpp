@@ -102,7 +102,7 @@ private:
     bool translateUnknowFunction(std::string func_name);
 
     std::map<std::string,std::string> DataTypeRange{
-        {"uint","range 0 .. (int'last)"},
+        {"uint","range 0 .. 1000"},
         {"uint8","range 0 .. 10"},
         {"bytes32","range 0 .. 1000"},
         {"address","range 0 .. 100"}
