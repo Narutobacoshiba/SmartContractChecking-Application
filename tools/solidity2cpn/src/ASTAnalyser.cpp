@@ -41,7 +41,6 @@ RootNodePtr ASTAnalyser::analyse() {
         
         Utils::debug_info("Contract-level ast line handling: " + *ptr_ast_line);
         /* if (keyword == TokenPragmaDirective) {
-
             get_next_token(TokenSource);
             line = Utils::substr_by_edge(*ptr_ast_line, "Source: \"", "\"");
             remove_escapes(line);
