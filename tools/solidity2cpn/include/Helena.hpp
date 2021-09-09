@@ -659,6 +659,8 @@ public:
 
     void add_inhibitArc(const ArcNodePtr& _node);
 
+    void add_let(const std::string& _node);
+
     void set_guard(const std::string& _guard);
     std::string get_guard() const;
 
@@ -675,6 +677,7 @@ private:
     std::vector<ArcNodePtr> inArcs;
     std::vector<ArcNodePtr> outArcs;
     std::vector<ArcNodePtr> inhibitArcs;
+    std::vector<std::string> lets;
     std::string guard;
     std::string priority;
     std::string description;

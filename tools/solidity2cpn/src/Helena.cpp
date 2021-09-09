@@ -2,6 +2,7 @@
 
 namespace SOL2CPN {
 
+
 LnaNodeType LnaNode::get_node_type() const {
     return node_type;
 }
@@ -384,7 +385,7 @@ std::string FunctionNode::source_code() {
     if (returnType != "")
         result += " -> " + returnType;
     if (body != "")
-        result += "{\n" + body + "}\n}";
+        result += "{\n" + body + "\n}\n";
     else 
         result += ";\n";
     return result;
@@ -504,6 +505,13 @@ std::string TransitionNode::source_code() {
     for (auto it = outArcs.begin(); it != outArcs.end(); ++it)
         result += "\t\t" + (*it)->source_code() + "\n";
     result += "\t}\n";
+    if (lets.size() != 0) {
+        result += "\tlet {\n";
+        for(auto it = lets.begin(); it != lets.end(); ++it){
+            result += "\t\t" + (*it) + "\n";
+        }
+        result += "\t}\n";
+    }
     if (inhibitArcs.size() != 0) {
         result += "\tinhibit {\n";
         for (auto it = inhibitArcs.begin(); it != inhibitArcs.end(); ++it)
