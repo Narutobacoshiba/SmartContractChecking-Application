@@ -43,11 +43,11 @@ std::string NetNode::source_code() {
         result << ")";        
     }
     result << " {\n";
-    result << "\n------- Color definition -------\n\n";
+    result << "\n/* ------- Color definition ------- */\n\n";
     for (auto it = color_nodes.begin(); it != color_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
-    result << "\n------- State color definition -------\n\n";
+    result << "\n/* ------- State color definition ------- */\n\n";
     StructColorNodePtr state = std::make_shared<StructColorNode>();
     state->set_name("STATE");
     for (auto it = state_color.begin(); it != state_color.end(); ++it) {
@@ -60,19 +60,19 @@ std::string NetNode::source_code() {
     for (auto it = func_color.begin(); it != func_color.end(); ++it) {
         result << (*it)->source_code();
     }
-    result << "\n------- Function definition -------\n\n";
+    result << "\n/* ------- Function definition ------- */\n\n";
     for (auto it = function_nodes.begin(); it != function_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
-    result << "\n------- Place definition -------\n\n";
+    result << "\n/* ------- Place definition ------- */\n\n";
     for (auto it = place_nodes.begin(); it != place_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
-    result << "\n------- Transition definition -------\n\n";
+    result << "\n/* ------- Transition definition ------- */\n\n";
     for (auto it = transition_nodes.begin(); it != transition_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
-    result << "\n------- Another definition -------\n\n";
+    result << "\n/* ------- Another definition ------- */\n\n";
     for (auto it = lna_nodes.begin(); it != lna_nodes.end(); ++it) {
         result << (*it)->source_code();
     }

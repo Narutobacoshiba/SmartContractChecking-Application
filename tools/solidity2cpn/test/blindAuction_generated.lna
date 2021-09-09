@@ -1,21 +1,21 @@
 BlindAuction {
 
-------- Color definition -------
+/* ------- Color definition ------- */
 
 type address : range 0 .. 100;
-type uint : range 0 .. (int'last);
+type uint : range 0 .. 1000;
 type USER : struct { address adr;uint balance;};
 type bytes32 : range 0 .. 1000;
 type Bid : struct { bytes32 blindedBid;uint deposit;};
-type list_Bid : list[nat] of Bid with capacity 100;
+type list_Bid : list[nat] of Bid with capacity 50;
 type struct_bids : struct { address key;list_Bid value;};
-type list_bids : list[nat] of struct_bids with capacity 100;
+type list_bids : list[nat] of struct_bids with capacity 50;
 type struct_pendingReturns : struct { address key;uint value;};
-type list_pendingReturns : list[nat] of struct_pendingReturns with capacity 100;
-type list_uint : list[nat] of uint with capacity 100;
-type list_bytes32 : list[nat] of bytes32 with capacity 100;
+type list_pendingReturns : list[nat] of struct_pendingReturns with capacity 50;
+type list_uint : list[nat] of uint with capacity 50;
+type list_bytes32 : list[nat] of bytes32 with capacity 50;
 
-------- State color definition -------
+/* ------- State color definition ------- */
 
 type STATE : struct { list_bids bids;bytes32 blindedBid;uint contractBalance;uint deposit;uint highestBid;address highestBidder;list_pendingReturns pendingReturns;};
 type bid_par : struct { USER sender;uint value;};
@@ -28,7 +28,7 @@ type withdraw_par : struct { USER sender;uint value;};
 type withdraw_return : struct { USER sender;};
 type withdraw_state : struct { STATE state;withdraw_par par;};
 
-------- Function definition -------
+/* ------- Function definition ------- */
 
 function getlist_bidsIndex (list_bids list_bids_par, address a) -> int{
 	int i := 0;
@@ -39,8 +39,8 @@ function getlist_bidsIndex (list_bids list_bids_par, address a) -> int{
 		return -1;
 }
 function push_bid_enter_value1 (bid_state bid_enter_pr) -> bid_state{
-	bid_state bid_enter_temp = bid_enter_pr;
-	bid_enter_temp.state.bids[getlist_bidsIndex(bid_enter_pr.state.bids,bid_enter_pr.par.sender.adr)] := bid_enter_temp.state.bids[getlist_bidsIndex(bid_enter_pr.state.bids,bid_enter_pr.par.sender.adr)] & {bid_enter_pr.state.blindedBid,bid_enter_pr.par.value};
+	bid_state bid_enter_temp := bid_enter_pr;
+	bid_enter_temp.state.bids[getlist_bidsIndex(bid_enter_pr.state.bids,bid_enter_pr.par.sender.adr)].value := bid_enter_temp.state.bids[getlist_bidsIndex(bid_enter_pr.state.bids,bid_enter_pr.par.sender.adr)].value & {bid_enter_pr.state.blindedBid,bid_enter_pr.par.value};
 	return bid_enter_temp;
 }
 function getlist_pendingReturnsIndex (list_pendingReturns list_pendingReturns_par, address a) -> int{
@@ -52,30 +52,30 @@ function getlist_pendingReturnsIndex (list_pendingReturns list_pendingReturns_pa
 		return -1;
 }
 function change_bid_pu1_value2 (bid_state bid_pu1_pr) -> bid_state{
-	bid_state bid_pu1_temp = bid_pu1_pr;
-	bid_pu1_temp.state.pendingReturns[getlist_pendingReturnsIndex(bid_pu1_pr.state.pendingReturns,bid_pu1_pr.par.sender.adr)] := bid_pu1_temp.state.pendingReturns[getlist_pendingReturnsIndex(bid_pu1_pr.state.pendingReturns,bid_pu1_pr.par.sender.adr)] + bid_pu1_pr.par.value;
+	bid_state bid_pu1_temp := bid_pu1_pr;
+	bid_pu1_temp.state.pendingReturns[getlist_pendingReturnsIndex(bid_pu1_pr.state.pendingReturns,bid_pu1_pr.par.sender.adr)].value := bid_pu1_temp.state.pendingReturns[getlist_pendingReturnsIndex(bid_pu1_pr.state.pendingReturns,bid_pu1_pr.par.sender.adr)].value + bid_pu1_pr.par.value;
 	return bid_pu1_temp;
 }
 function keccak256 (uint value, bytes32 secret) -> bytes32{
-	return bytes32 (nat (bv) * nat (sk));
+	return bytes32 (nat (value) * nat (secret));
 }
 function change_reveal_is6_value7 (reveal_state reveal_is6_pr, uint reveal_value4_pr) -> reveal_state{
-	reveal_state reveal_is6_temp = reveal_is6_pr;
+	reveal_state reveal_is6_temp := reveal_is6_pr;
 	reveal_is6_temp.state.highestBid := reveal_value4_pr;
 	return reveal_is6_temp;
 }
 function change_reveal_ass7_value8 (reveal_state reveal_ass7_pr) -> reveal_state{
-	reveal_state reveal_ass7_temp = reveal_ass7_pr;
-	reveal_ass7_temp.state.highestBidder := reveal_ass7_pr.par.sender;
+	reveal_state reveal_ass7_temp := reveal_ass7_pr;
+	reveal_ass7_temp.state.highestBidder := reveal_ass7_pr.par.sender.adr;
 	return reveal_ass7_temp;
 }
 function change_withdraw_eif4_value6 (withdraw_state withdraw_eif4_pr) -> withdraw_state{
-	withdraw_state withdraw_eif4_temp = withdraw_eif4_pr;
-	withdraw_eif4_temp.state.pendingReturns[getlist_pendingReturnsIndex(withdraw_eif4_pr.state.pendingReturns,withdraw_eif4_pr.par.sender.adr)] := 0;
+	withdraw_state withdraw_eif4_temp := withdraw_eif4_pr;
+	withdraw_eif4_temp.state.pendingReturns[getlist_pendingReturnsIndex(withdraw_eif4_pr.state.pendingReturns,withdraw_eif4_pr.par.sender.adr)].value := 0;
 	return withdraw_eif4_temp;
 }
 
-------- Place definition -------
+/* ------- Place definition ------- */
 
 place state {
 	dom : STATE;
@@ -180,7 +180,7 @@ place withdraw_eif6 {
 	dom : withdraw_state;
 }
 
-------- Transition definition -------
+/* ------- Transition definition ------- */
 
 transition bid {
 	in {
@@ -196,7 +196,7 @@ transition bid_push1 {
 		bid_enter : <(bid_enter_pr)>;
 	}
 	out {
-		bid_pu1 : <(push_bid_enter_value1(bid_enter_pr))>;;
+		bid_pu1 : <(push_bid_enter_value1(bid_enter_pr))>;
 	}
 }
 transition bid_assign2 {
@@ -204,7 +204,7 @@ transition bid_assign2 {
 		bid_pu1 : <(bid_pu1_pr)>;
 	}
 	out {
-		bid_ass2 : <(change_bid_pu1_value2(bid_pu1_pr))>;;
+		bid_ass2 : <(change_bid_pu1_value2(bid_pu1_pr))>;
 	}
 }
 transition bid_endfunc {
@@ -232,16 +232,16 @@ transition reveal_revert1 {
 	out {
 		state : <(reveal_enter_pr.state)>;
 	}
-	guard : not((reveal_enter_pr.reveal_par.values'size) = (reveal_enter_pr.reveal_par.secrets'size));
+	guard : not((reveal_enter_pr.par.values'size) = (reveal_enter_pr.par.secrets'size));
 }
 transition reveal_n_revert1 {
 	in {
 		reveal_enter : <(reveal_enter_pr)>;
 	}
 	out {
-		reveal_nr1 : <(reveal_enter)>;
+		reveal_nr1 : <(reveal_enter_pr)>;
 	}
-	guard : (reveal_enter_pr.reveal_par.values'size) = (reveal_enter_pr.reveal_par.secrets'size);
+	guard : (reveal_enter_pr.par.values'size) = (reveal_enter_pr.par.secrets'size);
 }
 transition reveal_initforloop_2 {
 	in {
@@ -261,7 +261,7 @@ transition reveal_condforloop_2 {
 		reveal_cond_2 : <(reveal_init_2_pr)>;
 		reveal_i_2 : <(reveal_i_2_pr)>;
 	}
-	guard : ((reveal_i_2_pr) < (reveal_init_2_pr.reveal_par.values'size)) and ((reveal_i_2_pr) < (reveal_init_2_pr.state.bids[getlist_bidsIndex(reveal_init_2_pr.state.bids,reveal_init_2_pr.par.sender.adr)]'size));
+	guard : ((reveal_i_2_pr) < (reveal_init_2_pr.par.values'size)) and ((reveal_i_2_pr) < (reveal_init_2_pr.state.bids[getlist_bidsIndex(reveal_init_2_pr.state.bids,reveal_init_2_pr.par.sender.adr)].value'size));
 }
 transition reveal_vardec3 {
 	in {
@@ -270,7 +270,7 @@ transition reveal_vardec3 {
 	}
 	out {
 		reveal_vd3 : <(reveal_cond_2_pr)>;
-		reveal_bid13 : <(reveal_cond_2_pr.state.bids[getlist_bidsIndex(reveal_cond_2_pr.state.bids,reveal_cond_2_pr.par.sender.adr)][reveal_i_2_pr])>;
+		reveal_bid13 : <(reveal_cond_2_pr.state.bids[getlist_bidsIndex(reveal_cond_2_pr.state.bids,reveal_cond_2_pr.par.sender.adr)].value[reveal_i_2_pr])>;
 		reveal_i_2 : <(reveal_i_2_pr)>;
 	}
 }
@@ -281,7 +281,7 @@ transition reveal_vardec4 {
 	}
 	out {
 		reveal_vd4 : <(reveal_vd3_pr)>;
-		reveal_value4 : <(reveal_vd3_pr.reveal_par.values[reveal_i_2_pr])>;
+		reveal_value4 : <(reveal_vd3_pr.par.values[reveal_i_2_pr])>;
 		reveal_i_2 : <(reveal_i_2_pr)>;
 	}
 }
@@ -292,7 +292,7 @@ transition reveal_vardec5 {
 	}
 	out {
 		reveal_vd5 : <(reveal_vd4_pr)>;
-		reveal_secret5 : <(reveal_vd4_pr.reveal_par.secrets[reveal_i_2_pr])>;
+		reveal_secret5 : <(reveal_vd4_pr.par.secrets[reveal_i_2_pr])>;
 		reveal_i_2 : <(reveal_i_2_pr)>;
 	}
 }
@@ -309,7 +309,7 @@ transition reveal_ifstate6 {
 		reveal_value4 : <(reveal_value4_pr)>;
 		reveal_secret5 : <(reveal_secret5_pr)>;
 	}
-	guard : (((reveal_bid13_pr.blindedBid) = (keccak256(reveal_value4_pr,reveal_secret5_pr))) and ((reveal_bid13_pr.deposit) >= (reveal_value4_pr))) and ((reveal_value4_pr) > (reveal_vd5_pr.state.highestBid))
+	guard : (((reveal_bid13_pr.blindedBid) = (keccak256(reveal_value4_pr,reveal_secret5_pr))) and ((reveal_bid13_pr.deposit) >= (reveal_value4_pr))) and ((reveal_value4_pr) > (reveal_vd5_pr.state.highestBid));
 }
 transition reveal_assign7 {
 	in {
@@ -318,7 +318,7 @@ transition reveal_assign7 {
 	}
 	out {
 		reveal_value4 : <(reveal_value4_pr)>;
-		reveal_ass7 : <(change_reveal_is6_value7(reveal_is6_pr,reveal_value4_pr))>;;
+		reveal_ass7 : <(change_reveal_is6_value7(reveal_is6_pr,reveal_value4_pr))>;
 	}
 }
 transition reveal_assign8 {
@@ -326,7 +326,7 @@ transition reveal_assign8 {
 		reveal_ass7 : <(reveal_ass7_pr)>;
 	}
 	out {
-		reveal_ass8 : <(change_reveal_ass7_value8(reveal_ass7_pr))>;;
+		reveal_ass8 : <(change_reveal_ass7_value8(reveal_ass7_pr))>;
 	}
 }
 transition reveal_endif8 {
@@ -339,12 +339,18 @@ transition reveal_endif8 {
 }
 transition reveal_n_ifstate8 {
 	in {
-		reveal_ass8 : <(reveal_ass8_pr)>;
+		reveal_vd5 : <(reveal_vd5_pr)>;
+		reveal_bid13 : <(reveal_bid13_pr)>;
+		reveal_value4 : <(reveal_value4_pr)>;
+		reveal_secret5 : <(reveal_secret5_pr)>;
 	}
 	out {
-		reveal_eif8 : <(reveal_ass8_pr)>;
+		reveal_eif8 : <(reveal_vd5_pr)>;
+		reveal_bid13 : <(reveal_bid13_pr)>;
+		reveal_value4 : <(reveal_value4_pr)>;
+		reveal_secret5 : <(reveal_secret5_pr)>;
 	}
-	guard : not ((((reveal_bid13_pr.blindedBid) = (keccak256(reveal_value4_pr,reveal_secret5_pr))) and ((reveal_bid13_pr.deposit) >= (reveal_value4_pr))) and ((reveal_value4_pr) > (reveal_vd5_pr.state.highestBid)))
+	guard : not ((((reveal_bid13_pr.blindedBid) = (keccak256(reveal_value4_pr,reveal_secret5_pr))) and ((reveal_bid13_pr.deposit) >= (reveal_value4_pr))) and ((reveal_value4_pr) > (reveal_vd5_pr.state.highestBid)));
 }
 transition reveal_forinc8 {
 	in {
@@ -365,7 +371,7 @@ transition reveal_condforloop_n_2 {
 		reveal_n_cond_2 : <(reveal_init_2_pr)>;
 		reveal_i_2 : <(reveal_i_2_pr)>;
 	}
-	guard : not (((reveal_i_2_pr) < (reveal_init_2_pr.reveal_par.values'size)) and ((reveal_i_2_pr) < (reveal_init_2_pr.state.bids[getlist_bidsIndex(reveal_init_2_pr.state.bids,reveal_init_2_pr.par.sender.adr)]'size)));
+	guard : not (((reveal_i_2_pr) < (reveal_init_2_pr.par.values'size)) and ((reveal_i_2_pr) < (reveal_init_2_pr.state.bids[getlist_bidsIndex(reveal_init_2_pr.state.bids,reveal_init_2_pr.par.sender.adr)].value'size)));
 }
 transition reveal_endfunc {
 	in {
@@ -391,7 +397,7 @@ transition withdraw_vardec1 {
 	}
 	out {
 		withdraw_vd1 : <(withdraw_enter_pr)>;
-		withdraw_amount1 : <(withdraw_enter_pr.state.pendingReturns[getlist_pendingReturnsIndex(withdraw_enter_pr.state.pendingReturns,withdraw_enter_pr.par.sender.adr)])>;
+		withdraw_amount1 : <(withdraw_enter_pr.state.pendingReturns[getlist_pendingReturnsIndex(withdraw_enter_pr.state.pendingReturns,withdraw_enter_pr.par.sender.adr)].value)>;
 	}
 }
 transition withdraw_ifstate2 {
@@ -403,7 +409,7 @@ transition withdraw_ifstate2 {
 		withdraw_is2 : <(withdraw_vd1_pr)>;
 		withdraw_amount1 : <(withdraw_amount1_pr)>;
 	}
-	guard : (withdraw_amount1_pr) > (0)
+	guard : (withdraw_amount1_pr) > (0);
 }
 transition withdraw_ifstate3 {
 	in {
@@ -412,7 +418,7 @@ transition withdraw_ifstate3 {
 	out {
 		withdraw_is3 : <(withdraw_is2_pr)>;
 	}
-	guard : (withdraw_is2_pr.par.sender) != (withdraw_is2_pr.state.highestBidder)
+	guard : (withdraw_is2_pr.par.sender.adr) != (withdraw_is2_pr.state.highestBidder);
 }
 transition withdraw_funcall4 {
 	in {
@@ -420,7 +426,7 @@ transition withdraw_funcall4 {
 		withdraw_amount1 : <(withdraw_amount1_pr)>;
 	}
 	out {
-		withdraw_fc4 : <({withdraw_is3_pr.state :: (contractBalance := withdraw_is3_pr.state.contractBalance - (amount)),withdraw_is3_pr.par})>;
+		withdraw_fc4 : <({withdraw_is3_pr.state :: (contractBalance := withdraw_is3_pr.state.contractBalance - (withdraw_amount1_pr)),withdraw_is3_pr.par})>;
 		withdraw_amount1 : <(withdraw_amount1_pr)>;
 	}
 }
@@ -439,7 +445,7 @@ transition withdraw_else4 {
 	out {
 		withdraw_else4 : <(withdraw_is2_pr)>;
 	}
-	guard : not ((withdraw_is2_pr.par.sender) != (withdraw_is2_pr.state.highestBidder))
+	guard : not ((withdraw_is2_pr.par.sender.adr) != (withdraw_is2_pr.state.highestBidder));
 }
 transition withdraw_funcall5 {
 	in {
@@ -464,7 +470,7 @@ transition withdraw_assign6 {
 		withdraw_eif4 : <(withdraw_eif4_pr)>;
 	}
 	out {
-		withdraw_ass6 : <(change_withdraw_eif4_value6(withdraw_eif4_pr))>;;
+		withdraw_ass6 : <(change_withdraw_eif4_value6(withdraw_eif4_pr))>;
 	}
 }
 transition withdraw_endif6 {
@@ -477,12 +483,14 @@ transition withdraw_endif6 {
 }
 transition withdraw_n_ifstate6 {
 	in {
-		withdraw_ass6 : <(withdraw_ass6_pr)>;
+		withdraw_vd1 : <(withdraw_vd1_pr)>;
+		withdraw_amount1 : <(withdraw_amount1_pr)>;
 	}
 	out {
-		withdraw_eif6 : <(withdraw_ass6_pr)>;
+		withdraw_eif6 : <(withdraw_vd1_pr)>;
+		withdraw_amount1 : <(withdraw_amount1_pr)>;
 	}
-	guard : not ((withdraw_amount1_pr) > (0))
+	guard : not ((withdraw_amount1_pr) > (0));
 }
 transition withdraw_endfunc {
 	in {
@@ -494,7 +502,7 @@ transition withdraw_endfunc {
 	}
 }
 
-------- Another definition -------
+/* ------- Another definition ------- */
 
 
 }

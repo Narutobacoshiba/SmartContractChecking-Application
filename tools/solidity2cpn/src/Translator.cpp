@@ -222,7 +222,7 @@ void Translator::translateIfStatement(IfStatementNodePtr statement){
 
     TransitionNodePtr ifstate = std::make_shared<TransitionNode>();
     ifstate->set_name(current_subnet->get_name()+"_ifstate"+std::to_string(current_subnet->count));
-    ifstate->set_guard(exp);
+    ifstate->set_guard(exp+";");
 
     std::vector<PlaceNodePtr> out_places;
     PlaceNodePtr cflow = std::make_shared<PlaceNode>();
@@ -309,7 +309,7 @@ void Translator::translateIfStatement(IfStatementNodePtr statement){
 
             TransitionNodePtr else_trans = std::make_shared<TransitionNode>();
             else_trans->set_name(current_subnet->get_name()+"_else"+std::to_string(current_subnet->count));
-            else_trans->set_guard("not ("+exp+")");
+            else_trans->set_guard("not ("+exp+");");
 
             for(int i = 0; i < init_out_places.size(); i++){
                 PlaceNodePtr param = init_out_places[i];
@@ -362,10 +362,10 @@ void Translator::translateIfStatement(IfStatementNodePtr statement){
     }else{
         TransitionNodePtr not_if = std::make_shared<TransitionNode>();
         not_if->set_name(current_subnet->get_name()+"_n_ifstate"+std::to_string(current_subnet->count));
-        not_if->set_guard("not ("+exp+")");
+        not_if->set_guard("not ("+exp+");");
 
-        for(int i = 0; i < current_subnet->num_in_places(); i++){
-            PlaceNodePtr param = current_subnet->get_in_places(i);
+        for(int i = 0; i < init_out_places.size(); i++){
+            PlaceNodePtr param = init_out_places[i];
             ArcNodePtr arc = std::make_shared<ArcNode>();
             arc->set_placeName(param->get_name());
             arc->set_label("<("+param->get_name()+"_pr)>");
@@ -483,7 +483,7 @@ void Translator::translateAssignment(AssignmentNodePtr assignment){
     std::string out_arc_label = "<(" + cvalue->get_name() + "(";
     
     std::string fbody;
-    fbody = "\t"+left_place->get_domain() + " " + left_place->get_name() + "_temp = " + left_place->get_name() + "_pr;\n\t";
+    fbody = "\t"+left_place->get_domain() + " " + left_place->get_name() + "_temp " + NormalSign[EqualSign] + " " + left_place->get_name() + "_pr;\n\t";
     std::string l_member;
     l_member = temp[0] + "_temp";
     for(int i = 1; i < temp.size()-1; i++){
@@ -534,7 +534,7 @@ void Translator::translateAssignment(AssignmentNodePtr assignment){
             }
         }
     }
-    out_arc_label = out_arc_label.substr(0, out_arc_label.size()-1) + "))>;";
+    out_arc_label = out_arc_label.substr(0, out_arc_label.size()-1) + "))>";
     out_arc_c->set_label(out_arc_label);
     assign->add_outArc(out_arc_c);
 
@@ -569,6 +569,13 @@ void Translator::translatePushFunctionCall(ASTNodePtr identifier, ASTNodePtr arg
     std::string arg = translateRequireExpressionToString(argument);
     std::string ident = translateRequireExpressionToString(identifier);
     
+    if(current_subnet->get_place_tempdata_by_name(arg) != nullptr){
+        arg = current_subnet->get_place_tempdata_by_name(arg)->get_name()+"_pr";
+    }
+    if(current_subnet->get_place_tempdata_by_name(ident) != nullptr){
+        ident = current_subnet->get_place_tempdata_by_name(ident)->get_name()+"_pr";
+    }
+
     TransitionNodePtr push_trans = std::make_shared<TransitionNode>();
     push_trans->set_name(current_subnet->get_name()+"_push"+std::to_string(current_subnet->count));
 
@@ -591,7 +598,7 @@ void Translator::translatePushFunctionCall(ASTNodePtr identifier, ASTNodePtr arg
     std::string out_arc_label = "<(" + cvalue->get_name() + "(";
     
     std::string fbody;
-    fbody = "\t"+ident_place->get_domain() + " " + ident_place->get_name() + "_temp = " + ident_place->get_name() + "_pr;\n\t";
+    fbody = "\t"+ident_place->get_domain() + " " + ident_place->get_name() + "_temp " + NormalSign[EqualSign] + " " + ident_place->get_name() + "_pr;\n\t";
     std::string l_member;
     l_member = temp[0] + "_temp";
     for(int i = 1; i < temp.size()-1; i++){
@@ -642,7 +649,7 @@ void Translator::translatePushFunctionCall(ASTNodePtr identifier, ASTNodePtr arg
         }
     }
 
-    out_arc_label = out_arc_label.substr(0, out_arc_label.size()-1) + "))>;";
+    out_arc_label = out_arc_label.substr(0, out_arc_label.size()-1) + "))>";
     out_arc_c->set_label(out_arc_label);
     push_trans->add_outArc(out_arc_c);
 
@@ -654,6 +661,9 @@ void Translator::translatePushFunctionCall(ASTNodePtr identifier, ASTNodePtr arg
 
 void Translator::translateTransferFunctionCall(ASTNodePtr identifier, ASTNodePtr argument){
     std::string arg = translateRequireExpressionToString(argument);
+    if(current_subnet->get_place_tempdata_by_name(arg) != nullptr){
+        arg = current_subnet->get_place_tempdata_by_name(arg)->get_name()+"_pr";
+    }
     
     std::vector<PlaceNodePtr> out_places;
     TransitionNodePtr func_trans = std::make_shared<TransitionNode>();
@@ -691,7 +701,7 @@ std::string Translator::translateMemberAcess(std::string _member){
     if(_member == "length"){
         return "'size";
     }else if(_member == "sender"){
-        return ".sender";
+        return ".sender.adr";
     }
     return "."+_member;
 }
@@ -781,7 +791,7 @@ std::string Translator::translateRequireExpressionToString(ASTNodePtr _arg){
                 if(current_subnet->get_in_place_by_domain(current_subnet->get_name()+"_par") != nullptr){
                     ret = current_subnet->get_in_place_by_domain(current_subnet->get_name()+"_par")->get_name()+"_pr."+operand;
                 }else if(current_subnet->get_in_place_by_domain(current_subnet->get_name()+"_state") != nullptr){
-                    ret = current_subnet->get_in_place_by_domain(current_subnet->get_name()+"_state")->get_name()+"_pr."+current_subnet->get_name()+"_par."+operand;
+                    ret = current_subnet->get_in_place_by_domain(current_subnet->get_name()+"_state")->get_name()+"_pr.par."+operand;
                 }
             }else{
                 ret = operand;
@@ -796,9 +806,12 @@ std::string Translator::translateRequireExpressionToString(ASTNodePtr _arg){
         if(Utils::isInteger(index_value)){
             ret = identifier+"["+index_value+"]";
         } else if(current_subnet->get_place_tempdata_by_name(index_value) != nullptr){
-            ret = identifier+"["+current_subnet->get_place_tempdata_by_name(index_value)->get_name()+"_pr]";
-        }else{
-            index_value = translateUnknowExpressionToString(index_value); 
+            if(current_subnet->get_place_tempdata_by_name(index_value)->get_domain() == "address"){
+                ret = identifier+"["+current_subnet->get_place_tempdata_by_name(index_value)->get_name()+"_pr].value";
+            }else{
+                ret = identifier+"["+current_subnet->get_place_tempdata_by_name(index_value)->get_name()+"_pr]";
+            }
+        }else{ 
             std::string func_name;
             std::string func_param;
             std::vector<std::string> target = Utils::split(identifier,".");
@@ -816,7 +829,7 @@ std::string Translator::translateRequireExpressionToString(ASTNodePtr _arg){
             param2->set_type("address");
 
             net->add_function(createGetMappingIndexFunction(func_name,std::vector<ParamNodePtr>{param1,param2}));
-            ret = identifier+"["+func_name+"("+identifier+","+index_value+")]";
+            ret = identifier+"["+func_name+"("+identifier+","+index_value+")].value";
         }
     }else if(_arg->get_node_type() == NodeTypeLiteral){
         ret = std::static_pointer_cast<LiteralNode>(_arg)->get_literal();
@@ -875,7 +888,7 @@ void Translator::generateKeccak256(){
     func->add_parameter(uint_par);
     func->add_parameter(byte32_par);
 
-    std::string body = "\treturn bytes32 (nat (bv) * nat (sk));";
+    std::string body = "\treturn bytes32 (nat (value) * nat (secret));";
     func->set_body(body);
 
     net->add_function(func);
@@ -936,7 +949,7 @@ void Translator::translateRequireFunctionCall(ASTNodePtr _arg){
 
             ArcNodePtr noarc = std::make_shared<ArcNode>();
             noarc->set_placeName(cflow->get_name());
-            noarc->set_label("<("+param->get_name()+")>");
+            noarc->set_label("<("+param->get_name()+"_pr)>");
             not_revert->add_outArc(noarc);         
         }else if(param->get_place_type() == PlaceTypeTempData){
             revert->add_outArc(arc);
@@ -1263,7 +1276,7 @@ ListColorNodePtr Translator::translateMapping(ASTNodePtr _node) {
     list_color->set_name("list_"+ var_node->get_variable_name());
     list_color->set_index_type("nat");
     list_color->set_element_type(struct_color->get_name());
-    list_color->set_capacity("100");
+    list_color->set_capacity("50");
 
     if(!is_in_function){
         net->add_state_color(list_color,var_node->get_variable_name());
@@ -1278,7 +1291,7 @@ ListColorNodePtr Translator::translateArray(ArrayTypeNameNodePtr array_node){
     list_color->set_name("list_"+ base_type->get_type_name());
     list_color->set_index_type("nat");
     list_color->set_element_type(base_type->get_type_name());
-    list_color->set_capacity("100");
+    list_color->set_capacity("50");
     return list_color;
 }
 
