@@ -130,4 +130,14 @@ type nvarchar(200),
 value nvarchar(200),
 fid int not null references Function(id)
 )
+
+""")
+mycursor.execute("""
+CREATE DATABASE Argument (
+id int primary key AUTO_INCREMENT,
+fid int not null references Function(id)
+value nvarchar(200),
+secrets nvarchar(200)
+)
+
 """)
