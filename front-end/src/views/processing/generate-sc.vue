@@ -8,9 +8,7 @@
                         <confirm @cancel="closeConfirm" @confirm="cfRemoveSC(currentSC)" :dialog="dialog"/>
                     </div>
             </div>
-            <div id="header">
-                <p>Selected Smart Contracts</p>
-            </div>
+            <div id="header">Selected Smart Contracts</div>
             <div id="table">
                 <div id = "sscs-header">
                     <div id="sscsh-name">Selected Smart Contracts</div>
@@ -233,8 +231,9 @@
 #header{
     margin-top: 20px;
     text-align: center;
-    font-size: 2.3em;
+    font-size: 35px;
     font-weight: bold;
+    margin-bottom: 20px;
 }
 /*--table-- */
 #table{

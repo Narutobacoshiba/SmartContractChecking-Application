@@ -1,8 +1,6 @@
 <template>
     <div id="ssc-body">
-        <div id="ssc-header">
-            <p>Smart Contracts Selection</p>
-        </div>
+        <div id="ssc-header">Smart Contracts Selection</div>
         <div id="ssc-selected">
             <div id="sscs-body">
                 <div id = "sscs-header">
@@ -169,9 +167,9 @@ export default ({
 #ssc-header{
     margin-top: 20px;
     text-align: center;
-    font-size: 2.3em;
+    font-size: 35px;
     font-weight: bold;
-    color: #5fb8ee;
+    margin-bottom: 20px;
 }
 #ssc-selected{
     width: 60%;
