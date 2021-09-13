@@ -1,5 +1,8 @@
 <template>
   <div class="form">
+    <label>Full Name:</label>
+    <input type="text" required v-model="fullname" placeholder="Full Name" />
+
     <label>Username:</label>
     <input type="text" required v-model="username" placeholder="User Name" />
 
@@ -7,55 +10,36 @@
     <input type="password" required v-model="password" placeholder="Password" />
     <div v-if="error" class="error">{{ error }}</div>
 
-    <div class="terms">
-      <input type="checkbox" v-model="terms" />
-      <label>Remember Me</label>
-    </div>
-
     <div class="submit">
-      <button @click="login()">Login</button>
+      <button @click="register()" id="register-btn">Register</button>
     </div>
     <div id="login-with">
       <button class="btn btn-google" type="submit">
-        <i class="fab fa-google mr-2"></i> Sign in with Google
+        <i class="fab fa-google mr-2"></i> Continue with Google
       </button>
       <button class="btn btn-facebook" type="submit">
-        <i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook
+        <i class="fab fa-facebook-f mr-2"></i> Continue with Facebook
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { makeLogin } from "../services/auth";
 export default {
   name: "login",
   data() {
     return {
       username: "",
       password: "",
+      fullname: "",
       terms: false,
       error: "",
     };
   },
   methods: {
-    login() {
-      const result = makeLogin(this.username, this.password);
-      console.log('Bat Dau Gui Request')
-      result
-        .then((response) => {
-          let user = response.data;
-          if (user.exist == undefined) {
-            console.log(user); //-> Then transfer to Json web token
-            this.$router.push("/");
-          } else {
-            this.error = "Login Fail!!!";
-          }
-        })
-        .catch((err) => {
-          this.error = err;
-        });
-    },
+    register(){
+
+    }
   },
 };
 </script>
@@ -106,6 +90,9 @@ button {
 }
 .submit {
   text-align: center;
+}
+#register-btn{
+    width: 50%;
 }
 .error {
   color: #ff0062;

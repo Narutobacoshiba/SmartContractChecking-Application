@@ -1,8 +1,6 @@
 <template>
     <div id="ssc-body">
-        <div id="ssc-header">
-            <p>Smart Contracts Selection</p>
-        </div>
+        <div id="ssc-header">Smart Contracts Selection</div>
         <div id="ssc-selected">
             <div id="sscs-body">
                 <div id = "sscs-header">
@@ -50,12 +48,12 @@
                     </div>
                 </div>
                 <div id="showConfirmation" v-if="showConfirmation">
-                <div id="removeAll-holder" v-if="confirmation == 'removeAll'">
-                    <confirm @cancel="closeConfirm" @confirm="cfRemoveAll" :dialog="dialog" />
-                </div>
-                <div id="removeSC-holder"  v-if="confirmation == 'removeSC'">
-                    <confirm @cancel="closeConfirm" @confirm="cfRemoveSC(idxSC)" :dialog="dialog"/>
-                </div>
+                    <div id="removeAll-holder" v-if="confirmation == 'removeAll'">
+                        <confirm @cancel="closeConfirm" @confirm="cfRemoveAll" :dialog="dialog" />
+                    </div>
+                    <div id="removeSC-holder"  v-if="confirmation == 'removeSC'">
+                        <confirm @cancel="closeConfirm" @confirm="cfRemoveSC(currentSC)" :dialog="dialog"/>
+                    </div>
                 </div>
             </div>
             </div>
@@ -76,7 +74,7 @@ export default ({
             showConfirmation: false,
             dialog: {},
             confirmation: '',
-            idxSC: null
+            currentSC: null,
         }
     },
     mounted(){
@@ -107,12 +105,19 @@ export default ({
         removeSC(sc){
             this.dialog = {title: 'Remove Smart Contract', message: "Are you sure to remove '"+sc.name+"' ?", confirmbtn: 'Remove'}
             this.confirmation = 'removeSC'
+            this.currentSC = sc.id
             this.showConfirmation = true
         },
-        cfRemoveSC(idx){
-            this.list_selected_sc.splice(idx,1)
+        cfRemoveSC(id){
+            for( var i = 0; i < this.list_selected_sc.length; i++){ 
+                if ( this.list_selected_sc[i].id === id) { 
+                    this.list_selected_sc.splice(i, 1); 
+                }
+            }
+            this.$store.commit("data/RemoveSCSelectedInfor", id);
             this.$cookies.set("_ssc",JSON.stringify(this.list_selected_sc))
             this.closeConfirm()
+            console.log(this.$store.getters["data/GetSCSelectedInfor"])
         },
         routing(param){
             if(param == "back"){
@@ -162,9 +167,9 @@ export default ({
 #ssc-header{
     margin-top: 20px;
     text-align: center;
-    font-size: 2.3em;
+    font-size: 35px;
     font-weight: bold;
-    color: #5fb8ee;
+    margin-bottom: 20px;
 }
 #ssc-selected{
     width: 60%;
@@ -377,7 +382,6 @@ export default ({
     height: 100%;
     background-color: rgba(0,0,0,0.2);
     z-index: 1;
-    /* display: flex; */
     align-items: center;
     justify-content: center;
 }
