@@ -7,7 +7,7 @@ const state = {
         selectedSCInfor: {},
         selectedContext: [],
         selectedVulnerbility: [],
-        configVul: {id: 1}
+        configVul: {}
     },
     views: {
         process: 'sc-selection',
@@ -94,27 +94,26 @@ const state = {
         var name = list_funcs[i].name
         list_lvs[name] = lvs
       }
-      
-      if(vuls.length > 0){
-        var obj = {}
-        if(Object.keys(state.data.selectedSCInfor[sc_id]).length > 0) obj = state.data.selectedSCInfor[sc_id];
-        var info = {list_gvs: list_gvs, list_lvs: list_lvs}
-        for(let i = 0; i< vuls.length; i++){
-          var vid = vuls[i].id
-          if(!(vid in obj) || Object.keys(obj[vid]).length === 0){
-            obj[vid] = info
+        if(vuls.length > 0){
+          var obj = {}
+          if(sc_id in state.data.selectedSCInfor) obj = state.data.selectedSCInfor[sc_id];
+          var info = {list_gvs: list_gvs, list_lvs: list_lvs}
+          for(let i = 0; i< vuls.length; i++){
+            var vid = vuls[i].id
+              if(!(vid in obj)) obj[vid] = info;
+          
+          }
+          state.data.selectedSCInfor[sc_id] = obj
+        }else{
+          state.data.selectedSCInfor[sc_id] = {}
         }
-        }
-        state.data.selectedSCInfor[sc_id] = obj
-      }else{
-        state.data.selectedSCInfor[sc_id] = {}
-      }
       console.log(state.data.selectedSCInfor)
     },
     RemoveSCSelectedInfor(state, expriedkey) {
       delete state.data.selectedSCInfor[expriedkey];
     },
     addGVSInfor(state, {vul_id, sc_id, data}){
+      console.log(state.data.selectedSCInfor[sc_id][vul_id].list_gvs)
       state.data.selectedSCInfor[sc_id][vul_id].list_gvs = data
     },
     addLVSInfor(state, {sc_id,vul_id, func_name, data}){

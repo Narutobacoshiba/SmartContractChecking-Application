@@ -107,12 +107,12 @@ export function DetectLTLFormatError(ltl_code){
     }
 
     if(left_level_err.length > 0){
-        error.detail = "to many '('"
+        error.detail = "too many '('"
         error.addr = left_level_err
         return error
     }
     if(right_level_err.length > 0){
-        error.detail = "to many ')'"
+        error.detail = "too many ')'"
         error.addr = right_level_err
         return error
     }

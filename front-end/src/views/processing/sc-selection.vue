@@ -77,13 +77,10 @@ export default ({
             dialog: {},
             confirmation: '',
             currentSC: null,
-            config_vul: null
         }
     },
     mounted(){
         this.list_selected_sc = this.$store.getters["data/GetSelectedSC"]
-        this.config_vul = this.$store.getters["data/GetConfigVul"]
-        console.log(this.config_vul)
     },
     computed: {
         selectedSc(){
