@@ -17,8 +17,6 @@
 
 using namespace std;
 
-namespace SOL2CPN {
-
 const string PlaceTypeNone = "0";
 const string PlaceTypeData = "1";
 const string PlaceTypeControlFlow = "2";
@@ -458,9 +456,12 @@ public:
     void set_typeDef(const std::string& _typeDef);
     std::string get_typeDef() const;
 
+    void set_init_value(const std::string& _value);
+    std::string get_init_value() const;
 protected:
     std::string name;
     std::string typeDef;
+    std::string init_value;
 };
 typedef std::shared_ptr<ColorNode> ColorNodePtr;
 
@@ -685,5 +686,4 @@ private:
 };
 typedef std::shared_ptr<TransitionNode> TransitionNodePtr;
 
-}
 #endif //SOL2CPN_HELENA_H_

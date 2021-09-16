@@ -1,7 +1,7 @@
 #ifndef SOL2CPN_TRANSLATOR_H_
 #define SOL2CPN_TRANSLATOR_H_
 
-#include "Helena.hpp"
+#include "../../helena/Helena.hpp"
 #include "nlohmann/json.hpp"
 #include "ASTNodes.hpp"
 #include <set>
@@ -47,7 +47,8 @@ public:
     void add_tempdata_place(const PlaceNodePtr& _place, const std::string& _name );
     void remove_tempdata_place_bye_name(const string& _name);
     PlaceNodePtr get_place_tempdata_by_name(const string& _name);
-    
+    std::map<std::string,PlaceNodePtr> get_place_tempdata();
+
     void set_wft_transition(const TransitionNodePtr& _trans);
     TransitionNodePtr get_wft_transition();
 
@@ -73,6 +74,7 @@ private:
     bool is_in_function;
     SubNetNodePtr current_subnet;
 
+    void genereteInitStateFunction();
     void generatePredefinedColors();
     void createInTransition(FunctionDefinitionNodePtr func);
     StructColorNodePtr translateStruct(StructDefinitionNodePtr struct_node);
@@ -105,7 +107,8 @@ private:
         {"uint","range 0 .. 1000"},
         {"uint8","range 0 .. 10"},
         {"bytes32","range 0 .. 1000"},
-        {"address","range 0 .. 100"}
+        {"address","range 0 .. 100"},
+        {"bool","enum(true,false)"},
     };
 
     std::map<std::string, std::string> NormalSign = {

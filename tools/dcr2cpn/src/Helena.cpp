@@ -1,7 +1,6 @@
 #include "../include/Helena.hpp"
 
-namespace SOL2CPN {
-
+namespace DCR2CPN{
 
 LnaNodeType LnaNode::get_node_type() const {
     return node_type;
@@ -43,36 +42,36 @@ std::string NetNode::source_code() {
         result << ")";        
     }
     result << " {\n";
-    result << "\n/* ------- Color definition ------- */\n\n";
+    result << "\n/**************************\n" 
+           << "*** Colours Definitions ***\n"
+           << "**************************/\n\n";
     for (auto it = color_nodes.begin(); it != color_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
-    result << "\n/* ------- State color definition ------- */\n\n";
-    StructColorNodePtr state = std::make_shared<StructColorNode>();
-    state->set_name("STATE");
-    for (auto it = state_color.begin(); it != state_color.end(); ++it) {
-        ComponentNodePtr component = std::make_shared<ComponentNode>();
-        component->set_name(it->first);
-        component->set_type((it->second)->get_name());
-        state->add_component(component);
-    }
-    result << state->source_code();
-    for (auto it = func_color.begin(); it != func_color.end(); ++it) {
-        result << (*it)->source_code();
-    }
-    result << "\n/* ------- Function definition ------- */\n\n";
+    result << "\n/**************************\n" 
+           << "*** Functions Definitions ***\n"
+           << "**************************/\n\n";
     for (auto it = function_nodes.begin(); it != function_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
-    result << "\n/* ------- Place definition ------- */\n\n";
+    result << "\n/**************************\n" 
+           << "*** PLACES ***\n"
+           << "**************************/\n\n";
     for (auto it = place_nodes.begin(); it != place_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
-    result << "\n/* ------- Transition definition ------- */\n\n";
+    result << "\n/**************************\n" 
+           << "*** TRANSITIONS ***\n"
+           << "**************************/\n\n";
     for (auto it = transition_nodes.begin(); it != transition_nodes.end(); ++it) {
+        result << "\n/*"
+               << "\n*  Function: " + (*it)->get_name()
+               << "\n*/\n";
         result << (*it)->source_code();
     }
-    result << "\n/* ------- Another definition ------- */\n\n";
+    result << "\n/**************************\n" 
+           << "*** ANOTHER ***\n"
+           << "**************************/\n\n";
     for (auto it = lna_nodes.begin(); it != lna_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
@@ -146,32 +145,6 @@ void NetNode::add_transition(const TransitionNodePtr& _transition){
 
 TransitionNodePtr NetNode::get_transiton_by_name(const string& _name){
     for (auto it = transition_nodes.begin(); it != transition_nodes.end(); ++it)
-            if ((*it)->get_name() == _name)
-                return (*it);
-    return nullptr;
-}
-
-void NetNode::add_state_color(const ColorNodePtr& _color, std::string _name){
-    if(get_state_color_by_name(_name) == nullptr){
-        state_color[_name] = _color;
-    }
-}
-
-ColorNodePtr NetNode::get_state_color_by_name(const string& _name){
-    if ( state_color.find(_name) != state_color.end() ) {
-        return state_color[_name];
-    } 
-    return nullptr;
-}
-
-void NetNode::add_func_color(const ColorNodePtr& _color){
-    if(get_func_color_by_name(_color->get_name()) == nullptr){
-        func_color.push_back(_color);
-    }
-}
-
-ColorNodePtr NetNode::get_func_color_by_name(const string& _name){
-    for (auto it = func_color.begin(); it != func_color.end(); ++it)
             if ((*it)->get_name() == _name)
                 return (*it);
     return nullptr;
@@ -576,4 +549,5 @@ void TransitionNode::set_safe(const std::string& _safe) {
 std::string TransitionNode::get_safe() const {
     return safe;
 }
+
 }
