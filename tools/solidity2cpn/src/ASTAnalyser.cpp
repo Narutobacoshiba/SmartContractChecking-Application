@@ -10,13 +10,13 @@ namespace SOL2CPN {
 
 ASTAnalyser::ASTAnalyser(std::stringstream& _ast_sstream, nlohmann::json& _jsonast, const bool& single_file, const std::string& file_name, const std::string& _visitor_arg) {
     std::string new_line;
+    
     while (std::getline(_ast_sstream, new_line)) {
         //Utils::trim(new_line);
         if (!new_line.empty()) {
             ast_lines.emplace_back(new_line);
         }
     }
-
     ast_json = _jsonast;
     ptr_ast_line = ast_lines.begin();
     num_functions_current_contract = 0;
