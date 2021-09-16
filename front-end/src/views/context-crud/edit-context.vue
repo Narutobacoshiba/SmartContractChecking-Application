@@ -35,7 +35,7 @@ export default {
     },
   data() {
     return {
-      context_id: this.$route.params.id,
+      context_id: this.$route.params.context_id,
       code: "",
       name: "",
       description: ""
