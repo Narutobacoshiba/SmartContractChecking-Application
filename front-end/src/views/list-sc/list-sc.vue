@@ -37,28 +37,25 @@
                         </div>
                     </div>
                     <div id="table-content">
-                        <div v-for="(sc,idx) in getShowList" :key="idx" class="table-row">
+                        <div v-for="sc in smartcontracts" :key="sc.id" class="table-row">
                             <div class="index-cell table-cell">
-                                {{inc(idx)}}
+                                {{sc.id}}
                             </div>
                             <div class="name-cell table-cell">
                                 {{sc.name}}
                             </div>
                             <div class="date-modified-cell table-cell">
-                                {{convertDate(sc.date_modified)}}
+                                
                             </div>
                             <div class="action-cell table-cell">
-                                <div v-if="chosen_table != 'pending'">
+                                <div >
                                     <i class="material-icons" @click="editSC(sc.id,sc.name)">edit</i>
-                                    <i class="material-icons" @click="deleteSC(sc.id,sc.name,chosen_table)">delete</i>
+                                    <i class="material-icons" @click="deleteSmartContracts(sc)">delete</i>
                                 </div>
-                                <div v-else>
-                                    <i class="material-icons" @click="editSC(sc.id,sc.name)">edit</i>
-                                    <i class="material-icons" @click="acceptPendingSC(sc.id,sc.name)">check_circle_outline</i>
-                                    <i class="material-icons" @click="deleteSC(sc.id,sc.name,chosen_table)">delete</i>
-                                </div>
+                               
                             </div>
                         </div>
+                        
                     </div>
 
                 </div>
@@ -78,34 +75,22 @@
         </div>
     </div>
 </template>
-
 <script>
-import {GetCommonSmartContracts, GetPendingSmartContracts, 
-       GetPrivateSmartContracts, DeleteSmartContracts, 
-       AddNewSmartContractsInfor} 
-from "../../services/data"
 
-export default ({
-    data(){
-        return {
-            chosen_table: "common",
-            list_smart_contracts: {
-                common: [],
-                private: [],
-                pending: []
-            },
-
-            num_of_record: 7,
-            num_of_page: 0,
-            pageNum: 1,
-        }
-    },
-    mounted(){
-        this.list_smart_contracts.common = GetCommonSmartContracts()
-        this.list_smart_contracts.private = GetPrivateSmartContracts()
-        this.list_smart_contracts.pending = GetPendingSmartContracts()
-    },
-    computed: {
+export default {
+  name: 'App',
+  data(){
+    return{
+      chosen_table: "common",
+      smartcontract: {
+      },
+      smartcontracts: []
+    }
+  },
+  async created(){
+    await this.getSmartContracts();
+  },
+  computed: {
         GetTableName(){
             if(this.chosen_table == "common"){
                 return "Common Smart Contracts"
@@ -118,83 +103,31 @@ export default ({
             }
             return "Invalid Table"
         },
-        showAddButton(){
-            return (this.chosen_table != 'pending') && 
-                  (this.chosen_table != 'common' || (this.$store.state.user.currentUser.role == 'admin'))
-        },
-        isSuperior(){
-            return this.$store.state.user.currentUser.role == 'admin'
-        },
-        getShowList(){
-            let ret = []
-            for(let i = 0; i<this.list_smart_contracts[this.chosen_table].length; i++){
-                if(((this.pageNum-1)*this.num_of_record <= i) && (this.pageNum*this.num_of_record > i)){
-                    ret.push(this.list_smart_contracts[this.chosen_table][i])
-                }
-            }
-            return ret
-        },
-        countPageNum(){
-            return ""+this.pageNum+"/"+this.numOfPage
-        },
-        numOfItems(){
-            return this.list_smart_contracts[this.chosen_table].length
-        },
-        numOfRecod(){
-            if(this.list_smart_contracts[this.chosen_table].length < this.num_of_record*this.pageNum){
-                return this.list_smart_contracts[this.chosen_table].length-this.num_of_record*(this.pageNum-1)
-            }
-            return this.num_of_record
-        },
-        numOfPage(){
-            return Math.ceil(this.numOfItems/this.num_of_record)
-        }
+  },
+  methods: {
+    async getSmartContracts(){
+      var response = await fetch('http://localhost:8000/api/smartcontracts/');
+      this.smartcontracts = await response.json();
     },
-    methods: {
-        inc(value){
-            return value+1
-        },
-        convertDate(value){
-            var date = new Date(value)
-            var datestring = ""+date.getDate()
-            var monthstring = ""+(date.getMonth()+1)
-            var hourstring = ""+date.getHours()
-            var minutestring = ""+date.getMinutes()
-            hourstring = (hourstring.length == 1 ? '0'+hourstring:hourstring)
-            minutestring = (minutestring.length == 1 ? '0'+minutestring:minutestring)
-            datestring = (datestring.length == 1 ? '0'+datestring:datestring)
-            monthstring = (monthstring.length == 1 ? '0'+monthstring:monthstring)
-            return datestring+"/"+monthstring+"/"+date.getFullYear()+" "+hourstring+":"+minutestring
-        },
-        ChooseTable(value){
-            this.chosen_table = value
-        },
-        addSmartContract(){
-            this.$router.push({name: "AddSc",params: {options: this.chosen_table, parent_path: "/list-sc"}})
-        },
-        deleteSC(sc_id, sc_name, option){
-            if(confirm("Are you sure to delete the Smart Contract named: '"+sc_name+"' ?")){
-                DeleteSmartContracts(sc_id, option)
+    async deleteSmartContracts(sc){
+      await this.getSmartContracts();
+       if(confirm("Are you sure to delete the Smart Contract named: '"+sc.name+"' ?")){
+                await fetch(`http://localhost:8000/api/smartcontracts/${sc.id}/`, {
+          method: 'delete',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.sc)
+      });
             }
-        },
-        editSC(sc_id, sc_name){
-            this.$router.push({name: "EditSc", params: {sc_id: sc_id, name: sc_name, parent_path: "/list-sc"}})
-        },
-        acceptPendingSC(sc_id, sc_name){
-            AddNewSmartContractsInfor(sc_id,sc_name,"common")
-            DeleteSmartContracts(sc_id,"pending")
-        },
-        goPage(value){
-            this.pageNum = value
-        }
-    },
-    watch: {
-        chosen_table: function(){
-            this.pageNum = 1
-        },
+      
+        await this.getSmartContracts();
     }
-})
+  }
+}
 </script>
+
+
 
 <style scoped>
 #body{

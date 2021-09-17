@@ -13,7 +13,7 @@
     </div>
 
     <div class="submit">
-      <button>Login</button>
+      <button @click="login()">Login</button>
     </div>
     <div id="login-with">
       <button class="btn btn-google" type="submit">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-//import { makeLogin } from "../services/auth";
+import { makeLogin } from "../services/auth";
 export default {
   name: "login",
   data() {
@@ -40,21 +40,21 @@ export default {
   },
   methods: {
     login() {
-      // const result = makeLogin(this.username, this.password);
-      // console.log('Bat Dau Gui Request')
-      // result
-      //   .then((response) => {
-      //     let user = response.data;
-      //     if (user.exist == undefined) {
-      //       console.log(user); //-> Then transfer to Json web token
-      //       this.$router.push("/");
-      //     } else {
-      //       this.error = "Login Fail!!!";
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     this.error = err;
-      //   });
+      const result = makeLogin(this.username, this.password);
+      console.log('Bat Dau Gui Request')
+      result
+        .then((response) => {
+          let user = response.data;
+          if (user.exist == undefined) {
+            console.log(user); //-> Then transfer to Json web token
+            this.$router.push("/");
+          } else {
+            this.error = "Login Fail!!!";
+          }
+        })
+        .catch((err) => {
+          this.error = err;
+        });
     },
   },
 };
