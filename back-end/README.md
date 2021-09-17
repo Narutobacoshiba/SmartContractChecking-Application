@@ -1,2 +1,0 @@
-# SmartContractChecking-Application
-Back End

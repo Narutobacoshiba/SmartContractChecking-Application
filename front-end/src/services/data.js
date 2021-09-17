@@ -1,3 +1,5 @@
+import { SmartContractsService } from "./smartcontract.service"
+
 /* -------Vulnerabilities------ */
 var listVulnerabilities = [
   {id: 1, name: "Integer Overfow/Underflow", description: "The [] Out of range is a property of vulnerability",},
@@ -41,8 +43,9 @@ var listPendingSmartContracts =[
   {id: 18, name: "perry the platypus", date_modified: 1608130465663, type: "pending"},
 ]
 
-export function GetCommonSmartContracts() {
-    return listCommonSmartContracts
+export async function GetCommonSmartContracts() {
+    //return listCommonSmartContracts
+  return await (await SmartContractsService.GetCommonSmartContracts()).data;
 }
 
 export function GetPrivateSmartContracts() {
@@ -120,15 +123,24 @@ export function AddNewSmartContractsInfor(sc_id, sc_name, options){
     listPendingSmartContracts.push({id: sc_id, name: sc_name, type: "pending"})
   }
 }
-export function AddNewSmartContracts(sc_id, sc_name, options, code){
-  AddNewSmartContractsInfor(sc_id,sc_name,options)
-  SmartContractCode[sc_id] = code
+export async function AddNewSmartContracts(sc_id, sc_name, options){
+  // AddNewSmartContractsInfor(sc_id,sc_name,options)
+  // SmartContractCode[sc_id] = code
+  var d = new Date,
+  dformat = [d.getFullYear(),
+  d.getMonth() + 1, d.getDate()].join('-') + ' ' +
+    [d.getHours(),
+    d.getMinutes(),
+    d.getSeconds()].join(':');
+  await SmartContractsService.CreateSmartContracts(sc_id.words[0],sc_name,dformat,options)
 }
 
-export function UpdateSmartContractCode(sc_id, code){
-  if(sc_id in SmartContractCode){
-    SmartContractCode[sc_id] = code
-  }
+export async function UpdateSmartContractCode(sc_id, name_sc, code){
+  // if(sc_id in SmartContractCode){
+  //   SmartContractCode[sc_id] = code
+  // }
+  console.log(code)
+  await SmartContractsService.UpdateSmartContracts(sc_id,name_sc)
 }
 
 function deleteSmartContractFromList(list,sc_id){
