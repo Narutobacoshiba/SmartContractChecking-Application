@@ -30,7 +30,7 @@ std::string removeNoneAlnum(const std::string& inp_string)
     for (int i = 0; i < s.size(); i++) {
         if ((s[i] < 'A' || s[i] > 'Z') &&
             (s[i] < 'a' || s[i] > 'z') && 
-            (s[i] < '0' || s[i] > '9'))
+            (s[i] < '0' || s[i] > '9') && s[i] != '_')
         {  
             s.erase(i, 1);
             i--;
