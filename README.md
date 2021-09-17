@@ -35,7 +35,6 @@ pip install mysqlclient
 python manage.py migrate
 ```
 #### 8. Done setup!
-```
                                            
                                            
 
