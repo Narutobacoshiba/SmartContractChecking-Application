@@ -229,6 +229,22 @@ void SubNet::add_ccondition(const std::string& param){
     cCondition.push_back(param);
 }
 
+/**
+ * Create a transition with:
+ *      in arcs: marking: <(execute,response,include)>;
+ *               cflow: epsilon;
+ * 
+ *      out arc: marking: <(new_execute,new_response,new_include)>
+ *               cflow: epsilon;
+ *  
+ *           -new_execute: add 1 to position 'transition.id' in execute
+ *           -new_response: based on response relations
+ *           -new_include: based on include and exclude relations
+ * 
+ *      guard: include['transition.id'] = 1 and new_condition
+ * 
+ *           -new_condition: based on condition and milestone relations
+ */ 
 TransitionNodePtr SubNet::createTransition(){
     TransitionNodePtr trans = std::make_shared<TransitionNode>();
     trans->set_name(name);
@@ -323,7 +339,7 @@ SubNetPtr Translator::get_subnet_by_name(const std::string& subnet_name){
 }
 
 std::string Translator::get_subnet_id(const std::string& subnet_name ){
-    if(subnets.find(subnet_name) == subnets.end()){
+    if(subnets.find(subnet_name) != subnets.end()){
         return subnets[subnet_name]->get_id();
     }
     return "-1";
