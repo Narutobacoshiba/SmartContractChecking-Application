@@ -28,8 +28,15 @@ python -m pip install django-cors-headers
 ```
 pip install mysqlclient
 ```
-#### 6. done setup!
+#### 6. Create a database name "testcrud" in MySql
 
+#### 7. Applying migrations to database
+```
+python manage.py migrate
+```
+#### 8. Done setup!
+                                           
+                                           
 
 ## run file back-end 
 ```
