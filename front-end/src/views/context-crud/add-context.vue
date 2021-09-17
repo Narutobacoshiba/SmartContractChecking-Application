@@ -1,24 +1,38 @@
 <template>
   <div id="main">
-    <div id="header">
-      Create a new Context
-    </div>
+    <div id="header">Create a new Context</div>
     <div class="body">
       <div class="row" id="name-section">
         <div class="title col-2">Name</div>
-        <div class="col-10"><input class="form-control" type="text" v-model="name" /></div>
+        <div class="col-10">
+          <input class="form-control" type="text" v-model="name" />
+        </div>
       </div>
       <div class="row">
         <div class="title col-2">Description</div>
-        <div class="col-10"><textarea class="form-control" type="text" v-model="description"></textarea></div>
+        <div class="col-10">
+          <textarea
+            class="form-control"
+            type="text"
+            v-model="description"
+          ></textarea>
+        </div>
       </div>
       <div class="editor-area">
-          <span class="title">Formular</span>
-        <EditorSc v-model="code"/>
+        <span class="title">Formular</span>
+        <EditorSc v-model="code" />
       </div>
       <div id="group-btn">
-          <button id="button-add" type="button" @click="clickHandler('save')">Save</button>
-          <button id="button-cancel" type="button" @click="clickHandler('cancel')">Cancel</button>
+        <button id="button-add" type="button" @click="clickHandler('save')">
+          Save
+        </button>
+        <button
+          id="button-cancel"
+          type="button"
+          @click="clickHandler('cancel')"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   </div>
@@ -26,34 +40,46 @@
 
 <script>
 import EditorSc from "../../components/EditorSc.vue";
-
+import { CreateContext } from "../../services/data";
 export default {
   data() {
     return {
-      code: "",
+      code: "pragma solidity >=0.4.22 <0.6.0;\npragma solidity ^0.5.6 ;\ncontract Ballot {\n}",
       name: "",
-      description: ""
+      description: "",
     };
   },
   components: { EditorSc },
   methods: {
-
-    SaveContext(){
-        //   Save context into database here
+    checkValidateContext() {
+      if (this.code !== "" && this.name !== "" && this.description !== "") {
+        return true;
+      }
+      return false;
     },
-
-    clickHandler(action){
-        if(action == "save"){
-            this.$router.push(this.$route.params.parent_path);
-        } 
-        else if(action == "cancel"){
-            if(!this.$route.params.parent_path) this.$router.push('/');
-            else this.$router.push(this.$route.params.parent_path);
+    async clickHandler(action) {
+      if (action == "save") {
+        //check validation of field context
+        if (!this.checkValidateContext()) {
+          console.log("Fail");
+          return;
         }
-    }
+        const response = await CreateContext(
+          this.name,
+          this.description,
+          this.code
+        );
+        if (response && response.status === 201) {
+          // this.$router.push(this.$route.params.parent_path);
+          this.$router.push({name:"ListContext"});
+        }
+      } else if (action == "cancel") {
+        if (!this.$route.params.parent_path) this.$router.push("/");
+        else this.$router.push(this.$route.params.parent_path);
+      }
+    },
   },
-  computed: {
-  }
+  computed: {},
 };
 </script>
 <style scoped>
@@ -63,7 +89,7 @@ export default {
   height: 100%;
   margin: 0;
 }
-#header{
+#header {
   text-align: center;
   font-size: 35px;
   font-weight: bold;
@@ -76,11 +102,11 @@ export default {
   width: 700px;
   margin: auto;
 }
-.title{
-    font-size: 18px;
+.title {
+  font-size: 18px;
 }
-#name-section{
-    margin-bottom: 30px;
+#name-section {
+  margin-bottom: 30px;
 }
 /* editor area */
 .editor-area {
@@ -90,7 +116,7 @@ export default {
   /* left: 40px; */
 }
 /* button style */
-#group-btn{
+#group-btn {
   width: 100%;
   align-items: center;
   display: flex;

@@ -1,6 +1,7 @@
 <template>
   <div id="ace-editor">
-    <div class="tool-bar"></div>
+    <div class="tool-bar">
+    </div>
     <editor
       v-model="content"
       @init="editorInit"
@@ -16,9 +17,15 @@
 export default {
   data() {
     return {
-      content:
-        "pragma solidity >=0.4.22 <0.6.0;\npragma solidity ^0.5.6 ;\ncontract Ballot {\n}",
+      // content:this.code
     };
+  },
+  model: {
+    prop: "content",
+    event: "input",
+  },
+  props: {
+    content: String,
   },
   components: {
     editor: require("vue2-ace-editor"),

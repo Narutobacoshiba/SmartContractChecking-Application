@@ -68,7 +68,7 @@ export class SmartContractsService extends BaseService {
     }
     /*---------Update Smartcontract--------- */
     static async UpdateSmartContracts(id, sc_name) {
-        const smartContractById = await this.request({ auth: true }).get(`${this.getUnity()}/scbyid?demo=${id}`)
+        const smartContractById = await this.request({ auth: true }).get(`${this.getUnity()}/scbyid?id=${id}`)
         try {
             const paraData = {
                 "id": id,

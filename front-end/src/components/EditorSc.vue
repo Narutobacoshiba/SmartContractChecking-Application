@@ -1,14 +1,9 @@
 <template>
   <div id="editor">
     <div class="text-edit textarea">
-      <!-- <textarea
-        id="code"
-        name="code"
-        :value="code"
-        v-on:input="$emit('input', $event.target.value)"
-      >
-      </textarea> -->
-      <AceEditor />
+      <AceEditor v-bind:content="code"/>
+    </div>
+    <div>
     </div>
   </div>
 </template>
@@ -25,7 +20,9 @@ export default {
     code: String,
   },
   data() {
-    return {};
+    return {
+
+    };
   },
   components: { AceEditor },
   methods: {},
