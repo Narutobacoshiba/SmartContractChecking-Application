@@ -81,32 +81,32 @@ std::string UnfoldingModel::source_code(){
 
     result << name << "{\n";
     result << "\n/**************************\n" 
-           << "*** Colours Definitions ***\n"
-           << "**************************/\n\n";
+           <<   "*** Colours Definitions ***\n"
+           <<   "**************************/\n\n";
     for (auto it = coloursDef.begin(); it != coloursDef.end(); ++it) {
         result << *it;
     }
-    result << "\n/**************************\n" 
-           << "*** Functions Definitions ***\n"
-           << "**************************/\n\n";
+    result << "\n/****************************\n" 
+           <<   "*** Functions Definitions ***\n"
+           <<   "****************************/\n\n";
     for (auto it = functionDef.begin(); it != functionDef.end(); ++it) {
         result << *it;
     }
-    result << "\n/**************************\n" 
-           << "*** PLACES ***\n"
-           << "**************************/\n\n";
+    result << "\n/*************\n" 
+           <<   "*** PLACES ***\n"
+           <<   "*************/\n\n";
     for (auto it = placesDef.begin(); it != placesDef.end(); ++it) {
         result << *it;
     }
-    result << "\n/**************************\n" 
-           << "*** TRANSITIONS ***\n"
-           << "**************************/\n\n";
+    result << "\n/******************\n" 
+           <<   "*** TRANSITIONS ***\n"
+           <<   "******************/\n\n";
     for (auto it = transitionDef.begin(); it != transitionDef.end(); ++it) {
         result << *it;
     }
-    result << "\n/**************************\n" 
-           << "*** ANOTHER ***\n"
-           << "**************************/\n\n";
+    result << "\n/**************\n" 
+           <<   "*** ANOTHER ***\n"
+           <<   "**************/\n\n";
     result << "\n}";
     return result.str();
 }
@@ -180,6 +180,19 @@ std::string TransitionHolder::get_sol(size_t i){
     return sol_transition[i];
 }
 
+
+void TransitionHolder::add_sol_place(const std::string& _place){
+    sol_places.push_back(_place);
+}
+
+std::string TransitionHolder::get_sol_place(size_t i){
+    return sol_places[i];
+}
+
+size_t TransitionHolder::num_sol_place(){
+    return sol_places.size();
+}
+
 TransitionHolderPtr Unfolding::get_transition_hodler_by_name(const std::string& _name){
     for(auto it = transitionHolder.begin(); it != transitionHolder.end(); ++it){
         if((*it)->get_name() == _name){
@@ -211,22 +224,19 @@ void Unfolding::add_sol_transition(const std::string& _name, const std::string& 
     }
 }
 
+void Unfolding::add_sol_place(const std::string& _name, const std::string& _place){
+    TransitionHolderPtr temp = get_transition_hodler_by_name(_name);
+    if(temp != nullptr){
+        temp->add_sol_place(_place);
+    }else{
+        TransitionHolderPtr new_th = std::make_shared<TransitionHolder>(_name);
+        new_th->add_sol_place(_place);
+        transitionHolder.push_back(new_th);
+    }
+}
 
 
 UnfoldingModelPtr Unfolding::unfolding(){
-    if(context == "dcr"){
-        unfolding_dcr_context();
-    }else{
-        unfolding_free_context();
-    }
-    return model;
-}
-
-void Unfolding::unfolding_free_context(){
-
-}
-
-void Unfolding::unfolding_dcr_context(){
     model = std::make_shared<UnfoldingModel>("test");
     
     while (ptr_context_line != _context_lines.end()){
@@ -260,110 +270,153 @@ void Unfolding::unfolding_dcr_context(){
                 std::string def = getSolStaticDefinition();
                 model->add_function(def);
             }else if(keyword == PLACES){
-                std::string def = getSolStaticDefinition();
-                model->add_place(def);
+                handleSolPlaces();
             }else if(keyword == TRANSITIONS){
                 handleSolTransitionDefinitionsDCR();
             }
         }
         ++ptr_sol_line;
     }
+    if(context == "dcr"){
+        unfolding_dcr_context();
+    }else{
+        unfolding_free_context();
+    }
 
+    return model;
+}
+
+void Unfolding::unfolding_free_context(){
+
+}
+
+void Unfolding::unfolding_dcr_context(){
     unfoldingTransitionInDCR();
 }
 
 void Unfolding::unfoldingTransitionInDCR(){
+    model->add_place("\n\tplace cflow {\n\t\tdom : epsilon;\n\t\tinit : epsilon;\n\t}");
+
     for(auto it = transitionHolder.begin(); it != transitionHolder.end(); ++it){
         model->add_transition("/*\n * Function: "+(*it)->get_name()+"\n */\n");
-        for(size_t i = 0; i < (*it)->num_context(); i++){
-            std::vector<std::string> temp = split((*it)->get_context(i),"\n");
-            std::stringstream _str;
-            auto st = temp.begin();
-                
-            _str << "\t" << *st << "\n";
-            while(retrieve_string_element(*(++st),0," ") != "out"){
-                _str << "\t" << *st << "\n";
+        if((*it)->get_name() == unfold_func){
+            model->add_place("\n\tplace "+(*it)->get_name()+"_cflow {\n\t\tdom : epsilon;\n\t}");
+            model->add_place("/*\n * Function: "+(*it)->get_name()+"\n */\n");
+            for(size_t i = 0; i < (*it)->num_sol_place(); i++){
+                model->add_place((*it)->get_sol_place(i));
             }
-            _str << "\t" << *st << "\n";
-            while(retrieve_string_element(*(++st),0," ") != "cflow"){
-                _str << "\t" << *st << "\n";
-            }
-            if((*it)->get_name() == unfold_func){
-                st++;
-                _str << "\t" << "\t\t" << (*it)->get_name() + "_cflow : epsilon;" << "\n";
-            }else{
-                _str << "\t" << *st << "\n";
-                st++;
-            }
-            while(st != temp.end()){
-                _str << "\t" << *st << "\n";
-                st++;
-            }
-                
-            model->add_transition(_str.str());
-        
-        }
 
-        bool first_require = true;
-        bool first_n_require = true;
-        for(size_t i = 0; i < (*it)->num_sol(); i++){
-            std::vector<std::string> temp = split((*it)->get_sol(i),"\n");
-            std::stringstream _str;
-            auto st = temp.begin();
-            
-            if((*st).find("_n_revert") != std::string::npos){
-                if(first_require){
+            for(size_t i = 0; i < (*it)->num_context(); i++){
+                std::vector<std::string> temp = split((*it)->get_context(i),"\n");
+                std::stringstream _str;
+                auto st = temp.begin();
+                
+                _str << "\t" << *st << "\n";
+                while(retrieve_string_element(*(++st),0," ") != "in"){
+                    _str << "\t" << *st << "\n";
+                }
+                _str << "\t" << *st << "\n";
+                _str << "\t\t\t" << "cflow : epsilon;" << "\n";
+                while(retrieve_string_element(*(++st),0," ") != "out"){
+                    _str << "\t" << *st << "\n";
+                }
+                _str << "\t" << *st << "\n";
+                _str << "\t\t\t" << (*it)->get_name() + "_cflow : epsilon;" << "\n";
+                st++;
+                while(st != temp.end()){
+                    _str << "\t" << *st << "\n";
+                    st++;
+                } 
+
+                model->add_transition(_str.str());
+            }
+
+            bool first_require = true;
+            bool first_n_require = true;
+            for(size_t i = 0; i < (*it)->num_sol(); i++){
+                std::vector<std::string> temp = split((*it)->get_sol(i),"\n");
+                std::stringstream _str;
+                auto st = temp.begin();
+                
+                if((*st).find("_n_revert") != std::string::npos){
+                    if(first_require){
+                        _str <<  *st << "\n";
+                        while(retrieve_string_element(*(st++),0," ") != "in"){
+                            _str <<  *st << "\n";
+                        }
+                        _str << "\t\t\t" << (*it)->get_name() + "_cflow : epsilon;" << "\n";
+                        while(st != temp.end()){
+                            _str << *st << "\n";
+                            st++;
+                        }
+                        first_require = false;
+                    }else{
+                        while(st != temp.end()){
+                            _str <<  *st << "\n";
+                            st++;
+                        }
+                    }
+                }else if((*st).find("_revert") != std::string::npos){
                     _str <<  *st << "\n";
-                    while(retrieve_string_element(*(st++),0," ") != "in"){
+                    if(first_n_require){
+                        while(retrieve_string_element(*(st++),0," ") != "in"){
+                            _str <<  *st << "\n";
+                        }
+                        _str << "\t\t\t" << (*it)->get_name() + "_cflow : epsilon;" << "\n";
+                        first_n_require = false;
+                    }
+                    while(retrieve_string_element(*(st++),0," ") != "out"){
                         _str <<  *st << "\n";
                     }
-                    _str << "\t\t\t" << (*it)->get_name() + "_cflow : epsilon;" << "\n";
+                    _str << "\t\t\t" << "cflow : epsilon;" << "\n";
                     while(st != temp.end()){
                         _str << *st << "\n";
                         st++;
                     }
-                    first_require = false;
+                }else if(i == (*it)->num_sol() - 1){
+                    _str <<  *st << "\n";
+                    while(retrieve_string_element(*(st++),0," ") != "out"){
+                        _str <<  *st << "\n";
+                    }
+                    _str << "\t\t\t" << "cflow : epsilon;" << "\n";
+                    while(st != temp.end()){
+                        _str <<  *st << "\n";
+                        st++;
+                    }
                 }else{
                     while(st != temp.end()){
                         _str <<  *st << "\n";
                         st++;
                     }
                 }
-            }else if((*st).find("_revert") != std::string::npos){
-                _str <<  *st << "\n";
-                if(first_n_require){
-                    while(retrieve_string_element(*(st++),0," ") != "in"){
-                         _str <<  *st << "\n";
-                    }
-                    _str << "\t\t\t" << (*it)->get_name() + "_cflow : epsilon;" << "\n";
-                    first_n_require = false;
-                }
-                while(retrieve_string_element(*(st++),0," ") != "out"){
-                    _str <<  *st << "\n";
-                }
-                _str << "\t\t\t" << "cflow : epsilon;" << "\n";
-                while(st != temp.end()){
-                    _str << *st << "\n";
-                    st++;
-                }
-            }else if(i == (*it)->num_sol() - 1){
-                _str <<  *st << "\n";
-                while(retrieve_string_element(*(st++),0," ") != "out"){
-                    _str <<  *st << "\n";
-                }
-                _str << "\t\t\t" << "cflow : epsilon;" << "\n";
-                while(st != temp.end()){
-                    _str <<  *st << "\n";
-                    st++;
-                }
-            }else{
-                while(st != temp.end()){
-                    _str <<  *st << "\n";
-                    st++;
-                }
-            }
 
-            model->add_transition(_str.str());
+                model->add_transition(_str.str());
+            }
+        }else{
+            for(size_t i = 0; i < (*it)->num_context(); i++){
+                std::vector<std::string> temp = split((*it)->get_context(i),"\n");
+                std::stringstream _str;
+                auto st = temp.begin();
+                
+                _str << "\t" << *st << "\n";
+                while(retrieve_string_element(*(++st),0," ") != "in"){
+                    _str << "\t" << *st << "\n";
+                }
+                _str << "\t" << *st << "\n";
+                _str << "\t\t\t" << "cflow : epsilon;" << "\n";
+                while(retrieve_string_element(*(++st),0," ") != "out"){
+                    _str << "\t" << *st << "\n";
+                }
+                _str << "\t" << *st << "\n";
+                _str << "\t\t\t" << "cflow : epsilon;" << "\n";
+                st++;
+                while(st != temp.end()){
+                    _str << "\t" << *st << "\n";
+                    st++;
+                } 
+
+                model->add_transition(_str.str());
+            }
         }
     }
 }
@@ -384,61 +437,84 @@ std::string Unfolding::getSolStaticDefinition(){
     return _str.str();
 }
 
-void Unfolding::handleSolTransitionDefinitionsDCR(){
-    while ((ptr_sol_line != _sol_lines.end()) && ((*ptr_sol_line).find("/***") == std::string::npos)){
-        if((*ptr_sol_line).find("Function:") != std::string::npos){
-            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Function:");
-            while (((*(ptr_sol_line))[0] != '}') && ((*ptr_sol_line).find("/*") == std::string::npos)){
-                if(retrieve_string_element(*ptr_sol_line,0," ") == "transition"){
-                    int level = 0;
-                    bool st_level = true;
-
-                    std::stringstream _str;
-                    while(st_level || (level > 0)){
-                        if((*ptr_sol_line).find("{") != std::string::npos){
-                            level++;
-                            st_level = false;
-                        }
-                        if((*ptr_sol_line).find("}") != std::string::npos){
-                            level--;
-                        }
-                        _str << *ptr_sol_line <<"\n";
-                        ptr_sol_line++;
-                    }          
-                    add_sol_transition(function_name,_str.str());
-                    ptr_sol_line--;
-                }
-                ptr_sol_line++;
-            }
-        }
-        ptr_sol_line++;
-    }
-    ptr_sol_line--;
-}
-
-void Unfolding::handleDCRContextTransitionDefinitions(){
-    while ((ptr_context_line != _context_lines.end()) && ((*ptr_context_line).find("/***") == std::string::npos)){
-        if(retrieve_string_element(*ptr_context_line,0," ") == "transition"){
-            std::string transition_name = retrieve_string_element(*ptr_context_line,1," ");
+std::vector<std::string> Unfolding::handleElement(std::string _element, std::list<std::string>::iterator& _pointer ){
+    std::vector<std::string> ret;
+    while ((_pointer != _sol_lines.end() && _pointer != _context_lines.end()) && ((*_pointer).find("/*") == std::string::npos)){
+        if((*_pointer).size() > 3 && retrieve_string_element(*_pointer,0," ") == _element){
             int level = 0;
             bool st_level = true;
 
             std::stringstream _str;
             while(st_level || (level > 0)){
-                if((*ptr_context_line).find("{") != std::string::npos){
+                if((*_pointer).find("{") != std::string::npos){
                     level++;
                     st_level = false;
                 }
-                if((*ptr_context_line).find("}") != std::string::npos){
+                if((*_pointer).find("}") != std::string::npos){
                     level--;
                 }
-                _str << *ptr_context_line << "\n";
-                ptr_context_line++;
-            }   
-            add_context_transition(transition_name,_str.str());
-        }      
+                _str << *_pointer <<"\n";
+                _pointer++;
+            }          
+            ret.push_back(_str.str());
+            _pointer--;
+        }
+        _pointer++;
+    }
+    _pointer--;
+    return ret;
+}
+
+void Unfolding::handleSolTransitionDefinitionsDCR(){
+    while ((ptr_sol_line != _sol_lines.end()) && ((*ptr_sol_line).find("/***") == std::string::npos)){
+        if((*ptr_sol_line).find("Function:") != std::string::npos){
+            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Function:");
+            std::cout<<"ns"<<*ptr_sol_line<<"\n";
+            std::vector<std::string> transitions = handleElement("transition",ptr_sol_line);
+            std::cout<<"nd"<<*ptr_sol_line<<"\n";
+            for(auto it = transitions.begin(); it != transitions.end(); ++it){
+                add_sol_transition(function_name,*it);
+            }
+        }
+        ptr_sol_line++;
+    }
+    ptr_sol_line--;
+}  
+
+void Unfolding::handleDCRContextTransitionDefinitions(){
+    while ((ptr_context_line != _context_lines.end()) && ((*ptr_context_line).find("/***") == std::string::npos)){
+        if((*ptr_context_line).find("Function:") != std::string::npos){
+            std::string function_name = retrieve_string_element(*ptr_context_line,1,"Function:");
+            std::vector<std::string> transitions = handleElement("transition",ptr_context_line);
+            for(auto it = transitions.begin(); it != transitions.end(); ++it){
+                add_context_transition(function_name,*it);
+            }
+        }
         ptr_context_line++;
     }
     ptr_context_line--;
 }
 
+void Unfolding::handleSolPlaces(){
+    while ((ptr_sol_line != _sol_lines.end()) && ((*ptr_sol_line).find("/***") == std::string::npos)){
+        if((*ptr_sol_line).find("Function:") != std::string::npos){
+            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Function:");
+            std::vector<std::string> transitions = handleElement("place",ptr_sol_line);
+            for(auto it = transitions.begin(); it != transitions.end(); ++it){
+                add_sol_place(function_name,*it);
+            }
+        }else if((*ptr_sol_line).find("Init:") != std::string::npos){
+            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Init:");
+            std::vector<std::string> transitions = handleElement("place",ptr_sol_line);
+            for(auto it = transitions.begin(); it != transitions.end(); ++it){
+                if(function_name == "state"){
+                    model->add_place(*it);
+                }else{
+                    add_sol_place(function_name,*it);
+                }
+            }
+        }
+        ptr_sol_line++;
+        
+    }
+}
