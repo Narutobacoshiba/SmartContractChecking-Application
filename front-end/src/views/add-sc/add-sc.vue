@@ -59,9 +59,9 @@ export default {
   },
   components: { EditorSc },
   methods: {
-    clickHandler(action){
+    async clickHandler(action){
         if(action == "save"){
-            AddNewSmartContracts(this.hashValue(this.nameSc), this.nameSc, this.options, this.code);
+            await AddNewSmartContracts(this.hashValue(this.nameSc), this.nameSc, this.options, this.code);
             this.$router.push(this.$route.params.parent_path);
         } 
         else if(action == "cancel"){

@@ -9,6 +9,12 @@
         </div>
 
         <div class='nav__mid'>
+            <div class='icon' @click="goURL('list-context')">
+              <a>Contexts</a>
+            </div>
+            <div class='icon' @click="goURL('list-vul')">
+              <a>LTLVuls</a>
+            </div>
             <div class='icon' @click="goHome()">
               <i class="material-icons">home</i>
             </div>
