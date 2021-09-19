@@ -230,7 +230,10 @@ void SubNet::add_ccondition(const std::string& param){
 }
 
 /**
- * Create a transition with:
+ * @return a transition with:
+ * 
+ *      name: 'transition.name'
+ * 
  *      in arcs: marking: <(execute,response,include)>;
  *               cflow: epsilon;
  * 
@@ -345,6 +348,10 @@ std::string Translator::get_subnet_id(const std::string& subnet_name ){
     return "-1";
 }
 
+/**
+ * @return a pointer to NetNode class
+ *   NetNode class is a class that handle all information about a helena code file.
+ */ 
 NetNodePtr Translator::translate(){
     net = std::make_shared<NetNode>();
     net->set_name("test");
@@ -358,6 +365,7 @@ NetNodePtr Translator::translate(){
     std::vector<SubNetPtr> vsubnets;
     std::vector<Event> dcr_events = dcrClass.getListEvent();
     
+    //Create a subnet corresponding to an event in the dcr events
     for(int i = 0; i< dcr_events.size(); i++){
         std::string subnet_name = Utils::removeNoneAlnum(dcr_events[i].getID());
         events_self_response[subnet_name] = false;
@@ -367,6 +375,7 @@ NetNodePtr Translator::translate(){
         vsubnets.push_back(subnet);
     }
     
+    //loop through ERE to get relations between two events, then add specific parameters to specific subnets based on this
     std::vector<ERE> dcr_ere = dcrClass.getERE();
     for(auto it = dcr_ere.begin(); it != dcr_ere.end(); it++) {
         SubNetPtr eventSource = get_subnet_by_name(Utils::removeNoneAlnum(it->getSource().getID()));
@@ -392,6 +401,7 @@ NetNodePtr Translator::translate(){
         }
     }
     
+    //check if the event has a response relation to itself
     for(auto it = events_self_response.begin(); it != events_self_response.end(); it++){
         if(!(it->second)){
             SubNetPtr event = get_subnet_by_name(it->first);
@@ -399,16 +409,9 @@ NetNodePtr Translator::translate(){
         }
     }
     
+    //get transition from subnet and add it to NetNode
     for(auto it = vsubnets.begin(); it != vsubnets.end(); ++it){
         TransitionNodePtr trans = (*it)->createTransition();
-
-        ArcNodePtr cflow = std::make_shared<ArcNode>();
-        cflow->set_label("epsilon");
-        cflow->set_placeName("cflow");
-
-        trans->add_inArc(cflow);
-        trans->add_outArc(cflow);
-
         net->add_transition(trans);
     }
     
@@ -503,20 +506,6 @@ void Translator::generateInitPlaces(){
 
     marking->set_init("<(|"+exer+"|,|"+exer+"|,|"+inc+"|)>");
     net->add_place(marking);
-
-    PlaceNodePtr cflow = std::make_shared<PlaceNode>();
-    cflow->set_name("cflow");
-    cflow->set_domain("epsilon");
-    cflow->set_init("epsilon");
-    net->add_place(cflow);
-
-    std::vector<Event> events = dcrClass.getListEvent();
-    for(auto it = events.begin(); it != events.end(); ++it){
-        PlaceNodePtr event_cflow = std::make_shared<PlaceNode>();
-        event_cflow->set_name(it->getID()+"_cflow");
-        event_cflow->set_domain("epsilon");
-        net->add_place(event_cflow);
-    }
 }
 
 void Translator::generateInitFunctions(){
