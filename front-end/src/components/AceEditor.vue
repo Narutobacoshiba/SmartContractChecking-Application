@@ -1,9 +1,9 @@
 <template>
   <div id="ace-editor">
-    <div class="tool-bar">
-    </div>
+    <div class="tool-bar"></div>
     <editor
-      v-model="content"
+      v-model="code"
+      @keyup="$emit('update:code', code)"
       @init="editorInit"
       lang="solidity"
       theme="chrome"
@@ -21,11 +21,11 @@ export default {
     };
   },
   model: {
-    prop: "content",
+    prop: "code",
     event: "input",
   },
   props: {
-    content: String,
+    code: String,
   },
   components: {
     editor: require("vue2-ace-editor"),
@@ -34,6 +34,9 @@ export default {
     editorInit: function () {
       require("brace/ext/language_tools"); //language extension prerequsite...
       require("brace/mode/solidity"); //language
+    },
+    change() {
+      console.log("Alo");
     },
   },
 };

@@ -20,7 +20,7 @@
       </div>
       <div class="editor-area">
         <span class="title">Formular</span>
-        <EditorSc v-bind:code="code" />
+        <EditorSc :code.sync ="code"/>
       </div>
       <div id="group-btn">
         <button id="button-add" type="button" @click="clickHandler('save')">
@@ -40,7 +40,7 @@
 
 <script>
 import EditorSc from "../../components/EditorSc.vue";
-import { GetContextById } from "../../services/data";
+import { GetContextById,UpdateContext } from "../../services/data";
 export default {
   created() {
     this.initData()
@@ -62,12 +62,12 @@ export default {
     this.description=data.description
     },
     SaveContext() {
-      console.log(this.code)
+      UpdateContext(this.context_id,this.name,this.description)
     },
     clickHandler(action) {
       if (action == "save") {
         this.SaveContext();
-        // this.$router.push(this.$route.params.parent_path);
+        this.$router.push(this.$route.params.parent_path);
       } else if (action == "cancel") {
         if (!this.$route.params.parent_path) this.$router.push("/");
         else this.$router.push(this.$route.params.parent_path);

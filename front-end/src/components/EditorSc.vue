@@ -1,8 +1,9 @@
 <template>
   <div id="editor">
     <div class="text-edit textarea">
-      <AceEditor v-bind:content="code"/>
+      <ace-editor  v-model="code" @keyup="$emit('update:code',code)"/>
     </div>
+    {{code}}
     <div>
     </div>
   </div>
@@ -24,7 +25,7 @@ export default {
 
     };
   },
-  components: { AceEditor },
+  components: {AceEditor},
   methods: {},
 };
 </script>
