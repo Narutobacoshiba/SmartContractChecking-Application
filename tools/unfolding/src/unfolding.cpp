@@ -76,6 +76,7 @@ void UnfoldingModel::add_transition(const std::string& _transition){
     transitionDef.push_back(_transition);
 }
 
+// get source code of model
 std::string UnfoldingModel::source_code(){
     std::stringstream result;
 
@@ -110,7 +111,6 @@ std::string UnfoldingModel::source_code(){
     result << "\n}";
     return result.str();
 }
-
 
 
 
@@ -236,6 +236,10 @@ void Unfolding::add_sol_place(const std::string& _name, const std::string& _plac
 }
 
 
+/**
+ * get the string line by line and find if it contains a defined string and then process it
+ * 
+ */
 UnfoldingModelPtr Unfolding::unfolding(){
     model = std::make_shared<UnfoldingModel>("test");
     
@@ -294,12 +298,17 @@ void Unfolding::unfolding_dcr_context(){
     unfoldingTransitionInDCR();
 }
 
+/**
+ * read code from all transition holder
+ * add cflow of model and of specific submodel to transition of dcr context
+ * add cflow of model to input transition, cflow of submodel to output transition of choosen submodel
+ */
 void Unfolding::unfoldingTransitionInDCR(){
     model->add_place("\n\tplace cflow {\n\t\tdom : epsilon;\n\t\tinit : epsilon;\n\t}");
 
-    for(auto it = transitionHolder.begin(); it != transitionHolder.end(); ++it){
+    for(auto it = transitionHolder.begin(); it != transitionHolder.end(); ++it){ // loop through list of transition holder
         model->add_transition("/*\n * Function: "+(*it)->get_name()+"\n */\n");
-        if((*it)->get_name() == unfold_func){
+        if((*it)->get_name() == unfold_func){ // if transition holder name == submodel that need unfolding name
             model->add_place("\n\tplace "+(*it)->get_name()+"_cflow {\n\t\tdom : epsilon;\n\t}");
             model->add_place("/*\n * Function: "+(*it)->get_name()+"\n */\n");
             for(size_t i = 0; i < (*it)->num_sol_place(); i++){
@@ -465,15 +474,17 @@ std::vector<std::string> Unfolding::handleElement(std::string _element, std::lis
     return ret;
 }
 
+/**
+ * get code of transition and name of submodel then store it to transition holder
+ * 
+ */
 void Unfolding::handleSolTransitionDefinitionsDCR(){
     while ((ptr_sol_line != _sol_lines.end()) && ((*ptr_sol_line).find("/***") == std::string::npos)){
-        if((*ptr_sol_line).find("Function:") != std::string::npos){
-            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Function:");
-            std::cout<<"ns"<<*ptr_sol_line<<"\n";
-            std::vector<std::string> transitions = handleElement("transition",ptr_sol_line);
-            std::cout<<"nd"<<*ptr_sol_line<<"\n";
+        if((*ptr_sol_line).find("Function:") != std::string::npos){ // if line contain "Function:" string then
+            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Function:"); // get submodel name
+            std::vector<std::string> transitions = handleElement("transition",ptr_sol_line); // get all transitions code of submodel
             for(auto it = transitions.begin(); it != transitions.end(); ++it){
-                add_sol_transition(function_name,*it);
+                add_sol_transition(function_name,*it); // add transition code to transition holder
             }
         }
         ptr_sol_line++;
@@ -481,13 +492,17 @@ void Unfolding::handleSolTransitionDefinitionsDCR(){
     ptr_sol_line--;
 }  
 
+/**
+ * get code of transition and name of submodel then store it to transition holder
+ * 
+ */
 void Unfolding::handleDCRContextTransitionDefinitions(){
     while ((ptr_context_line != _context_lines.end()) && ((*ptr_context_line).find("/***") == std::string::npos)){
-        if((*ptr_context_line).find("Function:") != std::string::npos){
-            std::string function_name = retrieve_string_element(*ptr_context_line,1,"Function:");
-            std::vector<std::string> transitions = handleElement("transition",ptr_context_line);
+        if((*ptr_context_line).find("Function:") != std::string::npos){ // if line contain "Function:" string then
+            std::string function_name = retrieve_string_element(*ptr_context_line,1,"Function:");// get submodel name
+            std::vector<std::string> transitions = handleElement("transition",ptr_context_line);// get all transitions code of submodel
             for(auto it = transitions.begin(); it != transitions.end(); ++it){
-                add_context_transition(function_name,*it);
+                add_context_transition(function_name,*it); // add transition code to transition holder
             }
         }
         ptr_context_line++;
@@ -495,21 +510,25 @@ void Unfolding::handleDCRContextTransitionDefinitions(){
     ptr_context_line--;
 }
 
+/**
+ * get code of place and name of submodel then store it to transition holder
+ * 
+ */
 void Unfolding::handleSolPlaces(){
     while ((ptr_sol_line != _sol_lines.end()) && ((*ptr_sol_line).find("/***") == std::string::npos)){
-        if((*ptr_sol_line).find("Function:") != std::string::npos){
-            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Function:");
-            std::vector<std::string> transitions = handleElement("place",ptr_sol_line);
+        if((*ptr_sol_line).find("Function:") != std::string::npos){ // if line contain "Function:" string then
+            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Function:");// get submodel name
+            std::vector<std::string> transitions = handleElement("place",ptr_sol_line);// get all places code of submodel
             for(auto it = transitions.begin(); it != transitions.end(); ++it){
-                add_sol_place(function_name,*it);
+                add_sol_place(function_name,*it);// add places code to transition holder
             }
-        }else if((*ptr_sol_line).find("Init:") != std::string::npos){
-            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Init:");
-            std::vector<std::string> transitions = handleElement("place",ptr_sol_line);
+        }else if((*ptr_sol_line).find("Init:") != std::string::npos){// if line contain "Init:" string then
+            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Init:");// get submodel name
+            std::vector<std::string> transitions = handleElement("place",ptr_sol_line);// get all places code of submodel
             for(auto it = transitions.begin(); it != transitions.end(); ++it){
-                if(function_name == "state"){
+                if(function_name == "state"){ // if it is the place for the state, add it directly to the model
                     model->add_place(*it);
-                }else{
+                }else{  // else place to transition holder
                     add_sol_place(function_name,*it);
                 }
             }
