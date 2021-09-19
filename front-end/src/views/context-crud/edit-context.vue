@@ -20,7 +20,7 @@
       </div>
       <div class="editor-area">
         <span class="title">Formular</span>
-        <EditorSc :code.sync ="code"/>
+        <EditorSc :code.sync="code" />
       </div>
       <div id="group-btn">
         <button id="button-add" type="button" @click="clickHandler('save')">
@@ -40,10 +40,10 @@
 
 <script>
 import EditorSc from "../../components/EditorSc.vue";
-import { GetContextById,UpdateContext } from "../../services/data";
+import { GetContextById, UpdateContext } from "../../services/data";
 export default {
   created() {
-    this.initData()
+    this.initData();
   },
   data() {
     return {
@@ -51,28 +51,46 @@ export default {
       code: "",
       name: "",
       description: "",
+      context: { name: String, code: String, description: String },
     };
   },
   components: { EditorSc },
   methods: {
     async initData() {
-    const data = await GetContextById(this.context_id);
-    this.code = data.content
-    this.name = data.name
-    this.description=data.description
+      const data = await GetContextById(this.context_id);
+      this.initModelContext(data);
+      this.code = data.content;
+      this.name = data.name;
+      this.description = data.description;
     },
     SaveContext() {
-      UpdateContext(this.context_id,this.name,this.description)
+      return UpdateContext(this.context_id, this.name, this.description);
     },
-    clickHandler(action) {
+    async clickHandler(action) {
       if (action == "save") {
-        this.SaveContext();
-        this.$router.push(this.$route.params.parent_path);
+        if (!this.checkChangeConText()) {
+          const res = await this.SaveContext();
+          if (res.status && res.status === 200) {
+            this.$router.push(this.$route.params.parent_path);
+          }
+        }else{
+          alert('You do not edit!')
+        }
       } else if (action == "cancel") {
         if (!this.$route.params.parent_path) this.$router.push("/");
         else this.$router.push(this.$route.params.parent_path);
       }
     },
+    initModelContext(modelContext) {
+      this.context.name = modelContext.name;
+      this.context.code = modelContext.content;
+      this.context.description = modelContext.description;
+    },
+    checkChangeConText(){
+      return this.context.name.trim() === this.name.trim() 
+      && this.context.code.trim() === this.code.trim() 
+      && this.context.description.trim() === this.description.trim()
+    }
   },
   computed: {},
 };

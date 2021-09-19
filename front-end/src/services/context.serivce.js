@@ -46,25 +46,22 @@ export class ContextService extends BaseService{
     }
     /*---------Update Context--------- */
     static async UpdateContext(id, ct_name,ct_description) {
-        const ContextById = await this.request({ auth: true }).get(`${this.getUnity()}/contextbyid?id=${id}`).data
-
+        const ContextById = await this.request({ auth: true }).get(`${this.getUnity()}/contextbyid?id=${id}`)
+        // console.log(ContextById,ct_name,ct_description)
         try {
             const paraData = {
                 "id": id,
                 "name": ct_name,
-                "content": ContextById.content ,
-                "type": ct_description
+                "content": ContextById.data.content ,
+                "description": ct_description
             }
-            console.log(paraData)
             const response = await this.request({ auth: true }).put(`${this.getUnity()}/api/`, paraData)
-            // const data = {
-            //     content: response.data.data,
-            //     headers: response.headers['']
-            // }
             return new ResponseWrapper(response, response.data)
         } catch (error) {
             const message = error.response.data ? error.response.data.error : error.response.statusText
+            console.log(error)
             throw new ErrorWrapper(error, message)
+           
         }
     }
     /*---------Get Context By ID--------- */

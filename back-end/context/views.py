@@ -1,10 +1,12 @@
 from django.core.exceptions import ValidationError
+from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Context
 from .serializer import ContextSerializer
 from rest_framework.decorators import api_view
+from rest_framework import exceptions
 
 class ContextAPIView(APIView):
     
@@ -28,7 +30,7 @@ class ContextAPIView(APIView):
                     serializerClient.save()
                     return Response({"message": "Created"}, status=status.HTTP_201_CREATED)
                 return Response({"message": "Field of Context is not Valid"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
+        except exceptions as e:
             print(e)
             return Response({"message": "Create Faill!!!"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -45,7 +47,7 @@ class ContextAPIView(APIView):
                     serializeUpdate.save()
                     return Response({"message": "Update Successfully!!"})
                 return Response({"message": "Context Data is Invalid"}, status=status.HTTP_409_CONFLICT)
-        except:
+        except Seri as e:
             return Response({"message": "Faill!"}, status=status.HTTP_404_NOT_FOUND)
 
     #----------DELETE CONTEXT-----------

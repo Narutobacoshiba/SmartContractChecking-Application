@@ -61,7 +61,7 @@ export default {
       if (action == "save") {
         //check validation of field context
         if (!this.checkValidateContext()) {
-          console.log("Fail");
+          alert('You must enter data to field!!!')
           return;
         }
         const response = await CreateContext(
