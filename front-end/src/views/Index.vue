@@ -15,7 +15,6 @@
             <div class="buttons-con">
                 <div class="action-link-wrap">
                 <a @click="routing('check')" class="link-button">Check smart contracts</a>
-                <a @click="routing('list')" class="link-button">List of smart contracts</a>
                 </div>
             </div>
             <div id="current-process" v-if="haveProcess">
