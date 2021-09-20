@@ -1,5 +1,10 @@
 <template>
   <div id="body">
+    <div id="showConfirmation" v-if="showConfirmation">
+        <div id="removeSC-holder">
+            <confirm @cancel="closeConfirm" @confirm="cfDeleteSC()" :dialog="deleteDialog"/>
+        </div>
+    </div>
     <div id="first-section"></div>
     <div id="second-section"></div>
     <div id="third-section">
@@ -124,8 +129,9 @@ import {
   DeleteSmartContracts,
   AddNewSmartContractsInfor,
 } from "../../services/data";
-
+import ConfirmationDialog from "../../components/ConfirmationDialog.vue" 
 export default {
+  components: {'confirm': ConfirmationDialog},
   data() {
     return {
       chosen_table: "common",
@@ -138,6 +144,9 @@ export default {
       num_of_record: 7,
       num_of_page: 0,
       pageNum: 1,
+      showConfirmation: false,
+      deleteDialog: {},
+      scDelete: null
     };
   },
   mounted() {
@@ -248,18 +257,24 @@ export default {
       });
     },
     deleteSC(sc_id, sc_name, option) {
-      if (
-        confirm(
-          "Are you sure to delete the Smart Contract named: '" + sc_name + "' ?"
-        )
-      ) {
-        DeleteSmartContracts(sc_id, option);
+      
+        this.deleteDialog={title: "Delete Smart Contract", message:  "Are you sure to delete the Smart Contract named: '" + sc_name + "' ?", confirmbtn: 'Delete'}
+        this.showConfirmation = true;
+        this.scDelete = {sc_id: sc_id, option: option}
+    },
+    cfDeleteSC(){
+      let sc_id = this.scDelete.sc_id;
+      let option = this.scDelete.option
+      DeleteSmartContracts(sc_id, option);
         let list_smart_contracts_afterdelete =  this.list_smart_contracts.common.filter((i)=>{
           return i.id != sc_id
         })
         this.list_smart_contracts.common=list_smart_contracts_afterdelete
-      }
+        this.closeConfirm()
     },
+    closeConfirm(){
+            this.showConfirmation = false
+        },
     editSC(sc_id, sc_name) {
       this.$router.push({
         name: "EditSc",
@@ -468,5 +483,21 @@ export default {
 }
 #itb-cnpage i:hover {
   color: #424141;
+}
+
+ /*---- showConfirmation */
+ #showConfirmation{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+}
+#removeSC-holder{
+    margin-top: 200px;
 }
 </style>

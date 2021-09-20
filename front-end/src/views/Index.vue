@@ -27,13 +27,22 @@
                 </div>
             </div>
         </div>
+        <div id="showConfirmation" v-if="showDialog">
+            <div id="components-holder">
+                <confirm @cancel="closeDialog" @confirm="cfNewProcess" :dialog="dialog" />
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import ConfirmationDialog from "../components/ConfirmationDialog.vue"
 export default ({
+  components:{'confirm': ConfirmationDialog},
   data(){
     return{
+      showDialog: false,
+      dialog: {title: 'Start a new process', message: 'Are you sure to start a new process?', confirmbtn: 'OK'},
       pages: [
                     { id: 1, name: "Select Smart Contracts", view: "sc-selection"},
                     { id: 2, name: "Select Context", view: "select-context"},
@@ -55,13 +64,7 @@ export default ({
               var current_date = Date.now()
               if(this.$store.state.data.used)
               {   
-                if(confirm("Are you sure to start a new process?")){
-                    this.$store.commit("data/ResetState")
-                    this.$store.commit('data/SetUsedState',true)
-                    this.$store.commit('data/SetDateState',current_date)
-                    this.$store.commit("data/SetProcessView","sc-selection")
-                    this.$router.push("/process")
-                }
+                this.showDialog = true;
               }
               else{
                   this.$store.commit("data/ResetState")
@@ -71,9 +74,18 @@ export default ({
                   this.$router.push("/process")
               }
           }
-          if(param == 'list'){
-              this.$router.push("/list-sc")
-          }
+      },
+      closeDialog(){
+        this.showDialog = false;
+      },
+      cfNewProcess(){
+        var current_date = Date.now()
+        this.$store.commit("data/ResetState")
+        this.$store.commit('data/SetUsedState',true)
+        this.$store.commit('data/SetDateState',current_date)
+        this.$store.commit("data/SetProcessView","sc-selection")
+        this.$router.push("/process")
+        this.closeDialog()
       },
       resumeProcess(){
         this.$store.commit("data/SetProcessView",this.pages[this.$store.getters["data/GetRoadPage"]-1].view)
@@ -190,6 +202,23 @@ svg {
 #current-process #cp-button:hover{
   border-color: #535353;
   color: #535353;
+}
+ /*---- showConfirmation */
+ #showConfirmation{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+}
+#components-holder{
+    width: 50%;
+    margin: auto;
+    margin-top: 200px;
 }
 @keyframes float {
 	100% {
