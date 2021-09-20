@@ -17,7 +17,7 @@
         <div class="col-8">{{ context.name }}</div>
         <div class="col-2">
           <i class="material-icons" @click="editContext(context.id)">edit</i>
-          <i class="material-icons" @click="deleteContext(context.id)"
+          <i class="material-icons" @click="deleteContext(context.id,context.name)"
             >delete</i
           >
         </div>
@@ -35,7 +35,7 @@ export default {
     };
   },
   mounted() {
-    // this.initData()
+    this.initData()
   },
   methods: {
     goAdd() {
@@ -50,7 +50,10 @@ export default {
         params: { context_id: id, parent_path: "/list-context" },
       });
     },
-    async deleteContext(id) {
+    async deleteContext(id,ct_name) {
+      if(!confirm(`Do you want to delete context ${ct_name}`)){
+        return
+      }
       console.log(id);
       const response = await DeleteContext(id);
       if (response.status === 200) {
@@ -62,7 +65,7 @@ export default {
     },
   },
   created() {
-    this.initData();
+    
   },
 };
 </script>

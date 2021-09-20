@@ -196,3 +196,8 @@ export async function CreateContext(name, description, fomular) {
 export async function DeleteContext(id_context){
   return await ContextService.DeleteContext(id_context)
 }
+
+/*---------Update Context-------- */
+export async function UpdateContext(id_context,ct_name,ct_description){
+  return await ContextService.UpdateContext(id_context,ct_name,ct_description)
+}
