@@ -1,6 +1,1 @@
-<<<<<<< HEAD
-"new development branch" 
-=======
-# test
->>>>>>> 7166bb471412966be18086791a4b59dc7d89cf0e
-# test
+Các bạn đợi đến sáng mai mình cập nhật thêm 1 cột mới yêu cầu từ thầy rồi làm theo các bước hướng dẫn nhé
