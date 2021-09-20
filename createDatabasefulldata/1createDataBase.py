@@ -2,7 +2,7 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = "",
+    passwd = "123456",
     database="Project"
 )
 mycursor = db.cursor()
@@ -102,7 +102,7 @@ primary key(id,scid,ctid)
 
 """)
 mycursor.execute("""
-CREATE TABLE Function (
+CREATE TABLE Functionss (
 id int primary key AUTO_INCREMENT,
 name nvarchar(200),
 bodycontent text,
@@ -128,14 +128,14 @@ name nvarchar(200),
 vartype nvarchar(200),
 type nvarchar(200),
 value nvarchar(200),
-fid int not null references Function(id)
+fid int not null references Functionss(id)
 )
 
 """)
 mycursor.execute("""
 CREATE table Argument (
 id int primary key AUTO_INCREMENT,
-fid int not null references Function(id),
+fid int not null references Functionss(id),
 name nvarchar(200),
 type nvarchar(200)
 

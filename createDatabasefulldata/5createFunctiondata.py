@@ -6,7 +6,7 @@ db = mysql.connector.connect(
     database="Project"
 )
 mycursor = db.cursor()
-sqlFomular = "INSERT INTO Function (name,bodycontent,scid) VALUES (%s,%s,%s)"
+sqlFomular = "INSERT INTO Functionss (name,bodycontent,scid) VALUES (%s,%s,%s)"
 multi = [
     ("play() public payable","""
     require(msg.value == 0.5 ether); // each play is 0.5 ether
