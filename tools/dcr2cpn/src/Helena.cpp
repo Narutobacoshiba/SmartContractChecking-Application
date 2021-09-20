@@ -2,33 +2,43 @@
 
 namespace DCR2CPN{
 
+/**
+ * The getter to get the node type
+*/
 LnaNodeType LnaNode::get_node_type() const {
     return node_type;
 }
 
+/** Add subnode to the collection
+ */ 
 void LnaNode::append_sub_node(const LnaNodePtr& _node) {
     lna_nodes.push_back(_node);
 }
 
+/** Delete the sub node
+ */ 
 void LnaNode::delete_sub_node(const unsigned int& x) {
     lna_nodes.erase(lna_nodes.begin() + x);
 }
-
+/** Update the sub node
+ */ 
 void LnaNode::update_sub_node(const unsigned int& x, const LnaNodePtr _node) {
     lna_nodes[x] = _node;
 }
-
+/** Get the sub node
+ */
 LnaNodePtr LnaNode::get_sub_node(const unsigned int& x) const {
     return lna_nodes[x];
 }
 
+/** Get the size of the node
+ */
 size_t LnaNode::size() {
     return lna_nodes.size();
 }
 
-
-
-
+/** Design the interface for the output lna file
+ */
 std::string NetNode::source_code() {
     std::stringstream result;
     result << name;
@@ -79,166 +89,205 @@ std::string NetNode::source_code() {
     return result.str();
 }
 
+/** Set name for the node
+ */ 
 void NetNode::set_name(const std::string& _name) {
     name = _name;
 }
-
+/** Get name of the node
+ */
 std::string NetNode::get_name() const {
     return name;
 }
 
+/** Add parametters to the collection
+ */
 void NetNode::add_parameter(const ParameterNodePtr& _node) {
     param_nodes.push_back(_node);
 }
-
+/** Add member to the node
+ */
 void NetNode::add_member(const LnaNodePtr& _node) {
     append_sub_node(_node);
 }
 
+/** Delete the member of the node
+ */
 void NetNode::delete_member(const unsigned int& x) {
     delete_sub_node(x);
 }
-
+/** Update the member of the node
+ */
 void NetNode::update_member(const unsigned int& x, const LnaNodePtr& _node) {
     update_sub_node(x, _node);
 }
-
+/** Get a member of the node
+ */
 LnaNodePtr NetNode::get_member(const unsigned int& x) {
     return get_sub_node(x);
 }
-
+/** Get the size of the net
+ */
 size_t NetNode::num_members() {
     return size();
 }
-
+/** Add colour to the net
+ */
 void NetNode::add_color(const ColorNodePtr& _color) {
     if(get_color_by_name(_color->get_name()) == nullptr){
         color_nodes.push_back(_color);
     }
 }
-
+/** Get colour with the input is name
+ */
 ColorNodePtr NetNode::get_color_by_name(const string& _color) {
     for (auto it = color_nodes.begin(); it != color_nodes.end(); ++it)
             if ((*it)->get_name() == _color)
                 return (*it);
     return nullptr;
 }
-
+/** Add place to the net
+ */
 void NetNode::add_place(const PlaceNodePtr& _place){
     if(get_place_by_name(_place->get_name()) == nullptr){
         place_nodes.push_back(_place);
     }
 }
-
+/** Get place by the input name
+ */ 
 PlaceNodePtr NetNode::get_place_by_name(const string& _name){
     for (auto it = place_nodes.begin(); it != place_nodes.end(); ++it)
             if ((*it)->get_name() == _name)
                 return (*it);
     return nullptr;
 }
-
+/** Add transition to the net
+ */
 void NetNode::add_transition(const TransitionNodePtr& _transition){
     if(get_transiton_by_name(_transition->get_name()) == nullptr){
         transition_nodes.push_back(_transition);
     }
 }
-
+/** Get the transition by name
+ */
 TransitionNodePtr NetNode::get_transiton_by_name(const string& _name){
     for (auto it = transition_nodes.begin(); it != transition_nodes.end(); ++it)
             if ((*it)->get_name() == _name)
                 return (*it);
     return nullptr;
 }
-
+/** Add functions to the net
+ */
 void NetNode::add_function(const FunctionNodePtr& _func){
     if(get_function_by_name(_func->get_name()) == nullptr){
         function_nodes.push_back(_func);
     }
 }
-
+/** Get function by name
+ */
 FunctionNodePtr NetNode::get_function_by_name(const string& _name){
     for (auto it = function_nodes.begin(); it != function_nodes.end(); ++it)
         if ((*it)->get_name() == _name)
             return (*it);
     return nullptr;
 }
-
+/** Connect the name and number 
+ */
 std::string ParameterNode::source_code() {
     std::string result = name + " := " + number;
     return result;
 }
-
+/** Set name to the parameter node
+ */
 void ParameterNode::set_name(const std::string& _name) {
     name = _name;
 }
-
+/** Get name of the parameter node
+ */
 std::string ParameterNode::get_name() const {
     return name;
 }
-
+/** Set number for the parameter node
+ */
 void ParameterNode::set_number(const std::string& _number) {
     number = _number;
 }
-
+/** Get number of the parameter node
+ */
 std::string ParameterNode::get_number() const {
     return number;
 }
-
+/** Append information
+ */
 std::string ColorNode::source_code() {
     //visit(this);
     std::string result = "type " + name + " : " + typeDef + ";\n";
     return result;
 }
-
+/** Set name for the colour node
+ */
 void ColorNode::set_name(const std::string& _name) {
     name = _name;
 }
-
+/** Get name of the colour node
+ */
 std::string ColorNode::get_name() const {
     return name;
 }
-
+/** Set type definition
+ */
 void ColorNode::set_typeDef(const std::string& _typeDef) {
     typeDef = _typeDef;
 }
-
+/** Get type definition
+ */
 std::string ColorNode::get_typeDef() const {
     return typeDef;
 }
-
+/** Connect the information for the Component node
+ */
 std::string ComponentNode::source_code() {
     std::string result = type + " " + name + ";";
     return result;
 }
-
+/** Set name for the component node
+ */
 void ComponentNode::set_name(const std::string& _name) {
     name = _name;
 }
-
+/** Get name of the component node
+ */
 std::string ComponentNode::get_name() const {
     return name;
 }
-
+/** Set type of the component node
+ */
 void ComponentNode::set_type(const std::string& _type) {
     type = _type;
 }
-
+/** Get type of the component node
+ */
 std::string ComponentNode::get_type() const {
     return type;
 }
-
+/** Process the Sub colour node
+ */
 std::string SubColorNode::source_code() {
     std::string result = "subtype " + name + " : " + supColor->get_name() + " " + typeDef + ";\n";
     return result;
 }
-
+/** Set sub color node
+ */
 void SubColorNode::set_supColor(const ColorNodePtr _supColor) {
     supColor = _supColor;
 }
+/** Get sub colo node
+ */
 ColorNodePtr SubColorNode::get_supColor() const {
     return supColor;
 }
-
+/** Process for the struct color node
+ */
 std::string StructColorNode::source_code() {
     std::string result = "type " + name + " : struct { ";
     for (auto it = components.begin(); it != components.end(); ++it)
@@ -246,107 +295,131 @@ std::string StructColorNode::source_code() {
     result += "};\n";
     return result;
 }
-
+/** Add component to the struct
+ */
 void StructColorNode::add_component(const ComponentNodePtr& _component) {
     components.push_back(_component);
 }
-
+/** Get component of the struct color node
+ */
 ComponentNodePtr StructColorNode::get_component(const unsigned int& x) {
     return components[x];
 }
-
+/** Get component by name
+ */
 ComponentNodePtr StructColorNode::get_component_by_name(const string& _name) {
     for (auto it = components.begin(); it != components.end(); ++it)
             if ((*it)->get_name() == _name)
                 return (*it);
     return nullptr;
 }
-
+/** Get size of the components
+ */
 size_t StructColorNode::num_components() {
     return components.size();
 }
-
+/** Processing the List of colour node
+ */
 std::string ListColorNode::source_code() {
     //visit(this);
     std::string result = "type " + name + " : list[" + index_type + "] of " + element_type + " with capacity " + capacity +";\n";
     return result;
 }
-
+/** Set value for index type
+ */
 void ListColorNode::set_index_type(const std::string& _index_type) {
     index_type = _index_type;
 }
-
+/** Get value of the index type
+ */
 std::string ListColorNode::get_index_type() const {
     return index_type;
 }
-
+/** Set value for the element type
+ */
 void ListColorNode::set_element_type(const std::string& _element_type) {
     element_type = _element_type;
 }
-
+/** Get value of the element type
+ */
 std::string ListColorNode::get_element_type() const {
     return element_type;
 }
-
+/** Set value for the capacity
+ */
 void ListColorNode::set_capacity(const std::string& _capacity) {
     capacity = _capacity;
 }
-
+/** Get value of the capacity
+ */ 
 std::string ListColorNode::get_capacity() const {
     return capacity;
 }
-
+/** Processing for the constant node
+ */
 std::string ConstantNode::source_code() {
     //visit(this);
     std::string result = "constant " + type + " " + name + ":=" + expression + ";\n";
     return result;
 }
-
+/** Set name for the constant node
+ */
 void ConstantNode::set_name(const std::string& _name) {
     name = _name;
 }
-
+/** Get name ò the constant node
+ */
 std::string ConstantNode::get_name() const {
     return name;
 }
-
+/** Set type for the constant node
+ */
 void ConstantNode::set_type(const std::string& _type) {
     type = _type;
 }
-
+/** Get type of the constant node
+ */
 std::string ConstantNode::get_type() const {
     return type;
 }
-
+/** Set expression for the constant node
+ */
 void ConstantNode::set_expression(const std::string& _expression) {
     expression = _expression;
 }
-
+/** Get expression of the constant node
+ */
 std::string ConstantNode::get_expression() const {
     return expression;
 }
-
+/** Processing for the Parameter node
+ */
 std::string ParamNode::source_code() {
     std::string result = type + " " + name;
     return result;
 }
-
+/** Set name for the Parameter node
+ */
 void ParamNode::set_name(const std::string& _name) {
     name = _name;
 }
-
+/** Get name of the parameter node
+ */
 std::string ParamNode::get_name() const {
     return name;
 }
-
+/** Set type for the parameter node
+ */
 void ParamNode::set_type(const std::string& _type) {
     type = _type;
 }
-
+/** Get type of the parameter node
+ */
 std::string ParamNode::get_type() const {
     return type;
 }
-
+/** Processing for the function node
+ */
 std::string FunctionNode::source_code() {
     std::string result = "function " + name + " (";
     for (auto it = parameters_spec.begin(); it != parameters_spec.end(); ++it) {
@@ -363,38 +436,49 @@ std::string FunctionNode::source_code() {
         result += ";\n";
     return result;
 }
-
+/** Set name of the Function node
+ */
 void FunctionNode::set_name(const std::string& _name) {
     name = _name;
 }
+/** Get name of the Function node
+ */
 std::string FunctionNode::get_name() const {
     return name;
 }
-
+/** Get parameter of the function node
+ */
 ParamNodePtr FunctionNode::get_parameter(const unsigned int& x){
     if(x < parameters_spec.size())
         return parameters_spec[x];
 }
-
+/** Set return type of the Function node
+ */
 void FunctionNode::set_returnType(const std::string& _returnType) {
     returnType = _returnType;
 }
-
+/** Get the return type
+ */
 std::string FunctionNode::get_returnType() const {
     return returnType;
 }
-
+/** Add the parameter of the fucntion
+ */
 void FunctionNode::add_parameter(const ParamNodePtr& _node) {
     parameters_spec.push_back(_node);
 }
-
+/** Set body for the function
+ */
 void FunctionNode::set_body(const std::string& _body) {
     body = _body;
 }
+/** Get the body of the fucntion
+ */
 std::string FunctionNode::get_body() const {
     return body;
 }
-
+/** Processing the Place node
+ */
 std::string PlaceNode::source_code() {
     std::string result = "place " + name + " {\n\tdom : " + domain + ";";
     if (init != "")
@@ -407,69 +491,94 @@ std::string PlaceNode::source_code() {
     result += "\n}\n";
     return result;
 }
-
+/** Set name of the place node
+ */
 void PlaceNode::set_name(const std::string& _name) {
     name = _name;
 }
+/** Get name of the place node
+ */
 std::string PlaceNode::get_name() const {
     return name;
 }
-
+/** Set domain of the place node
+ */
 void PlaceNode::set_domain(const std::string& _domain) {
     domain = _domain;
 }
+/** Get domain of the place node
+ */
 std::string PlaceNode::get_domain() const {
     return domain;
 }
-
+/** Set initilize for the place node
+ */
 void PlaceNode::set_init(const std::string& _init) {
     init = _init;
 }
+/** Get initialize of the place node
+ */
 std::string PlaceNode::get_init() const {
     return init;
 }
-
+/** Set the capacity of the place node
+ */
 void PlaceNode::set_capacity(const std::string& _capacity) {
     capacity = _capacity;
 }
+/** Get capacity of the place node
+ */
 std::string PlaceNode::get_capacity() const {
     return capacity;
 }
-
+/** Set type of the place node
+ */
 void PlaceNode::set_type(const std::string& _type) {
     type = _type;
 }
+/** Get type of the place node
+ */
 std::string PlaceNode::get_type() const {
     return type;
 }
-
+/** Set type for the place node
+ */ 
 void PlaceNode::set_place_type(const std::string& _type){
     place_type = _type;
 }
-
+/** Get type of the place node
+ */
 std::string PlaceNode::get_place_type() const{
     return place_type;
 }
-
+/** Processing for the Arc node
+ */
 std::string ArcNode::source_code() {
     std::string result = placeName + " : " + label + ";";
     return result;
 }
-
+/** Set place name
+ */
 void ArcNode::set_placeName(const std::string& _placeName) {
     placeName = _placeName;
 }
+/** Get place name
+ */
 std::string ArcNode::get_placeName() const {
     return placeName;
 }
-
+/** Set label for the Arc node
+ */
 void ArcNode::set_label(const std::string& _label) {
     label = _label;
 }
+/** Get label for the Arc node
+ */
 std::string ArcNode::get_label() const {
     return label;
 }
-
+/** Processing for the Transition node
+ */
 std::string TransitionNode::source_code() {
     std::string result = "transition " + name + " {\n\tin {\n";
     for (auto it = inArcs.begin(); it != inArcs.end(); ++it)
@@ -502,50 +611,68 @@ std::string TransitionNode::source_code() {
     result += "}\n";
     return result;
 }
-
+/** Set name for the transition node
+ */  
 void TransitionNode::set_name(const std::string& _name) {
     name = _name;
 }
+/** Get name of the Transition node
+ */
 std::string TransitionNode::get_name() const {
     return name;
 }
-
+/** Add an input Arc node to the net
+ */
 void TransitionNode::add_inArc(const ArcNodePtr& _node) {
     inArcs.push_back(_node);
 }
-
+/** Add an output Arc node to the net
+ */
 void TransitionNode::add_outArc(const ArcNodePtr& _node) {
     outArcs.push_back(_node);
 }
-
+/** Add an inhibit Arc to the net
+ */
 void TransitionNode::add_inhibitArc(const ArcNodePtr& _node) {
     inhibitArcs.push_back(_node);
 }
-
+/** Set guard for the transition
+ */
 void TransitionNode::set_guard(const std::string& _guard) {
     guard = _guard;
 }
+/** Get the guard of the transition
+ */
 std::string TransitionNode::get_guard() const {
     return guard;
 }
-
+/** Set priority for the transition
+ */
 void TransitionNode::set_priority(const std::string& _priority) {
     priority = _priority;
 }
+/** Get priority of the Transition
+ */
 std::string TransitionNode::get_priority() const {
     return priority;
 }
-
+/** Set description for the transitions
+ */
 void TransitionNode::set_description(const std::string& _description) {
     description = _description;
 }
+/** Get the description for the transition
+ */
 std::string TransitionNode::get_description() const {
     return description;
 }
-
+/** Set safe for the Transition node
+ */
 void TransitionNode::set_safe(const std::string& _safe) {
     safe = _safe;
 }
+/** Get safe of the transition node
+ */
 std::string TransitionNode::get_safe() const {
     return safe;
 }
