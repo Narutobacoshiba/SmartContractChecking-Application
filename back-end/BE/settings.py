@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'smartconstract',
     'context',
+    'ltl',
     'demo_middleware',
     'corsheaders',
 ]
