@@ -1,7 +1,7 @@
 export default {
   currentUser: {
-    id: '12345678910',
+    id: '1804',
     role: 'admin',
-    name: 'Dinh Thanh Ha'
+    name: 'Carl Adam Petri'
   }
 }
