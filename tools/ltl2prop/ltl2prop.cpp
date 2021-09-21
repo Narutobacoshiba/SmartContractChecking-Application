@@ -6,7 +6,9 @@
 #include "../cli11/CLI11.hpp"
 
 using namespace std;
-
+/**
+ * Create a map between the operator G, F, U of LTL and Helena
+ */
 map<char,string> createAMap(){
     map<char,string> m;
 
@@ -16,7 +18,9 @@ map<char,string> createAMap(){
 
     return m;
 }
-
+/**
+ * Create a map between the operator and, or, not of LTL and Helena
+ */
 map<char,string> createNAMap(){
     map<char,string> m;
 
@@ -29,7 +33,9 @@ map<char,string> createNAMap(){
 
 map<char,string> specAMap = createAMap();
 map<char,string> specNAMap = createNAMap();
-
+/**
+ * Check if a character is an operator (G,F,U)
+ */
 bool isSpecAChar(char a){
     if ( specAMap.find(a) == specAMap.end() ) {
         return false;
@@ -37,6 +43,9 @@ bool isSpecAChar(char a){
         return true;
     }
 }
+/**
+ * Check if a character is an operator (And, Or, Not)
+ */
 bool isSpecNAChar(char a){
     if ( specNAMap.find(a) == specNAMap.end() ) {
         return false;
@@ -82,22 +91,37 @@ string converLTL2LNAProp(string str){
     }
     return s.str();
 }
-
+/**
+ * The main function
+ */
 int main(int argc, char** argv){
+    /**
+     * Declare the parameters
+     */
     CLI::App app{"Solidity2CPN tool"}; 
     string LTL_FILE;
     string OUT_FILE_NAME = "";
+     /**
+     * Process the argument for the main function
+     */
     app.add_option("--ltl", LTL_FILE, "LTL File")
         ->required()
         ->check(CLI::ExistingFile);
     app.add_option("--out_file", OUT_FILE_NAME, "Ouput File");
     CLI11_PARSE(app, argc, argv); 
-
+    /**
+     * Read the input files
+     */
     ifstream t(LTL_FILE);
     stringstream buffer;
     buffer << t.rdbuf();
-
+    /**
+     * Convert LTL to properties
+     */
     string stringTokens = converLTL2LNAProp(buffer.str());
+    /**
+     * Export information to the output file
+     */
     ofstream myfile;
     if(OUT_FILE_NAME.compare("") == 0){
         myfile.open (LTL_FILE.substr(0, LTL_FILE.find('.'))+".prop.lna");
