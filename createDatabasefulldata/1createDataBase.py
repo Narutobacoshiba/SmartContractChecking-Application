@@ -58,7 +58,7 @@ mycursor.execute("""
 CREATE TABLE Context (
 id int primary key AUTO_INCREMENT,
 name nvarchar(200),
-context text,
+context LONGBLOB,
 description text
 )
 
