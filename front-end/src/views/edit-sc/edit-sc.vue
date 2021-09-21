@@ -34,10 +34,14 @@ export default {
     };
   },
   methods:{
-    clickHandler(param){
+    async clickHandler(param){
       if(param == "save"){
-        UpdateSmartContractCode(this.$route.params.sc_id, this.code)
-        this.$router.push(this.$route.params.parent_path);
+        // UpdateSmartContractCode(this.$route.params.sc_id, this.code)
+        // this.$router.push(this.$route.params.parent_path);
+        await UpdateSmartContractCode(this.$route.params.sc_id, this.nameSc,this.code)
+        this.$router.push({
+          name:"ListSc"
+          })
       }
       if(param == "back"){
         this.$router.push(this.$route.params.parent_path);

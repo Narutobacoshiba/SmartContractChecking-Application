@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import { makeLogin } from "../services/auth";
+//import { makeLogin } from "../services/auth";
+import {AuthService} from '../services/auth'
 export default {
   name: "login",
   data() {
@@ -39,22 +40,33 @@ export default {
     };
   },
   methods: {
+    // login() {
+    //   const result = makeLogin(this.username, this.password);
+    //   console.log('Bat Dau Gui Request')
+    //   result
+    //     .then((response) => {
+    //       let user = response.data;
+    //       if (user.exist == undefined) {
+    //         console.log(user); //-> Then transfer to Json web token
+    //         this.$router.push("/");
+    //       } else {
+    //         this.error = "Login Fail!!!";
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       this.error = err;
+    //     });
+    // },
     login() {
-      const result = makeLogin(this.username, this.password);
-      console.log('Bat Dau Gui Request')
-      result
-        .then((response) => {
-          let user = response.data;
-          if (user.exist == undefined) {
-            console.log(user); //-> Then transfer to Json web token
-            this.$router.push("/");
-          } else {
-            this.error = "Login Fail!!!";
-          }
-        })
-        .catch((err) => {
-          this.error = err;
-        });
+      const response  = AuthService.makeLogin({username:this.username,password:this.password})
+      response.then((res)=>{
+        if(res.status===200&&res.data.success===true){
+          this.$router.push({
+            name:"Index"
+          })
+        }
+      })
+      
     },
   },
 };

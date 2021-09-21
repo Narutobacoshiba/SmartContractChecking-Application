@@ -6,22 +6,32 @@
 
 namespace DCR2CPN {
 
+/**
+ * The class to read a DCR xml input file to an object of DCR
+ * @date Sep 2021
+ */
 DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
+    /**
+     * Declare the variables of the class
+     */
     rapidxml::xml_document<> doc;
     rapidxml::xml_node<> * root_node = NULL;
     std::vector<Event> listEvent;
     std::vector<Relation> listRelation;
    
-    // Read the xml file
+    /** Read data from the xml file
+     */ 
     std::ifstream theFile (DCR_XML_FILE);
     std::vector<char> buffer((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>());
     buffer.push_back('\0');
    
-    // Parse the buffer
+    /** Parse the buffer
+     */
     doc.parse<0>(&buffer[0]);
     root_node = doc.first_node("DCRModel");
     int nEvent = 0 ;
-    //Take name of attribute of Event by iterator eacch sub_node of node  have name Events in XML
+    /** Take a name of an attribute of Events by using iterator to skim each sub_node of node that have name Events in XML
+     */
     for(rapidxml::xml_node<>* events_node = root_node->first_node("events") ; events_node; events_node = events_node -> next_sibling()){
         std::string id,labels,roles,datatype,parent,type;
         if(events_node ->first_node("id")!=nullptr){
@@ -63,9 +73,10 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
     for(auto itr = listEvent.begin(); itr!= listEvent.end();itr++){
         numofEvent++;
     }
-    //Take name of attribute of Rules by iterator eacch sub_node of node  have name Rules in XML
+    /** Take a name of an attribute of Rules by using iterator to skim each sub_node of node that have name Rules in XML
+     */
     for(rapidxml::xml_node<>* rule_node = root_node->first_node("rules") ; rule_node; rule_node = rule_node -> next_sibling()){
-        //Relation(std::string Type,std::string Source, std::string Target, std::string Guard, std::string DurationExpression){
+        
         std::string type,source,target,guard,de;
         if(rule_node->first_node("type")!=nullptr){
             type = rule_node->first_node("type")->value();
@@ -96,13 +107,13 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
             listRelation.push_back(Relation(type,source,target,guard,de));
         }
     }
-    // for(auto itr = listRelation.begin(); itr!= listRelation.end();itr++){
-    //         Relation rel = *itr;
-    //        cout<<"Relation :"<<rel.getType()<<" "<<rel.getSource()<<" "<<rel.getTarget()<<" "<<rel.getGuard()<<" "<<rel.getDE()<<"\n"; 
-    // };
+    
+    /** Declare a vector for ERE
+     */
     std::vector<ERE> listERE;
 
-    //Add all couple [E-E](Event-i <> Event-J  to  std::vector (2 Events have to have differents ID)
+    /** Add all couples [E-E](Event-i <> Event-J to std::vector (2 Events must have differents ID)
+     */
     for(auto itr1 = listEvent.begin(); itr1 != listEvent.end(); itr1++){
         for(auto itr2 = listEvent.begin(); itr2 != listEvent.end(); itr2++ ){
             
@@ -111,22 +122,24 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
             if(source.getID() == target.getID()){
                 continue;
             }
-            else{
-                // cout<<"ahihi";
+            else{                
                 std::vector<std::string> nilVector;
                 listERE.push_back(ERE(source,target,nilVector));
             }   
         }
     }
 
-    //Iterator all Relation in std::vector 
+    /** Iterate all Relations in the vector
+     */ 
     for(auto itrRelation = listRelation.begin() ; itrRelation != listRelation.end(); itrRelation++){
             Relation rel = *itrRelation;
             std::string sourceName = rel.getSource();
             std::string targetName = rel.getTarget();
             Event source,target;
             int count = 0;
-            //Iterator all Event of list Events to take Event Source and Event Target
+            /** Iterate all Events of list Events to take the Event Source and Event Target
+             * 
+             */
             for(auto itrEvent = listEvent.begin() ; itrEvent!=listEvent.end(); itrEvent++ ){
                 if(itrEvent->getID()==targetName){
                     target=*itrEvent;
@@ -141,10 +154,12 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
                 }
                 
             }
-            //Iterator all ERE in list ERE 
+            /** Iterate all EREs in the list ERE
+             */ 
             for(auto itrERE = listERE.begin(); itrERE!=listERE.end(); itrERE++){
                     ERE ere =*itrERE;
-                    //Check if current index ERE have Event-Source and Event-Target same of Relation..
+                    /** Check if current index ERE have Event-Source and Event-Target same of Relation.
+                     */
                     if(ere.getSource().getID() == sourceName && ere.getTarget().getID() == targetName){
                         itrERE->setText(itrERE->getTest()+" ; "+itrRelation->getType());
                         std::vector<std::string> a = itrERE->getLisRelation();
@@ -153,13 +168,12 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
                         break;
                     }
                 } 
-            //If 2 Events is nesting, add Realtion to all ERE have Event-Soure and Event-Target that is sub Event of this 2 nesting Event
+            /** If 2 Events is nesting, add Relations to all EREs have Event-Soure and Event-Target that is a subevent of this 2 nesting Events
+             */
             if(source.getType()=="nesting" && target.getType()=="nesting"){
-                // cout<<"2 Nesting"<< sourceName<<" "<<targetName <<"{\n";
                 for(auto itrERE = listERE.begin(); itrERE!=listERE.end(); itrERE++){
                     ERE ere =*itrERE;
                     if(Utils::isSubOf2(sourceName,ere.getSource().getID(),listEvent) && Utils::isSubOf2(targetName,ere.getTarget().getID(),listEvent) ){ 
-                        // cout<<"Couple : "<<ere.getSource().getID()<<"~~ "<<ere.getTarget().getID()<<"\n";
                         std::vector<std::string> a = itrERE->getLisRelation();
                         a.push_back(itrRelation->getType());
                         itrERE->setListRelation(a); 
@@ -168,7 +182,8 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
                     
                 }
             }
-            //Check if one of 2 Event is nesting 
+            /** Check if one of 2 Events is nesting 
+             */
             else if(source.getType()=="nesting"){
                for(auto itrERE = listERE.begin(); itrERE!=listERE.end(); itrERE++){
                     ERE ere =*itrERE;
@@ -199,8 +214,8 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
     return myDCRClass;
 }
 
-
-
+/** Declare the getters of the class
+ */
 std::string SubNet::get_name(){
     return name;
 }
@@ -208,29 +223,40 @@ std::string SubNet::get_name(){
 std::string SubNet::get_id(){
     return id;
 }
-
+/** Add the executed parametters to the subnet
+ */
 void SubNet::add_executecvparams(const std::string& param){
     executeCVParams.push_back(param);
 }
 
+/** Add the included parametters to the subnet
+ */
 void SubNet::add_includecvparams(const std::string& param){
     includeCVParams.push_back(param);
 }
 
+/** Add the response parametters to the subnet
+ */
 void SubNet::add_responsecvparams(const std::string& param){
     responseCVParams.push_back(param);
 }
 
+/** Add the milestone parametter to the subnet
+ */
 void SubNet::add_cmilestone(const std::string& param){
     cMilestone.push_back(param);
 }
-
+/** Add the condition parametter to the subnet
+ */
 void SubNet::add_ccondition(const std::string& param){
     cCondition.push_back(param);
 }
 
 /**
- * Create a transition with:
+ * @return a transition with:
+ * 
+ *      name: 'transition.name'
+ * 
  *      in arcs: marking: <(execute,response,include)>;
  *               cflow: epsilon;
  * 
@@ -324,20 +350,24 @@ TransitionNodePtr SubNet::createTransition(){
 }
 
 
-
+/** Add a subnet to the collection
+ */
 void Translator::add_subnet(const std::string& subnet_name, SubNetPtr _subnet){
     if(subnets.find(subnet_name) == subnets.end()){
         subnets[subnet_name] = _subnet;
     }
 }
 
+/** Get a subnet by its name
+ */
 SubNetPtr Translator::get_subnet_by_name(const std::string& subnet_name){
     if(subnets.find(subnet_name) != subnets.end()){
         return subnets[subnet_name];
     }
     return nullptr;
 }
-
+/** get the subnet ID by its name
+ */
 std::string Translator::get_subnet_id(const std::string& subnet_name ){
     if(subnets.find(subnet_name) != subnets.end()){
         return subnets[subnet_name]->get_id();
@@ -345,6 +375,10 @@ std::string Translator::get_subnet_id(const std::string& subnet_name ){
     return "-1";
 }
 
+/**
+ * @return a pointer to NetNode class
+ *   NetNode class is a class that handle all information about a helena code file.
+ */ 
 NetNodePtr Translator::translate(){
     net = std::make_shared<NetNode>();
     net->set_name("test");
@@ -358,6 +392,8 @@ NetNodePtr Translator::translate(){
     std::vector<SubNetPtr> vsubnets;
     std::vector<Event> dcr_events = dcrClass.getListEvent();
     
+    /** Create a subnet corresponding to an event in the dcr events
+     */
     for(int i = 0; i< dcr_events.size(); i++){
         std::string subnet_name = Utils::removeNoneAlnum(dcr_events[i].getID());
         events_self_response[subnet_name] = false;
@@ -367,6 +403,8 @@ NetNodePtr Translator::translate(){
         vsubnets.push_back(subnet);
     }
     
+    /** Loop through the EREs to get the relations between two events, then add specific parameters to specific subnets based on this condition
+     */
     std::vector<ERE> dcr_ere = dcrClass.getERE();
     for(auto it = dcr_ere.begin(); it != dcr_ere.end(); it++) {
         SubNetPtr eventSource = get_subnet_by_name(Utils::removeNoneAlnum(it->getSource().getID()));
@@ -392,6 +430,8 @@ NetNodePtr Translator::translate(){
         }
     }
     
+    /** Check if the event has a response relation to itself
+     */
     for(auto it = events_self_response.begin(); it != events_self_response.end(); it++){
         if(!(it->second)){
             SubNetPtr event = get_subnet_by_name(it->first);
@@ -399,22 +439,17 @@ NetNodePtr Translator::translate(){
         }
     }
     
+    /** Get transitions from subnet and add it to a NetNode
+     */
     for(auto it = vsubnets.begin(); it != vsubnets.end(); ++it){
         TransitionNodePtr trans = (*it)->createTransition();
-
-        ArcNodePtr cflow = std::make_shared<ArcNode>();
-        cflow->set_label("epsilon");
-        cflow->set_placeName("cflow");
-
-        trans->add_inArc(cflow);
-        trans->add_outArc(cflow);
-
         net->add_transition(trans);
     }
     
     return net;
 }
-
+/** Generate the initial colours for the net
+ */
 void Translator::generateInitColours(){
     ParameterNodePtr n_param = std::make_shared<ParameterNode>();
     n_param->set_name("N");
@@ -486,6 +521,8 @@ void Translator::generateInitColours(){
     net->add_color(vcondition);
 }
 
+/** Generate the initial places for the net
+ */ 
 void Translator::generateInitPlaces(){
     PlaceNodePtr marking = std::make_shared<PlaceNode>();
     marking->set_name("marking");
@@ -503,22 +540,9 @@ void Translator::generateInitPlaces(){
 
     marking->set_init("<(|"+exer+"|,|"+exer+"|,|"+inc+"|)>");
     net->add_place(marking);
-
-    PlaceNodePtr cflow = std::make_shared<PlaceNode>();
-    cflow->set_name("cflow");
-    cflow->set_domain("epsilon");
-    cflow->set_init("epsilon");
-    net->add_place(cflow);
-
-    std::vector<Event> events = dcrClass.getListEvent();
-    for(auto it = events.begin(); it != events.end(); ++it){
-        PlaceNodePtr event_cflow = std::make_shared<PlaceNode>();
-        event_cflow->set_name(it->getID()+"_cflow");
-        event_cflow->set_domain("epsilon");
-        net->add_place(event_cflow);
-    }
 }
-
+/** Generate the initial functions for the net
+ */
 void Translator::generateInitFunctions(){
     FunctionNodePtr cvalue = std::make_shared<FunctionNode>();
     cvalue->set_name("cvalue");
@@ -538,6 +562,5 @@ void Translator::generateInitFunctions(){
     confirm_milestone->set_body("\tboolean ret := 1;\b\tfor(v in vc){\n\t\tif(v.cv1 = 1 and v.cv2 = 1) ret := 0;\n\t}\n\treturn ret;");
     net->add_function(confirm_milestone);
 }
-
 
 }

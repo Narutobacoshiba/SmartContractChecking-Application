@@ -3,7 +3,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
-#include "../CLI11.hpp"
+#include "../cli11/CLI11.hpp"
 
 using namespace std;
 
@@ -45,6 +45,16 @@ bool isSpecNAChar(char a){
     }
 }
 
+/** convert LTL format to .prop.lna file format 
+ * LTL        ->  .prop.lna
+ * G(global)  ->  []
+ * F(finally) ->  <>
+ * U(until)   ->  until
+ * ^(or)      ->  or
+ * &(and)     ->  and
+ * |(not)     ->  not
+ * 
+ */
 string converLTL2LNAProp(string str){
     vector<string> ret;
     string temp = "";
