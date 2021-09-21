@@ -1,1 +1,1 @@
-Các bạn đợi đến sáng mai mình cập nhật thêm 1 cột mới yêu cầu từ thầy rồi làm theo các bước hướng dẫn nhé
+Database đã xong, mọi người chịu khó sửa lại path ở nhung collum lưu file thành path dài nhất nhé
