@@ -26,6 +26,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< Updated upstream:back-end/project/urls.py
     path('api/', include('students.urls')),
     path('dcrtolna/',include('export2lna.urls')),
 
@@ -34,4 +35,11 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 #callDcrToLna
     
+=======
+    path('smartconstract/',include('smartconstract.urls')),
+    path('login',views.loginpage),
+    path('context/',include('context.urls')),
+    path('ltl/',include('LTLpro.urls')),
+
+>>>>>>> Stashed changes:back-end/BE/urls.py
 ]

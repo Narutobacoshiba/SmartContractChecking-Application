@@ -1,3 +1,11 @@
+<<<<<<< Updated upstream
+=======
+import { SmartContractsService } from "./smartcontract.service"
+import { ContextService } from "./context.serivce"
+import { LtlService } from "./ltlpro.serivce"
+
+
+>>>>>>> Stashed changes
 /* -------Vulnerabilities------ */
 var listVulnerabilities = [
   {id: 1, name: "Integer Overfow/Underflow", description: "The [] Out of range is a property of vulnerability",},
@@ -12,6 +20,7 @@ var listVulnerabilities = [
 export function GetVulnerabilities(){
   return listVulnerabilities
 }
+
 
 /* -------Smart Contracts-------- */
 var listCommonSmartContracts = [
@@ -148,7 +157,9 @@ export function DeleteSmartContracts(sc_id, options){
     deleteSmartContractFromList(listPendingSmartContracts, sc_id)
   }
 }
+
 /* ------Context------- */
+<<<<<<< Updated upstream
 export function GetContext() {
   return [
     {id: 1, context: "BPMN", des: "BPMN: User will choose the BPMN context by clicking on the \"Load a Context\" button"},
@@ -157,3 +168,59 @@ export function GetContext() {
     {id: 4, context: "Free", des: "Free"},
   ]
 }
+=======
+export async function GetContext() {
+  const response = await ContextService.GetAllContext()
+  return response.data
+}
+
+export async function GetContextById(id_context){
+  const response = await ContextService.GetContextById(id_context)
+  return response.data
+}
+
+
+/*---------CreateAndModiftyContext--------- */
+export async function CreateContext(name, description, fomular) {
+  return await ContextService.CreateContext(name, fomular, description)
+}
+
+/*---------DeleteContext-------- */
+export async function DeleteContext(id_context){
+  return await ContextService.DeleteContext(id_context)
+}
+
+/*---------Update Context-------- */
+export async function UpdateContext(id_context,ct_name,ct_description){
+  return await ContextService.UpdateContext(id_context,ct_name,ct_description)
+}
+
+
+/* ------LTL------- */
+
+export async function GetLtl() {
+  const response = await LtlService.GetAllLtl()
+  return response.data
+}
+
+export async function GetLtlById(id_Ltl){
+  const response = await LtlService.GetLtlById(id_ltl)
+  return response.data
+}
+
+/*---------CreateAndModiftyLtl--------- */
+export async function CreateLtl(name, description, fomular) {
+  return await LtlService.CreateLtl(name, fomular, description)
+}
+
+/*---------DeleteLtl-------- */
+export async function DeleteLtl(id_Ltl){
+  return await LtlService.DeleteLtl(id_Ltl)
+}
+
+/*---------Update Ltl-------- */
+export async function UpdateLtl(id_Ltl,ct_name,ct_description){
+  return await LtlService.UpdateLtl(id_Ltl,ct_name,ct_description)
+}
+
+>>>>>>> Stashed changes

@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'students',
     'corsheaders',
+<<<<<<< Updated upstream:back-end/project/settings.py
     'export2lna',
+=======
+    'LTLpro',
+>>>>>>> Stashed changes:back-end/BE/settings.py
 ]
 
 MIDDLEWARE = [
@@ -92,7 +96,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< Updated upstream:back-end/project/settings.py
         'NAME': 'testcrud',
+=======
+        'NAME': 'project',
+>>>>>>> Stashed changes:back-end/BE/settings.py
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': 'localhost',
