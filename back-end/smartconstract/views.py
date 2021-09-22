@@ -10,7 +10,8 @@ class SmartConstractAPIView(APIView):
     def get(self,request):
         try:
             if request.method == 'GET':
-                smartConstractDB = SmartConstract.objects.all()
+                sc_type = request.GET['type']
+                smartConstractDB = SmartConstract.objects.filter(type=sc_type)
                 serialiSmartConstract = GetSmartConstractSerializer(smartConstractDB,many=True)
                 return Response(serialiSmartConstract.data,status=status.HTTP_200_OK)
         except:
