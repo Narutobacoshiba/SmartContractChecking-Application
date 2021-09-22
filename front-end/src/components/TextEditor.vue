@@ -2,54 +2,58 @@
   <div id="editor">
     <div class="body">
       <div class="title">
-        <p>
-          <b>Edit the </b>
-          <span>{{ name }}</span>
-        </p>
       </div>
       <div class="btn">
-        <button class="save" @click="isSaved = true">Save</button>
         <button class="clear" @click="clear()">Clear</button>
       </div>
       <div class="box-code">
         <section class="input-box">
-          <textarea
+          <div
             name="inputCode"
             id="textarea-input"
             cols="30"
             rows="10"
             wrap="soft"
-            v-model="code"
-            @keyup="$emit('update:code', code)"
+            contenteditable=""
+            @keyup="getCode"
           >
-          </textarea>
-          <div class="save-check" v-show="!isSaved"></div>
+          <span v-for="ltl in codearr" :key="ltl" :class="{opr: ltl[0]=='opr'}">{{getSubString(ltl[1], ltl[2])}}</span>
+          </div>
         </section>
-        <p>{{ code }} {{ isSaved }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
+  props: ["ltlcode", "codearr"],
   name: "editor",
   data() {
     return {
-      text: "This is Code",
+      code: "",
     };
   },
-  computed: {},
-  props: {
-    name: String,
-    code: String,
-    isSaved: Boolean,
-  },
   methods: {
+    getSubString(from, to){
+      return this.ltlcode.substring(from, to)
+    },
     clear() {
        this.code = "";
        this.isSaved = false;
     },
+    getCode(){
+      var el = document.getElementById("textarea-input");
+      var ltl = ""
+      if(el.children.length > 0){
+        el.children.forEach(el => {ltl = ltl.concat(el.innerHTML)})
+      }else ltl = el.innerHTML
+      this.code = ltl
+      this.$emit('update', this.code)
+      console.log(this.codearr)
+      console.log(this.ltlcode)
+    }
   },
 };
 </script>
@@ -143,6 +147,10 @@ export default {
   padding-top: 20px;
   padding-left: 15px;
   box-shadow: rgb(0 0 0 / 12%) 0px 1px 3px, rgb(0 0 0 / 12%) 0px 1px 2px;
+}
+.opr{
+  color: red;
+  background-color: white;
 }
 @media only screen and (max-width: 1100px) {
   .title p {

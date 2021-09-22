@@ -9,33 +9,44 @@
         </div>
 
         <div class='nav__mid'>
-            <div class='icon' @click="goHome()">
+            <div class='icon' @click="goHome()" title="Home">
               <i class="material-icons">home</i>
             </div>
-            <div class='icon' @click="goListSC()">
+            <div id="dropdown">
+            <div class='icon' title="Manage">
               <i class="material-icons">view_list</i>
             </div>
-            <div class='icon' @click="goRoadMap()">
+              <div id="dropdown-content">
+                  <p @click="goURL('list-sc')"><a>Smart Contracts</a></p>
+                  <p @click="goURL('list-context')"><a>Contexts</a></p>
+                  <p @click="goURL('list-vul')"><a>LTL</a></p>
+              </div>
+            </div>
+            <div class='icon' @click="goRoadMap()" title="RoadMap">
               <i class="material-icons">map</i>
             </div>
-            <div class='icon'>
+            <div class='icon' title="Help">
               <i class="material-icons">help</i>
             </div>
         </div>
 
-        <div class="nav__right" v-show="checkUser()">
-            <a href='#' class="avatar">
+        <div class="nav__right" v-if="checkUser">
+            <a class="avatar">
                 <img class='avatar__img' src='../assets/avata.jpg' />
-                <span><strong>{{getUserName()}}</strong></span>
+                <span><strong>{{getUserName}}</strong></span>
             </a>
             <div class="buttons">
-                <a href="#"><i class='material-icons'>notifications</i></a>
+                <a><i class='material-icons'>notifications</i></a>
             </div>
             <div class="buttons">
-                <a href="#"><i v-on:click="showDia= !showDia" class='material-icons'>arrow_drop_down
-                   <ProDia v-show="showDia"/>
-                    </i></a>
+                <a><i @click="toggleProfile" class='material-icons'>arrow_drop_down</i>
+                <ProDia v-show="showDia"/>
+                    </a>
             </div>
+        </div>
+        <div class="nav__right" v-if="!checkUser">
+            <button @click="goLogin()" id="login-btn">Login</button>
+            <button id="register-btn">Register</button>
         </div>
     </nav>
 </template>
@@ -52,12 +63,17 @@ export default ({
             showDia: false
         }
     },
-    methods: {
+    computed:{
+        checkUser(){
+          return this.$store.state.user.currentUser.id
+        },
         getUserName() {
             return this.$store.state.user.currentUser.name
         },
-        checkUser(){
-          return this.$store.state.user.currentUser.id
+    },
+    methods: {
+        toggleProfile(){
+            this.showDia = !this.showDia
         },
         goHome() {
           this.goURL("/")
@@ -67,6 +83,9 @@ export default ({
         },
         goRoadMap() {
           this.goURL("/roadmap")
+        },
+        goLogin(){
+            this.goURL("/login")
         },
         goURL(url){
             if(this.$route.path != url)
@@ -132,12 +151,12 @@ nav {
     padding: 10px 2.8vw;
     border-radius: 5px;
     cursor: pointer;
+    align-items: center;
 }
 
 .icon i {
-    font-size: 32px;
+    font-size: 30px;
 }
-
 .icon:hover {
     background-color: #e6e6e9;
     transition: ease-in-out 0.1s;
@@ -189,7 +208,47 @@ nav {
 .material-icons{
     color: #616264;
 }
-
+a{
+    cursor: pointer;
+}
+#login-btn{
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+}
+#login-btn:hover{
+    color: blue;
+    text-decoration: underline;
+}
+#register-btn{
+    font-size: 20px;
+    border: none;
+    margin-left: 10px;
+    margin-right: 30px;
+    background-color: #5fb8ee;
+    border-radius: 5px;
+}
+#dropdown-content{
+display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 0;
+  z-index: 1;
+}
+#dropdown:hover #dropdown-content {
+  display: block;
+}
+#dropdown-content p{
+    width: 100%;
+    cursor: pointer;
+    margin: 0;
+    padding: 8px 16px;
+}
+#dropdown p:hover{
+    background-color: #f9f9f9;
+}
 @media only screen and (max-width:720px) {
     .nav__mid {
         display: none;

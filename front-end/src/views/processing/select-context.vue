@@ -1,18 +1,18 @@
 <template>
       <div class="container" id="section">
-        <h1>Context of the Smart Contract</h1>
+        <div id="header">Context of the Smart Contract</div>
 
         <div class="row" id="select">
           <div class="col-3">
             <p>Context of the SCs</p>
           </div>
           <div class="col-6">
-            <select class="form-select" aria-label="Default select example" v-model="contextSC">
+            <select class="form-select input-sm" aria-label="Default select example" v-model="contextSC" @change="setContext()">
               <option v-for="c in contexts" :key="c" :value="c">{{c.context}}</option>
             </select>
           </div>
-          <div class="col-2">
-            <button type="button" class="btn btn-outline-primary btn-sm" @click="loadContext()">
+          <div class="col-3">
+            <button type="button" id="load-btn" class="btn btn-outline-primary btn-md" @click="loadContext()">
               Load a Context
             </button>
           </div>
@@ -72,6 +72,12 @@ export default {
     loadContext(){
             this.showComponents = true
         },
+    setContext(){
+            var arr = [];
+            arr.push(this.contextSC);
+            this.$store.commit("data/SetSelectedContext", arr);
+          
+    }
   },
   computed:{
     getShowComponents(){
@@ -85,24 +91,28 @@ export default {
   width: 70%;
   margin: auto;
 }
-#section h1 {
+#header{
+  text-align: center;
+  font-size: 35px;
+  font-weight: bold;
   margin-top: 20px;
-    text-align: center;
-    font-size: 2.3em;
-    font-weight: bold;
 }
 #select {
   margin-top: 60px;
   text-align: center;
 }
 #select p {
-  font-size: 25px;
+  text-align: left;
+  font-size: 18px;
+}
+#load-btn{
+  float: left;
 }
 #description {
   margin-top: 100px;
 }
 #description p {
-  text-align: center;
+  text-align: left;
   font-size: 18px;
 }
 #btns {
@@ -114,6 +124,7 @@ export default {
   margin-left: 40px;
   margin-right: 40px;
 }
+
 /* ---- showComponents ---- */
 #showComponents{
     position: fixed;
@@ -126,5 +137,11 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@media screen and (max-width: 800px) {
+    #section{
+      width: 100%;
+    }
 }
 </style>

@@ -54,31 +54,25 @@ h1{
   margin-top: 30px;
 }
 #main{
-  height: 85vh;
+  height: 70vh;
   width: 50%;
   max-width: 500px;
   margin: auto;
   box-sizing: border-box;
 }
-.container{
-  align-items: center;
-}
 .progressbar{
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-}
-.progressbar{
-  position: relative;
   counter-reset: step;
 }
-li{
+.progressbar li{
   list-style: none;
 }
 .progressbar::after{
   content: '';
   position: absolute;
-  width: 1px;
+  width: 2px;
   height: calc(100% - 60px);
   right: 90px;
   top: 0;
@@ -107,7 +101,7 @@ li{
   text-align:  center;
   right: 76px;
   border: 2px solid #bebebe;
-  border-radius: 50%;
+  border-radius: 4px;
   font-size: 1rem;
   transform: translateY(80%);
   background: white;
@@ -116,13 +110,13 @@ li{
   font-weight: bold;
 }
 .progressbar li.active a:before {
-  border-color: rgb(91, 206, 91);
-  background-color: rgb(91, 206, 91);
+  border-color: #5fb8ee;
+  background-color: #5fb8ee;
   color: white;
 }
 .progressbar li.choosen a:before {
-  border-color: rgb(16, 100, 16);
-  background-color: rgb(16, 100, 16);
+  border-color: #3a7694;
+  background-color: #3a7694;
   color: white;
 }
 li a{
@@ -130,7 +124,7 @@ li a{
   color: black;
 }
 li.active a{
-  color: #0d6efd;
+  color: #1967d2;
   text-decoration: underline;
 }
 li.active a:hover{

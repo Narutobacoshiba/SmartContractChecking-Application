@@ -5,6 +5,14 @@ import AddSc from "../views/Add-Sc.vue"
 import Processing from "../views/Processing.vue"
 import CreateCsp from "../views/Create-Csp.vue"
 import RoadMap from "../views/RoadMap.vue"
+import Login from "../views/Login.vue"
+import Register from "../views/Register.vue"
+import AddContext from "../views/context-crud/add-context.vue"
+import EditContext from "../views/context-crud/edit-context.vue"
+import ListContext from "../views/context-crud/list-context.vue"
+import AddVul from "../views/vuls-crud/add-vul.vue"
+import EditVul from "../views/vuls-crud/edit-vul.vue"
+import ListVul from "../views/vuls-crud/list-vulnerabilities.vue"
 import { DOMAIN_TITLE } from '../.env'
 
 export const routes = [
@@ -13,6 +21,18 @@ export const routes = [
     name: "Index",
     component: Index,
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | home` },
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | login` },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | register` },
   },
   {
     path: "/list-sc",
@@ -52,6 +72,48 @@ export const routes = [
     name: "RoadMap",
     component: RoadMap,
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | RoadMap` },
+    props: true
+  },
+  {
+    path: "/add-context",
+    name: "AddContext",
+    component: AddContext,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Add a Context` },
+    props: true
+  },
+  {
+    path: "/edit-context",
+    name: "EditContext",
+    component: EditContext,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Edit Context` },
+    props: true
+  },
+  {
+    path: "/list-context",
+    name: "ListContext",
+    component: ListContext,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | List Of Contexts` },
+    props: true
+  },
+  {
+    path: "/list-vul",
+    name: "ListVul",
+    component: ListVul,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | List Of Vulnerabilities` },
+    props: true
+  },
+  {
+    path: "/add-vul",
+    name: "AddVul",
+    component: AddVul,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Add an LTL Vulnerability` },
+    props: true
+  },
+  {
+    path: "/edit-vul",
+    name: "EditVul",
+    component: EditVul,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Edit an LTL Vulnerability` },
     props: true
   },
 ]

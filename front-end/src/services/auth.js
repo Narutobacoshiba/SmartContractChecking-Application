@@ -18,7 +18,7 @@ export class AuthService {
   
   static async makeLogin ({ username, password }) {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`,{username, password}, {useCredentails: true})
+      const response = await axios.post(`${API_URL}/login`,{username, password}, {useCredentails: true})
       _setAuthData({
         accessToken: response.data.accessToken,
         exp: _parseTokenData(response.data.accessToken).exp
@@ -29,22 +29,22 @@ export class AuthService {
     }
   }
 
-  static async makeLogout () {
+  static async makeLogout() {
     try {
       /* const response = await new Http({ auth: true }).post('auth/logout', {}, { useCredentails: true }) */
       _resetAuthData()
 
-      $router.push({ name: 'Login' }).catch(() => {})
+      $router.push({ name: 'Login' }).catch(() => { })
       /* return new ResponseWrapper(response, response.data) */
     } catch (error) {
       throw new ErrorWrapper(error)
     }
   }
 
-  static async makeRegister ({username, email, password }) {
+  static async makeRegister({ username, email, password }) {
     try {
       const response = await axios.post(`${API_URL}/auth/register`,
-        {username, email, password}, { useCredentails: true })
+        { username, email, password }, { useCredentails: true })
 
       return new ResponseWrapper(response, response.data)
     } catch (error) {
@@ -53,10 +53,10 @@ export class AuthService {
   }
 
 
-  static async refreshTokens () {
+  static async refreshTokens() {
     try {
       var currentUserId = $store.state.user.currentUser.id
-      const response = await axios.post(`${API_URL}/auth/refresh-tokens`,{ currentUserId },{useCredentails: true})
+      const response = await axios.post(`${API_URL}/auth/refresh-tokens`, { currentUserId }, { useCredentails: true })
       _setAuthData({
         accessToken: response.data.accessToken,
         exp: _parseTokenData(response.data.accessToken).exp
@@ -65,7 +65,7 @@ export class AuthService {
     } catch (error) {
       console.log(error.response.data.code)
       _resetAuthData()
-      $router.push({ name: 'Login' }).catch(() => {})
+      $router.push({ name: 'Login' }).catch(() => { })
       throw new ErrorWrapper(error)
     }
   }
@@ -80,18 +80,18 @@ export class AuthService {
    ******************************
    */
 
-  static isAccessTokenExpired () {
+  static isAccessTokenExpired() {
     const accessTokenExpDate = $store.state.auth.accessTokenExpDate - 10
     const nowTime = Math.floor(new Date().getTime() / 1000)
 
     return accessTokenExpDate <= nowTime
   }
 
-  static hasRefreshToken () {
+  static hasRefreshToken() {
     return Boolean(localStorage.getItem('refreshToken'))
   }
 
-  static setRefreshToken (status) {
+  static setRefreshToken(status) {
     if (!['', 'true'].includes(status)) {
       throw new Error(`setRefreshToken: invalid value ${status}; Expect one of ['', 'true']`)
     }
@@ -99,18 +99,18 @@ export class AuthService {
     localStorage.setItem('refreshToken', status)
   }
 
-  static getBearer () {
+  static getBearer() {
     return BEARER
   }
 
-  static setBearer (accessToken) {
+  static setBearer(accessToken) {
     BEARER = `${accessToken}`
   }
 
   /*
    *tham khảo https://stackoverflow.com/questions/35228052/debounce-function-implemented-with-promises
    */
-  static _debounce (inner, ms = 0) {
+  static _debounce(inner, ms = 0) {
     let timer = null
     let resolves = []
 
@@ -133,7 +133,7 @@ export class AuthService {
  ******************************
  */
 
-function _parseTokenData (accessToken) {
+function _parseTokenData(accessToken) {
   let payload = ''
   let tokenData = {}
 
@@ -147,7 +147,7 @@ function _parseTokenData (accessToken) {
   return tokenData
 }
 
-function _resetAuthData () {
+function _resetAuthData() {
   // reset userData
   $store.commit('user/SET_CURRENT_USER', {})
   $store.commit('auth/SET_ATOKEN_EXP_DATE', null)
@@ -160,10 +160,33 @@ function _resetAuthData () {
   AuthService.setBearer('')
 }
 
-function _setAuthData ({ accessToken, exp } = {}) {
+function _setAuthData({ accessToken, exp } = {}) {
   console.log(accessToken)
   console.log(exp)
   AuthService.setRefreshToken('true')
   AuthService.setBearer(accessToken)
   $store.commit('auth/SET_ATOKEN_EXP_DATE', exp)
+}
+
+/*----------------- Login----------------- */
+export async function makeLogin(user, pass) {
+  const req = await axios.post('/Login', {
+    Username: user,
+    Pwd: pass
+  })
+  return req
+}
+export async function getAccessToken(userDetail) {
+  try {
+    const req = await axios.post('/accesstoken', {
+      id: userDetail.id,
+      username: userDetail.Username,
+      password: userDetail.Password,
+      realname: userDetail.Realname,
+      role: userDetail.role
+    })
+    return new ResponseWrapper(req, req.data)
+  } catch (error) {
+    return new ErrorWrapper(error)
+  }
 }
