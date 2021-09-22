@@ -1,3 +1,7 @@
+# Full-Stack là nơi chứa cấu trúc hệ thống Web bao gồm 2 folder Backend-Front-end
+# Script là nơi chưa các file Python để tạo Database, tất cả script sẽ đặt trong này
+# Tools ...
+
 "new development branch" 
 # test
 
