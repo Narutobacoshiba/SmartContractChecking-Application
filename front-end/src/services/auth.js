@@ -32,7 +32,7 @@ export class AuthService {
   static async makeLogout() {
     try {
       /* const response = await new Http({ auth: true }).post('auth/logout', {}, { useCredentails: true }) */
-      _resetAuthData()
+      // _resetAuthData()
 
       $router.push({ name: 'Login' }).catch(() => { })
       /* return new ResponseWrapper(response, response.data) */
