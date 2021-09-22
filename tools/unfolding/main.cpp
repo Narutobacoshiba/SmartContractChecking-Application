@@ -13,11 +13,17 @@ using namespace std;
 
 int main(int argc, char** argv){
     CLI::App app{"Unfolding tool"};
+    /**
+     * Declare the input parameters
+     */
     string SOL_LNA_FILE_NAME;
     string SOL_JSON_FILE_NAME;
     string CONTEXT_FILE_NAME;
     string PARAM_NAME; 
     string OUT_FILE_NAME = "";
+    /**
+     * Check the exist of the input arguments
+     */
     app.add_option("--lna", SOL_LNA_FILE_NAME, "Lna file")
         ->required()
         ->check(CLI::ExistingFile);
@@ -31,7 +37,9 @@ int main(int argc, char** argv){
         ->required();
     app.add_option("--out_file", OUT_FILE_NAME, "Output file path");
     CLI11_PARSE(app, argc, argv);
-
+    /**
+     * Read files 
+     */
     ifstream sol_lna_file_stream(SOL_LNA_FILE_NAME);
     ifstream sol_json_file_stream(SOL_JSON_FILE_NAME);
     ifstream context_file_stream(CONTEXT_FILE_NAME);
@@ -53,12 +61,16 @@ int main(int argc, char** argv){
     while (getline(sol_json_file_stream, new_line)) {
         sol_json_content = sol_json_content + new_line + "\n";
     }
-
+    /** 
+     * Process JSON
+     */
     nlohmann::json ast_json = nlohmann::json::parse(sol_json_content);
 
     Unfolding unfold = Unfolding("dcr",sol_lna_stream,ast_json,context_text_stream,PARAM_NAME);
     UnfoldingModelPtr model = unfold.unfolding();
-
+    /**
+     * Process output files
+     */
     ofstream myfile;
     if(OUT_FILE_NAME.compare("") == 0){
         myfile.open (SOL_LNA_FILE_NAME.substr(0, SOL_LNA_FILE_NAME.find('.'))+".lna");
