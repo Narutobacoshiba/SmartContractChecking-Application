@@ -33,6 +33,7 @@ CREATE TABLE SmartContract (
 id int primary key AUTO_INCREMENT,
 name nvarchar(200),
 type nvarchar(50),
+content text ,
 description text,
 aid int not null references Account(id)
 )
