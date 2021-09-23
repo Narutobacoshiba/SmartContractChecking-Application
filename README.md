@@ -6,10 +6,9 @@
 "new development branch" 
 # test
 
-branch front-end hiện đang là branch đang phát triển front-end
+back-end: using python Django
 
-branch back-end hiện đang là branch đang phát triển back-end
-
+front-end: using VueJS
 
 ## Back-end environment setup
 #### 1. Update to python 3 
