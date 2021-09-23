@@ -1,15 +1,3 @@
-# Full-Stack là nơi chứa cấu trúc hệ thống Web bao gồm 2 folder Backend-Front-end
-# Script là nơi chưa các file Python để tạo Database, tất cả script sẽ đặt trong này
-# Tools ...
-
-"new development branch" 
-# test
-
-branch front-end hiện đang là branch đang phát triển front-end
-
-branch back-end hiện đang là branch đang phát triển back-end
-
-
 ## Back-end environment setup
 #### 1. Update to python 3 
 ```
@@ -30,9 +18,9 @@ python -m pip install django-cors-headers
 ```
 #### 5. Connect to database MySQL
 ```
-pip install mysqlclient
+pip install mysqlclient (if error run: sudo apt-get install python3.x-dev libmysqlclient-dev)
 ```
-#### 6. Create a database name "testcrud" in MySql
+#### 6. Create a database name "soliditycpn" in MySql
 
 #### 7. Applying migrations to database
 ```
