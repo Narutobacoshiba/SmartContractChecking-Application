@@ -22,8 +22,6 @@ export class SmartContractsService extends BaseService {
     static async GetPrivateSmartContracts() {
         try {
             const response = await this.request({ auth: true }).get(`${this.getUnity()}/api?type=private`)
-            console.log(response)
-            //const response = await this.request({ auth: true }).get(`${this.entity}?type=private`)
             // const data = {
             //     content: response.data.data,
             //     headers: response.headers['']
@@ -37,8 +35,6 @@ export class SmartContractsService extends BaseService {
     static async GetPendingSmartContracts() {
         try {
             const response = await this.request({ auth: true }).get(`${this.getUnity()}/api?type=pending`)
-            console.log(response)
-            // const response = await this.request({ auth: true }).get(`${this.entity}?type=pending`)
             // const data = {
             //     content: response.data.data,
             //     headers: response.headers['']

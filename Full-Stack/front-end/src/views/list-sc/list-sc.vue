@@ -271,11 +271,24 @@ export default {
       let sc_id = this.scDelete.sc_id;
       let option = this.scDelete.option
       DeleteSmartContracts(sc_id, option);
-        // let list_smart_contracts_afterdelete =  this.list_smart_contracts.common.filter((i)=>{
-        //   return i.id != sc_id
-        // })
-        // this.list_smart_contracts.common=list_smart_contracts_afterdelete
-        this.fetchData();
+        if (option == "common"){
+          let list_smart_contracts_afterdelete =  this.list_smart_contracts.common.filter((i)=>{
+          return i.id != sc_id
+          })
+          this.list_smart_contracts.common=list_smart_contracts_afterdelete
+        }else if (option == "private"){
+          let list_smart_contracts_afterdelete =  this.list_smart_contracts.private.filter((i)=>{
+          return i.id != sc_id
+          })
+          this.list_smart_contracts.private=list_smart_contracts_afterdelete
+        }else if (option == "pending"){
+          let list_smart_contracts_afterdelete =  this.list_smart_contracts.pending.filter((i)=>{
+          return i.id != sc_id
+          })
+          this.list_smart_contracts.pending=list_smart_contracts_afterdelete
+        }
+        
+        // this.fetchData();
         this.closeConfirm()
     },
     closeConfirm(){

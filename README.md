@@ -1,3 +1,7 @@
+# Full-Stack là nơi chứa cấu trúc hệ thống Web bao gồm 2 folder Backend-Front-end
+# Script là nơi chưa các file Python để tạo Database, tất cả script sẽ đặt trong này
+# Tools ...
+
 "new development branch" 
 # test
 
@@ -28,8 +32,15 @@ python -m pip install django-cors-headers
 ```
 pip install mysqlclient
 ```
-#### 6. done setup!
+#### 6. Create a database name "testcrud" in MySql
 
+#### 7. Applying migrations to database
+```
+python manage.py migrate
+```
+#### 8. Done setup!
+                                           
+                                           
 
 ## run file back-end 
 ```
