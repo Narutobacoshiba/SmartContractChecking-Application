@@ -25,6 +25,7 @@ python3 -m venv [your virtual environment name] (i.e: python3 -m venv myVenv)
 source [your virtual environment name]/bin/activate
 ###### install django and framework
 pip install django
+
 pip install djangorestframework
 ```
 #### 3. Install jwt
