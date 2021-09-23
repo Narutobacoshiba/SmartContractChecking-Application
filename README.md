@@ -4,7 +4,7 @@
 # tools: Contain all the core tools for the model and algorithms of formal method
 
 "new development branch" 
-# Description
+# description
 
 back-end: using python Django
 
@@ -12,41 +12,41 @@ front-end: using VueJS
 
 
 ## Back-end environment setup
-#### 1. Update to python 3 
+### 1. Update to python 3 
 ```
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ```
-#### 2. Install Django and Django REST framework into the virtual environment
+### 2. Install Django and Django REST framework into the virtual environment
 
-python3 -m venv [your virtual environment name] (i.e: python3 -m venv myVenv)
+python3 -m venv you_virtual_environment_name (i.e: python3 -m venv myVenv)
 
-[your virtual environment name]\Scripts\activate.bat (for Windows)
+your_virtual_environment_name\Scripts\activate.bat (for Windows)
 
-source [your virtual environment name]/bin/activate (for Unix)
+source your_virtual_environment_name/bin/activate (for Unix)
 
 pip install django
 
 pip install djangorestframework
 ```
-#### 3. Install jwt
+### 3. Install jwt
 ```
 pip install djangorestframework-simplejwt
 ```
-#### 4. Adds CORS (Cross-Origin Resource Sharing) headers to responses.
+### 4. Adds CORS (Cross-Origin Resource Sharing) headers to responses.
 ```
 python -m pip install django-cors-headers
 ```
-#### 5. Connect to database MySQL
+### 5. Connect to database MySQL
 ```
 pip install mysqlclient
 ```
-#### 6. Create a database name "testcrud" in MySql
+### 6. Create a database name "testcrud" in MySql
 
-#### 7. Applying migrations to database
+### 7. Applying migrations to database
 ```
 python manage.py migrate
 ```
-#### 8. Done setup!
+### 8. Done setup!
                                            
                                            
 
