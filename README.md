@@ -16,7 +16,13 @@ branch back-end hiện đang là branch đang phát triển back-end
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ```
 #### 2. Install Django and Django REST framework into the virtual environment
-```
+```Create a virtual environment
+python3 -m venv <your virtual environment name> (i.e: python3 -m venv myVenv)
+```on Window:
+tutorial-env\Scripts\activate.bat
+```on Unix:
+source <your virtual environment name>/bin/activate
+```install django and framework
 pip install django
 pip install djangorestframework
 ```
