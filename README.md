@@ -1,52 +1,44 @@
-# back-end Contain al the source codes of back end
-# front-end Contain al the source codes of front end
-# scripts Contain all the sripts to generate Database 
-# tools Contain all the core tools for the model and algorithms of formal method
+# Full-Stack là nơi chứa cấu trúc hệ thống Web bao gồm 2 folder Backend-Front-end
+# Script là nơi chưa các file Python để tạo Database, tất cả script sẽ đặt trong này
+# Tools ...
 
 "new development branch" 
 # test
 
-back-end: using python Django
+branch front-end hiện đang là branch đang phát triển front-end
 
-front-end: using VueJS
+branch back-end hiện đang là branch đang phát triển back-end
 
 
 ## Back-end environment setup
-### 1. Update to python 3 
+#### 1. Update to python 3 
 ```
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ```
-### 2. Install Django and Django REST framework into the virtual environment
+#### 2. Install Django and Django REST framework into the virtual environment
 ```
-python3 -m venv you_virtual_environment_name (i.e: python3 -m venv myVenv)
-
-your_virtual_environment_name\Scripts\activate.bat (for Windows)
-
-source your_virtual_environment_name/bin/activate (for Unix)
-
 pip install django
-
 pip install djangorestframework
-
-### 3. Install jwt
+```
+#### 3. Install jwt
 ```
 pip install djangorestframework-simplejwt
 ```
-### 4. Adds CORS (Cross-Origin Resource Sharing) headers to responses.
+#### 4. Adds CORS (Cross-Origin Resource Sharing) headers to responses.
 ```
 python -m pip install django-cors-headers
 ```
-### 5. Connect to database MySQL
+#### 5. Connect to database MySQL
 ```
 pip install mysqlclient
 ```
-### 6. Create a database name "testcrud" in MySql
+#### 6. Create a database name "testcrud" in MySql
 
-### 7. Applying migrations to database
+#### 7. Applying migrations to database
 ```
 python manage.py migrate
 ```
-### 8. Done setup!
+#### 8. Done setup!
                                            
                                            
 
