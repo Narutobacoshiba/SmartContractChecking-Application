@@ -1,13 +1,14 @@
-# Full-Stack là nơi chứa cấu trúc hệ thống Web bao gồm 2 folder Backend-Front-end
-# Script là nơi chưa các file Python để tạo Database, tất cả script sẽ đặt trong này
-# Tools ...
+# back-end: Contain al the source codes of back end
+# front-end: Contain al the source codes of front end
+# scripts: Contain all the sripts to generate Database 
+# tools: Contain all the core tools for the model and algorithms of formal method
 
 "new development branch" 
-# test
+# Description
 
-branch front-end hiện đang là branch đang phát triển front-end
+back-end: using python Django
 
-branch back-end hiện đang là branch đang phát triển back-end
+front-end: using VueJS
 
 
 ## Back-end environment setup
