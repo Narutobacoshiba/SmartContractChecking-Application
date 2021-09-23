@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class LTLConfig(AppConfig):
+class LtlproConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'context'
+    name = 'LTLpro'

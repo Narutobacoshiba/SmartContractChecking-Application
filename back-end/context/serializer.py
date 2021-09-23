@@ -5,4 +5,4 @@ from .models import Context
 class ContextSerializer(serializers.ModelSerializer):
     class Meta:
         model = Context
-        fields = '__all__'
+        fields = ['id', 'name', 'context', 'description']

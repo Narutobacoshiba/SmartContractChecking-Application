@@ -26,41 +26,62 @@
 
 <script>
 import LTLEditor from "../../components/LTLEditor.vue"
+import { GetLtlById,UpdateLtl } from "../../services/data"
 export default {
   data() {
     return {
       id: this.$route.params.vul_id,
       code: "",
       name: "",
-      description: ""
+      description: "",
+      ltl: {name: String, code: String, description: String},
     };
   },
   mounted(){
       let el = document.getElementById("textarea-input");
       el.style.height = 180 + 'px';
+      // this.initData();
   },
   created(){
       //get vulnerability by id from db: name, description
   },
   components: { LTLEditor },
   methods: {
+    async initData() {
+      const data = await GetLtlById(this.id);
+      this.initModelLTL(data);
+      this.code= data.ltl;
+      this.name= data.name;
+      this.description= data.description;
+    },
       updateCode(code){
           this.code = code
       },
     Save(){
         //   Save LTL vulnerability into database
+        return UpdateLtl(this.id, this.name, this.description);
     },
-
-    clickHandler(action){
+  
+  async clickHandler(action){
         if(action == "save"){
-            this.Save()
-            this.$router.push(this.$route.params.parent_path);
+          await this.Save();
+          this.$router.push(this.$route.params.parent_path);
         } 
         else if(action == "cancel"){
             if(!this.$route.params.parent_path) this.$router.push('/');
             else this.$router.push(this.$route.params.parent_path);
         }
-    }
+    },
+    initModelLTL(modelLTL){
+      this.ltl.name= modelLTL.name;
+      this.ltl.code= modelLTL.code;
+      this.ltl.description= modelLTL.description;
+    },
+    CheckchangeLTL(){
+return this.ltl.name.trim() === this.name.trim()
+&& this.ltl.code.trim() === this.code.trim()
+&& this.ltl.description.trim() === this.description.trim()
+    },
   },
   computed: {
   }

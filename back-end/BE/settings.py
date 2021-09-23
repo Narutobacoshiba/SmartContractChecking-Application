@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'smartconstract',
     'context',
-    'ltl',
     'demo_middleware',
     'corsheaders',
+    'LTLpro',
 ]
 
 MIDDLEWARE = [
@@ -87,8 +87,12 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'project',
+        'USER': 'root',
+        'PASSWORD': '22042001',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 

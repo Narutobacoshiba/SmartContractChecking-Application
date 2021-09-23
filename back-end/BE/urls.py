@@ -22,5 +22,5 @@ urlpatterns = [
     path('smartconstract/',include('smartconstract.urls')),
     path('login',views.loginpage),
     path('context/',include('context.urls')),
-    path('ltl/',include('ltl.urls')),
-]
+    path('ltl/',include('LTLpro.urls')),
+    ]
