@@ -17,6 +17,9 @@ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ```
 #### 2. Install Django and Django REST framework into the virtual environment
 ```
+python3 -m venv you_virtual_environment_name (i.e: python3 -m venv myVenv)
+your_virtual_environment_name\Scripts\activate.bat (for Windows)
+source your_virtual_environment_name/bin/activate (for Unix)
 pip install django
 pip install djangorestframework
 ```
