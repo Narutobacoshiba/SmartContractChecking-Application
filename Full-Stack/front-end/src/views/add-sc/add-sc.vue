@@ -87,15 +87,20 @@ export default {
   methods: {
     async clickHandler(action) {
       if (action == "save") {
-        const res = await AddNewSmartContracts(
-          this.hashValue(this.nameSc),
-          this.nameSc,
-          this.options,
-          this.code
-        );
-        if (res.status && res.status === 200) {
-          this.$router.push(this.$route.params.parent_path);
-        }
+        // chưa chạy được res.status nên comment lại
+
+        // const res = await AddNewSmartContracts(
+        //   this.hashValue(this.nameSc),
+        //   this.nameSc,
+        //   this.options,
+        //   this.code
+        // );
+        // if (res.status && res.status === 200) {
+        //   this.$router.push(this.$route.params.parent_path);
+        // }
+        await AddNewSmartContracts(this.hashValue(this.nameSc), this.nameSc, this.options, this.code);
+        this.$router.push(this.$route.params.parent_path);
+
       } else if (action == "cancel") {
         this.$router.push(this.$route.params.parent_path);
       }
