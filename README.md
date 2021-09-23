@@ -17,13 +17,13 @@ front-end: using VueJS
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ```
 #### 2. Install Django and Django REST framework into the virtual environment
-##### Create a virtual environment
+
 python3 -m venv [your virtual environment name] (i.e: python3 -m venv myVenv)
-###### on Window:
-[your virtual environment name]\Scripts\activate.bat
-###### on Unix:
-source [your virtual environment name]/bin/activate
-###### install django and framework
+
+[your virtual environment name]\Scripts\activate.bat (for Windows)
+
+source [your virtual environment name]/bin/activate (for Unix)
+
 pip install django
 
 pip install djangorestframework
