@@ -1,10 +1,10 @@
-# back-end: Contain al the source codes of back end
-# front-end: Contain al the source codes of front end
-# scripts: Contain all the sripts to generate Database 
-# tools: Contain all the core tools for the model and algorithms of formal method
+# back-end Contain al the source codes of back end
+# front-end Contain al the source codes of front end
+# scripts Contain all the sripts to generate Database 
+# tools Contain all the core tools for the model and algorithms of formal method
 
 "new development branch" 
-# description
+# test
 
 back-end: using python Django
 
@@ -17,7 +17,7 @@ front-end: using VueJS
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ```
 ### 2. Install Django and Django REST framework into the virtual environment
-
+```
 python3 -m venv you_virtual_environment_name (i.e: python3 -m venv myVenv)
 
 your_virtual_environment_name\Scripts\activate.bat (for Windows)
@@ -27,7 +27,7 @@ source your_virtual_environment_name/bin/activate (for Unix)
 pip install django
 
 pip install djangorestframework
-```
+
 ### 3. Install jwt
 ```
 pip install djangorestframework-simplejwt
