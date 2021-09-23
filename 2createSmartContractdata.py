@@ -6,7 +6,7 @@ db = mysql.connector.connect(
     database="Project"
 )
 mycursor = db.cursor()
-sqlFomular = "INSERT INTO SmartContract (name,type,description,aid) VALUES (%s,%s,%s,%s)"
+sqlFomular = "INSERT INTO SmartContract (name,type,content,description,aid) VALUES (%s,%s,%s,%s,%s)"
 multi = [
     ("EtherGame","Pending","""
     uint public payoutMileStone1 = 3 ether;
@@ -43,7 +43,7 @@ multi = [
         require(redeemableEther[msg.sender] > 0); 
         redeemableEther[msg.sender] = 0;
         msg.sender.transfer(redeemableEther[msg.sender]);
-    }""",1),
+    }""","This is discription ",1),
     ("indAuctionbl","Private","""
     struct Bid {
     bytes32 blindedBid;
@@ -191,7 +191,7 @@ multi = [
         // of the refunds might have failed.
         beneficiary.transfer(this.balance);
     }
-    """,2),
+    ""","This is discription ",2),
     ("OpenAddressLottery","Common","""
     struct SeedComponents{
         uint component1;
@@ -270,7 +270,7 @@ multi = [
         if(msg.value>=0.1 ether && msg.sender!=owner) //owner can't participate, he can only fund the jackpot
             participate();
     }
-    """,3),
+    ""","This is discription ",3),
     ("EtherLotto","Pending","""
     
     // Amount of ether needed for participating in the lottery.
@@ -316,7 +316,7 @@ multi = [
             pot = 0;
         }
     }
-    """,4),
+    ""","This is discription ",4),
     ("SimpleDice","Common","""
     
   struct gamblerarray {
@@ -447,7 +447,7 @@ multi = [
   function setFeeRate(uint new_feerate) onlyowner { //set new fee rate
       FeeRate = new_feerate;
   }
-    """,5),
+    ""","This is discription ",5),
     ("Lotto","Private","""
     uint constant public blocksPerRound = 6800;
     // there are an infinite number of rounds (just like a real lottery that takes place every week). `blocksPerRound` decides how many blocks each round will last. 6800 is around a day.
@@ -596,7 +596,7 @@ multi = [
         //keep track of the total pot
 
     }
-    """,5),
+    ""","This is discription ",6),
 ]
 mycursor.executemany(sqlFomular,multi)
 db.commit()
