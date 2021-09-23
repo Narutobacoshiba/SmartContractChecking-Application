@@ -1,5 +1,5 @@
-#ifndef SOL2CPN_HELENA_H_
-#define SOL2CPN_HELENA_H_
+#ifndef HELENA_HELENA_H_
+#define HELENA_HELENA_H_
 
 #include <algorithm>
 //#include <fstream>
@@ -16,6 +16,8 @@
 #include <map>
 
 using namespace std;
+
+namespace HELENA{
 
 const string PlaceTypeNone = "0";
 const string PlaceTypeData = "1";
@@ -250,6 +252,7 @@ const string List_Token = "List";
 enum LnaNodeType {
     LnaNodeTypeNet,
     LnaNodeTypeNet_Param,
+    LnaNodeTypeComment,
     LnaNodeTypeColor,
     LnaNodeTypeRange_Color,
     LnaNodeTypeMod_Color,
@@ -346,18 +349,6 @@ enum LnaNodeType {
 class LnaNode;
 typedef shared_ptr<LnaNode> LnaNodePtr;
 
-class ColorNode;
-typedef shared_ptr<ColorNode> ColorNodePtr;
-
-class PlaceNode;
-typedef shared_ptr<PlaceNode> PlaceNodePtr;
-
-class FunctionNode;
-typedef shared_ptr<FunctionNode> FunctionNodePtr;
-
-class TransitionNode;
-typedef shared_ptr<TransitionNode> TransitionNodePtr;
-
 class LnaNode {
 public:
     explicit LnaNode(LnaNodeType _node_type) : node_type(_node_type) {}
@@ -396,8 +387,6 @@ private:
 };
 typedef std::shared_ptr<ParameterNode> ParameterNodePtr;
 
-
-
 class NetNode : public LnaNode {
 public:
     NetNode() : LnaNode(LnaNodeTypeNet) {}
@@ -415,34 +404,23 @@ public:
     LnaNodePtr get_member(const unsigned int& x);
     size_t num_members();
 
-    void add_color(const ColorNodePtr& _color);
-    ColorNodePtr get_color_by_name(const string& _name);
-
-    void add_place(const PlaceNodePtr& _place);
-    PlaceNodePtr get_place_by_name(const string& _name);
-
-    void add_transition(const TransitionNodePtr& _transition);
-    TransitionNodePtr get_transiton_by_name(const string& _name);
-
-    void add_state_color(const ColorNodePtr& _color, std::string);
-    ColorNodePtr get_state_color_by_name(const string& _name);
-
-    void add_func_color(const ColorNodePtr& _color);
-    ColorNodePtr get_func_color_by_name(const string& _name);
-
-    void add_function(const FunctionNodePtr& _func);
-    FunctionNodePtr get_function_by_name(const string& _name);
 private:
     std::string name;
     std::vector<ParameterNodePtr> param_nodes;
-    std::vector<ColorNodePtr> color_nodes;
-    std::map<std::string,ColorNodePtr> state_color;
-    std::vector<ColorNodePtr> func_color;
-    std::vector<PlaceNodePtr> place_nodes;
-    std::vector<TransitionNodePtr> transition_nodes;    
-    std::vector<FunctionNodePtr> function_nodes;
 };
 typedef std::shared_ptr<NetNode> NetNodePtr;
+
+class CommentNode : public LnaNode {
+public:
+    CommentNode() : LnaNode(LnaNodeTypeComment) {}
+    std::string source_code();
+
+    void set_comment(const std::string& _comment);
+    std::string get_comment();
+private:
+    std::string comment;
+};
+typedef std::shared_ptr<CommentNode> CommentNodePtr;
 
 //TODO: define classes for each type of color (range, mod, struct..)..
 class ColorNode : public LnaNode {
@@ -685,5 +663,7 @@ private:
     std::string safe;
 };
 typedef std::shared_ptr<TransitionNode> TransitionNodePtr;
+
+} // namespace HELENA
 
 #endif //SOL2CPN_HELENA_H_

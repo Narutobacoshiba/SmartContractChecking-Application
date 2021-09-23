@@ -1,5 +1,7 @@
 #include "Helena.hpp"
 
+namespace HELENA{
+
 LnaNodeType LnaNode::get_node_type() const {
     return node_type;
 }
@@ -25,8 +27,6 @@ size_t LnaNode::size() {
 }
 
 
-
-
 std::string NetNode::source_code() {
     std::stringstream result;
     result << name;
@@ -40,36 +40,6 @@ std::string NetNode::source_code() {
         result << ")";        
     }
     result << " {\n";
-    result << "\n/* ------- Color definition ------- */\n\n";
-    for (auto it = color_nodes.begin(); it != color_nodes.end(); ++it) {
-        result << (*it)->source_code();
-    }
-    result << "\n/* ------- State color definition ------- */\n\n";
-    StructColorNodePtr state = std::make_shared<StructColorNode>();
-    state->set_name("STATE");
-    for (auto it = state_color.begin(); it != state_color.end(); ++it) {
-        ComponentNodePtr component = std::make_shared<ComponentNode>();
-        component->set_name(it->first);
-        component->set_type((it->second)->get_name());
-        state->add_component(component);
-    }
-    result << state->source_code();
-    for (auto it = func_color.begin(); it != func_color.end(); ++it) {
-        result << (*it)->source_code();
-    }
-    result << "\n/* ------- Function definition ------- */\n\n";
-    for (auto it = function_nodes.begin(); it != function_nodes.end(); ++it) {
-        result << (*it)->source_code();
-    }
-    result << "\n/* ------- Place definition ------- */\n\n";
-    for (auto it = place_nodes.begin(); it != place_nodes.end(); ++it) {
-        result << (*it)->source_code();
-    }
-    result << "\n/* ------- Transition definition ------- */\n\n";
-    for (auto it = transition_nodes.begin(); it != transition_nodes.end(); ++it) {
-        result << (*it)->source_code();
-    }
-    result << "\n/* ------- Another definition ------- */\n\n";
     for (auto it = lna_nodes.begin(); it != lna_nodes.end(); ++it) {
         result << (*it)->source_code();
     }
@@ -109,84 +79,6 @@ size_t NetNode::num_members() {
     return size();
 }
 
-void NetNode::add_color(const ColorNodePtr& _color) {
-    if(get_color_by_name(_color->get_name()) == nullptr){
-        color_nodes.push_back(_color);
-    }
-}
-
-ColorNodePtr NetNode::get_color_by_name(const string& _color) {
-    for (auto it = color_nodes.begin(); it != color_nodes.end(); ++it)
-            if ((*it)->get_name() == _color)
-                return (*it);
-    return nullptr;
-}
-
-void NetNode::add_place(const PlaceNodePtr& _place){
-    if(get_place_by_name(_place->get_name()) == nullptr){
-        place_nodes.push_back(_place);
-    }
-}
-
-PlaceNodePtr NetNode::get_place_by_name(const string& _name){
-    for (auto it = place_nodes.begin(); it != place_nodes.end(); ++it)
-            if ((*it)->get_name() == _name)
-                return (*it);
-    return nullptr;
-}
-
-void NetNode::add_transition(const TransitionNodePtr& _transition){
-    if(get_transiton_by_name(_transition->get_name()) == nullptr){
-        transition_nodes.push_back(_transition);
-    }
-}
-
-TransitionNodePtr NetNode::get_transiton_by_name(const string& _name){
-    for (auto it = transition_nodes.begin(); it != transition_nodes.end(); ++it)
-            if ((*it)->get_name() == _name)
-                return (*it);
-    return nullptr;
-}
-
-void NetNode::add_state_color(const ColorNodePtr& _color, std::string _name){
-    if(get_state_color_by_name(_name) == nullptr){
-        state_color[_name] = _color;
-    }
-}
-
-ColorNodePtr NetNode::get_state_color_by_name(const string& _name){
-    if ( state_color.find(_name) != state_color.end() ) {
-        return state_color[_name];
-    } 
-    return nullptr;
-}
-
-void NetNode::add_func_color(const ColorNodePtr& _color){
-    if(get_func_color_by_name(_color->get_name()) == nullptr){
-        func_color.push_back(_color);
-    }
-}
-
-ColorNodePtr NetNode::get_func_color_by_name(const string& _name){
-    for (auto it = func_color.begin(); it != func_color.end(); ++it)
-            if ((*it)->get_name() == _name)
-                return (*it);
-    return nullptr;
-}
-
-void NetNode::add_function(const FunctionNodePtr& _func){
-    if(get_function_by_name(_func->get_name()) == nullptr){
-        function_nodes.push_back(_func);
-    }
-}
-
-FunctionNodePtr NetNode::get_function_by_name(const string& _name){
-    for (auto it = function_nodes.begin(); it != function_nodes.end(); ++it)
-        if ((*it)->get_name() == _name)
-            return (*it);
-    return nullptr;
-}
-
 std::string ParameterNode::source_code() {
     std::string result = name + " := " + number;
     return result;
@@ -207,6 +99,20 @@ void ParameterNode::set_number(const std::string& _number) {
 std::string ParameterNode::get_number() const {
     return number;
 }
+
+
+std::string CommentNode::source_code(){
+    return comment;
+}
+
+void CommentNode::set_comment(const std::string& _comment){
+    comment = _comment;
+}
+
+std::string CommentNode::get_comment(){
+    return comment;
+}
+
 
 std::string ColorNode::source_code() {
     //visit(this);
@@ -572,4 +478,6 @@ void TransitionNode::set_safe(const std::string& _safe) {
 }
 std::string TransitionNode::get_safe() const {
     return safe;
+}
+
 }
