@@ -18,7 +18,7 @@ python -m pip install django-cors-headers
 ```
 #### 5. Connect to database MySQL
 ```
-pip install mysqlclient
+pip install mysqlclient (if error run: sudo apt-get install python3.x-dev libmysqlclient-dev)
 ```
 #### 6. Create a database name "testcrud" in MySql
 
