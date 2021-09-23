@@ -20,7 +20,7 @@ python -m pip install django-cors-headers
 ```
 pip install mysqlclient (if error run: sudo apt-get install python3.x-dev libmysqlclient-dev)
 ```
-#### 6. Create a database name "testcrud" in MySql
+#### 6. Create a database name "soliditycpn" in MySql
 
 #### 7. Applying migrations to database
 ```
