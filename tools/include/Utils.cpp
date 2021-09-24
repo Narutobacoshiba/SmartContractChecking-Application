@@ -1,5 +1,6 @@
 #include "./Utils.hpp"
 
+// remove non-alphabetic characters, numbers and '_'
 std::string removeNoneAlnum(const std::string& inp_string)
 {
     std::string s = inp_string;
@@ -39,6 +40,12 @@ void ltrim(std::string& _str) {
     }));
 }
 
+void ltrim_ex(std::string& _str) {
+    _str.erase(_str.begin(), std::find_if(_str.begin(), _str.end(), [](int ch) {
+    return !std::isspace(ch) && !(ch == '\t') && !(ch == '\n');
+    }));
+}
+
 // trim string from right side
 // from https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
 void rtrim(std::string& _str) {
@@ -47,11 +54,22 @@ void rtrim(std::string& _str) {
     }).base(), _str.end());
 }
 
+void rtrim_ex(std::string& _str) {
+    _str.erase(std::find_if(_str.rbegin(), _str.rend(), [](int ch) {
+        return !std::isspace(ch) && !(ch == '\t') && !(ch == '\n');
+    }).base(), _str.end());
+}
+
 // trim from both ends (in place)
 // from https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
 void trim(std::string& _str) {
     ltrim(_str);
     rtrim(_str);
+}
+
+void trim_ex(std::string& _str) {
+    ltrim_ex(_str);
+    rtrim_ex(_str);
 }
 
 // trim from left side but no overwrite
@@ -88,8 +106,28 @@ std::vector<std::string> split(const std::string& _str, const std::string& _deli
     return result;
 }
 
+// spilt a string to maximum '_num' substring based on _delimiter
+std::vector<std::string> split_ex(const std::string& _str, const std::string& _delimiter, const size_t& _num) {
+    std::vector<std::string> result;
+    std::string str = std::string(_str);
+    size_t pos = 0;
+    std::string token;
+    int count = 1;
+    while ((pos = str.find(_delimiter)) != std::string::npos && count < _num) {
+        token = str.substr(0, pos);
+        result.push_back(token);
+        str.erase(0, pos + _delimiter.length());
+        count++;
+    }
+    result.push_back(str);
+        
+    return result;
+}
+/** Retrieve an element of the string by delimiter
+ */
 std::string retrieve_string_element(const std::string& _str, const unsigned int& _index, const std::string& _delimiter) {
-    std::string new_str= trim_copy(_str);
+    std::string new_str= std::string(_str);
+    trim_ex(new_str);
     std::vector<std::string> v_str = split(new_str, _delimiter);
     if (_index < v_str.size()) {
         return v_str[_index];
@@ -98,6 +136,8 @@ std::string retrieve_string_element(const std::string& _str, const unsigned int&
     }
 }
 
+/** Extract the string by edge 
+ */
 std::string substr_by_edge(const std::string& _str, const std::string& _left, const std::string& _right) {
     auto left = _str.find(_left);
     auto right = _str.rfind(_right);
@@ -131,4 +171,21 @@ std::map<std::string, std::string> parse_visitor_args(const std::string& _args) 
         result[pair[0]] = pair[1];
     }
     return result;
+}
+
+// trim string and get first substring that only contain alphabetic characters, numbers and '_'
+std::string get_first_alpha_only_string(const std::string& _str){
+    std::string str = std::string(_str);
+    trim_ex(str);
+    int pos = 0;
+    for (int i = 0; i < str.size(); i++) {
+        if ((str[i] < 'A' || str[i] > 'Z') &&
+            (str[i] < 'a' || str[i] > 'z') && 
+            (str[i] < '0' || str[i] > '9') && str[i] != '_')
+        {  
+            pos = i;
+            break;
+        }
+    }
+    return str.substr(0,pos);
 }

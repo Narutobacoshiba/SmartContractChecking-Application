@@ -2,10 +2,9 @@
 #include <fstream>
 #include <vector>
 #include <set>
-#include "../cli11/CLI11.hpp"
+#include "../../include/cli11/CLI11.hpp"
 #include "include/translator.hpp"
 #include "include/DCR.hpp"
-#include "include/Helena.hpp"
 
 using namespace std;
 using namespace DCR2CPN;
