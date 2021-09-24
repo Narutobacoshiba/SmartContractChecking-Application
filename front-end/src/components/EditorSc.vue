@@ -1,14 +1,10 @@
 <template>
   <div id="editor">
     <div class="text-edit textarea">
-      <!-- <textarea
-        id="code"
-        name="code"
-        :value="code"
-        v-on:input="$emit('input', $event.target.value)"
-      >
-      </textarea> -->
-      <AceEditor />
+      <ace-editor  v-model="code" @keyup="$emit('update:code',code)"/>
+    </div>
+    {{code}}
+    <div>
     </div>
   </div>
 </template>
@@ -25,9 +21,11 @@ export default {
     code: String,
   },
   data() {
-    return {};
+    return {
+
+    };
   },
-  components: { AceEditor },
+  components: {AceEditor},
   methods: {},
 };
 </script>
@@ -56,8 +54,5 @@ export default {
 }
 .textarea {
   overflow: hidden;
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px,
-    rgba(6, 24, 44, 0.65) 0px 4px 6px -1px,
-    rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
 }
 </style>

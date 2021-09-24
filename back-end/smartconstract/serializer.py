@@ -7,4 +7,4 @@ class GetSmartConstractSerializer(serializers.ModelSerializer):
     class Meta:
         model = SmartConstract
         #fields = '__all__'
-        fields = ['id','name','type','description']
+        fields = ['id','name','type']

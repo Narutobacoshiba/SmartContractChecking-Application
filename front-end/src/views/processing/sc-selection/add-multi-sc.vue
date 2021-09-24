@@ -88,12 +88,21 @@
                 <i class="material-icons" id="itb-last-page-icon" @click="goPage(num_of_page)">last_page</i>
             </div>
         </div>
+        <div id="showComponents" v-if="showConfirmation">
+            <div id="components-holder">
+            <confirm @cancel="cancelUpdate" @confirm="updateSCs" :dialog="dialog"/>
+            </div>
+         </div>
     </div>
 </template>
 
 <script>
-import { GetPrivateSmartContracts, GetCommonSmartContracts } from "../../../services/data.js";
+import ConfirmationDialog from "../../../components/ConfirmationDialog.vue"
+import { GetPrivateSmartContracts, GetCommonSmartContracts, GetSmartContractFunctionInfor} from "../../../services/data.js";
 export default ({
+    components:{
+        'confirm': ConfirmationDialog
+    },
     data(){
         return{
             selected_sc: [],
@@ -112,13 +121,14 @@ export default ({
             sort_asc: {name:1,type:1,date_modified:1},
 
             name_input: "",
+            showConfirmation: false,
+            dialog: {title: 'Update Smart Contracts', message: 'Are you sure to update your selection?', confirmbtn: 'Update'}
         }
     },
     mounted(){
         this.list_sc = GetPrivateSmartContracts().concat(GetCommonSmartContracts())
         this.selected_sc = this.$store.getters["data/GetSelectedSC"];
         this.filtername_items = this.list_sc
-
         this.filterListItems()
         this.sortItems(this.sort_selection)
     },
@@ -154,7 +164,7 @@ export default ({
                 return this.selection_items.length-this.num_of_record*(this.pageNum-1)
             }
             return this.num_of_record
-        }
+        },
     },
     methods: {
         filterByName(){
@@ -228,24 +238,33 @@ export default ({
             this.$emit("closeComponents")
         },
         SaveSLSc(){
-            if(confirm("Are you sure to upadte your selection?")){
-                var store_gvs = this.$store.state.data.data.selectedSCInfor;
-                var new_update = this.selected_sc
-                for (let idx = 0; idx < new_update.length; idx++) {
-                    if (!(new_update[idx].id in store_gvs)) {
+            this.showConfirmation = true
+        },
+        updateSCs(){
+            var store_gvs = this.$store.state.data.data.selectedSCInfor;
+            var new_update = this.selected_sc
+            var sc_info = this.getSelectedSCsInfo(new_update)
+            // console.log(sc_info)
+            for (let idx = 0; idx < new_update.length; idx++) {
+                if (!(new_update[idx].id in store_gvs)) {
                     this.$store.commit(
                         "data/NewSCSelectedInfor",
-                        new_update[idx].id
-                    );
-                    }
+                            {sc_id: new_update[idx].id, sc_info: sc_info[new_update[idx].id]});
                 }
-                this.$store.commit("data/SetSelectedSC", new_update);
-                this.$store.commit("views/SetHomeView", "sc-selection");
-                this.CancelSLSc()
             }
+            this.$store.commit("data/SetSelectedSC", new_update);
+            this.$store.commit("views/SetHomeView", "sc-selection");
+            this.CancelSLSc()
+        },
+        cancelUpdate(){
+            this.showConfirmation = false
         },
         goPage(value){
             this.pageNum = value
+        },
+        
+        getSelectedSCsInfo(selected_sc){
+            return GetSmartContractFunctionInfor(selected_sc)
         }
     }
 })
@@ -485,5 +504,22 @@ export default ({
 }
 #itb-cnpage i:hover{
     color: #424141;
+}
+/* ---- showComponents ---- */
+#showComponents{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+}
+#components-holder{
+    width: 50%;
+    margin: auto;
+    margin-top: 200px;
 }
 </style>

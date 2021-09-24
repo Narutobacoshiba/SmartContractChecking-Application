@@ -56,7 +56,6 @@ export class LtlService extends BaseService{
     /*---------Delete Smartcontract--------- */
     static async DeleteLtl(id) {
         try {
-            console.log(id)
             const response = await this.request({ auth: true }).delete(`${this.getUnity()}/api/?id=${id}`)
             return new ResponseWrapper(response, response.data)
         } catch (error) {

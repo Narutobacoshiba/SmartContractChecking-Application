@@ -11,7 +11,7 @@ export class ContextService extends BaseService{
     */
     static async GetAllContext() {
         try {
-            const response = await this.request({ auth: true }).get(`${this.getUnity()}/api/`)
+            const response = await this.request({ auth: true }).get(`${this.getUnity()}/api/`) // ->  http://127.0.0.1:8000/context/api/
             return new ResponseWrapper(response, response.data)
         } catch (error) {
             const message = error.response.data ? error.response.data.error : error.response.statusText
@@ -59,6 +59,7 @@ export class ContextService extends BaseService{
             return new ResponseWrapper(response, response.data)
         } catch (error) {
             const message = error.response.data ? error.response.data.error : error.response.statusText
+            console.log(error)
             throw new ErrorWrapper(error, message)
            
         }

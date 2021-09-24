@@ -1,0 +1,379 @@
+Syntax trees:
+
+
+======= Etherloto.sol =======
+ContractDefinition "EtherLotto"
+   Source: "contract EtherLotto {\r\n    address public bank ;\r\n    struct GameRecord {\r\n    address winner ;\r\n    uint amount ;\r\n    }\r\n    uint8 gameNum ;\r\n    GameRecord [] LottoLog ;\r\n    GameRecord gr;\r\n    bool won ;\r\n    uint constant TICKET_AMOUNT = 10;\r\n    uint constant FEE_AMOUNT = 1;\r\n    uint public pot ;\r\n\r\n    function EtherLottos () public {\r\n        bank = msg.sender ;\r\n        won = false ;\r\n        gameNum = 0;\r\n    }\r\n    function RestartLotto () public {\r\n        require (msg. sender == bank ) ;\r\n        require (won == true );\r\n        require (pot == 0) ;\r\n        won = false ;\r\n        gameNum += 1;\r\n    }\r\n    function playTicket () public payable {\r\n        require (msg.value == TICKET_AMOUNT );\r\n        require (won == false);\r\n        pot += msg.value ;\r\n        \r\n        won = true;\r\n        \r\n        gr.winner = msg.sender ;\r\n        gr.amount = pot - FEE_AMOUNT ;\r\n        LottoLog [gameNum] = gr;\r\n    }\r\n\r\n    function getPot () public {\r\n        require (won == true );\r\n        if(msg.sender == LottoLog[gameNum].winner ){\r\n            pot = 0;\r\n        }\r\n    }\r\n}"
+  VariableDeclaration "bank"
+     Type: address
+     Source: "address public bank"
+    ElementaryTypeName address
+       Source: "address"
+  StructDefinition "GameRecord"
+     Source: "struct GameRecord {\r\n    address winner ;\r\n    uint amount ;\r\n    }"
+    VariableDeclaration "winner"
+       Type: address
+       Source: "address winner"
+      ElementaryTypeName address
+         Source: "address"
+    VariableDeclaration "amount"
+       Type: uint256
+       Source: "uint amount"
+      ElementaryTypeName uint
+         Source: "uint"
+  VariableDeclaration "gameNum"
+     Type: uint8
+     Source: "uint8 gameNum"
+    ElementaryTypeName uint8
+       Source: "uint8"
+  VariableDeclaration "LottoLog"
+     Type: struct EtherLotto.GameRecord storage ref[] storage ref
+     Source: "GameRecord [] LottoLog"
+    ArrayTypeName
+       Source: "GameRecord []"
+      UserDefinedTypeName "GameRecord"
+         Source: "GameRecord"
+  VariableDeclaration "gr"
+     Type: struct EtherLotto.GameRecord storage ref
+     Source: "GameRecord gr"
+    UserDefinedTypeName "GameRecord"
+       Source: "GameRecord"
+  VariableDeclaration "won"
+     Type: bool
+     Source: "bool won"
+    ElementaryTypeName bool
+       Source: "bool"
+  VariableDeclaration "TICKET_AMOUNT"
+     Type: uint256
+     Source: "uint constant TICKET_AMOUNT = 10"
+    ElementaryTypeName uint
+       Source: "uint"
+    Literal, token: [no token] value: 10
+       Type: int_const 10
+       Source: "10"
+  VariableDeclaration "FEE_AMOUNT"
+     Type: uint256
+     Source: "uint constant FEE_AMOUNT = 1"
+    ElementaryTypeName uint
+       Source: "uint"
+    Literal, token: [no token] value: 1
+       Type: int_const 1
+       Source: "1"
+  VariableDeclaration "pot"
+     Type: uint256
+     Source: "uint public pot"
+    ElementaryTypeName uint
+       Source: "uint"
+  FunctionDefinition "EtherLottos" - public
+     Source: "function EtherLottos () public {\r\n        bank = msg.sender ;\r\n        won = false ;\r\n        gameNum = 0;\r\n    }"
+    ParameterList
+       Source: "()"
+    ParameterList
+       Source: ""
+    Block
+       Source: "{\r\n        bank = msg.sender ;\r\n        won = false ;\r\n        gameNum = 0;\r\n    }"
+      ExpressionStatement
+         Source: "bank = msg.sender"
+        Assignment using operator =
+           Type: address
+           Source: "bank = msg.sender"
+          Identifier bank
+             Type: address
+             Source: "bank"
+          MemberAccess to member sender
+             Type: address payable
+             Source: "msg.sender"
+            Identifier msg
+               Type: msg
+               Source: "msg"
+      ExpressionStatement
+         Source: "won = false"
+        Assignment using operator =
+           Type: bool
+           Source: "won = false"
+          Identifier won
+             Type: bool
+             Source: "won"
+          Literal, token: false value: false
+             Type: bool
+             Source: "false"
+      ExpressionStatement
+         Source: "gameNum = 0"
+        Assignment using operator =
+           Type: uint8
+           Source: "gameNum = 0"
+          Identifier gameNum
+             Type: uint8
+             Source: "gameNum"
+          Literal, token: [no token] value: 0
+             Type: int_const 0
+             Source: "0"
+  FunctionDefinition "RestartLotto" - public
+     Source: "function RestartLotto () public {\r\n        require (msg. sender == bank ) ;\r\n        require (won == true );\r\n        require (pot == 0) ;\r\n        won = false ;\r\n        gameNum += 1;\r\n    }"
+    ParameterList
+       Source: "()"
+    ParameterList
+       Source: ""
+    Block
+       Source: "{\r\n        require (msg. sender == bank ) ;\r\n        require (won == true );\r\n        require (pot == 0) ;\r\n        won = false ;\r\n        gameNum += 1;\r\n    }"
+      ExpressionStatement
+         Source: "require (msg. sender == bank )"
+        FunctionCall
+           Type: tuple()
+           Source: "require (msg. sender == bank )"
+          Identifier require
+             Type: function (bool) pure
+             Source: "require"
+          BinaryOperation using operator ==
+             Type: bool
+             Source: "msg. sender == bank"
+            MemberAccess to member sender
+               Type: address payable
+               Source: "msg. sender"
+              Identifier msg
+                 Type: msg
+                 Source: "msg"
+            Identifier bank
+               Type: address
+               Source: "bank"
+      ExpressionStatement
+         Source: "require (won == true )"
+        FunctionCall
+           Type: tuple()
+           Source: "require (won == true )"
+          Identifier require
+             Type: function (bool) pure
+             Source: "require"
+          BinaryOperation using operator ==
+             Type: bool
+             Source: "won == true"
+            Identifier won
+               Type: bool
+               Source: "won"
+            Literal, token: true value: true
+               Type: bool
+               Source: "true"
+      ExpressionStatement
+         Source: "require (pot == 0)"
+        FunctionCall
+           Type: tuple()
+           Source: "require (pot == 0)"
+          Identifier require
+             Type: function (bool) pure
+             Source: "require"
+          BinaryOperation using operator ==
+             Type: bool
+             Source: "pot == 0"
+            Identifier pot
+               Type: uint256
+               Source: "pot"
+            Literal, token: [no token] value: 0
+               Type: int_const 0
+               Source: "0"
+      ExpressionStatement
+         Source: "won = false"
+        Assignment using operator =
+           Type: bool
+           Source: "won = false"
+          Identifier won
+             Type: bool
+             Source: "won"
+          Literal, token: false value: false
+             Type: bool
+             Source: "false"
+      ExpressionStatement
+         Source: "gameNum += 1"
+        Assignment using operator +=
+           Type: uint8
+           Source: "gameNum += 1"
+          Identifier gameNum
+             Type: uint8
+             Source: "gameNum"
+          Literal, token: [no token] value: 1
+             Type: int_const 1
+             Source: "1"
+  FunctionDefinition "playTicket" - public
+     Source: "function playTicket () public payable {\r\n        require (msg.value == TICKET_AMOUNT );\r\n        require (won == false);\r\n        pot += msg.value ;\r\n        \r\n        won = true;\r\n        \r\n        gr.winner = msg.sender ;\r\n        gr.amount = pot - FEE_AMOUNT ;\r\n        LottoLog [gameNum] = gr;\r\n    }"
+    ParameterList
+       Source: "()"
+    ParameterList
+       Source: ""
+    Block
+       Source: "{\r\n        require (msg.value == TICKET_AMOUNT );\r\n        require (won == false);\r\n        pot += msg.value ;\r\n        \r\n        won = true;\r\n        \r\n        gr.winner = msg.sender ;\r\n        gr.amount = pot - FEE_AMOUNT ;\r\n        LottoLog [gameNum] = gr;\r\n    }"
+      ExpressionStatement
+         Source: "require (msg.value == TICKET_AMOUNT )"
+        FunctionCall
+           Type: tuple()
+           Source: "require (msg.value == TICKET_AMOUNT )"
+          Identifier require
+             Type: function (bool) pure
+             Source: "require"
+          BinaryOperation using operator ==
+             Type: bool
+             Source: "msg.value == TICKET_AMOUNT"
+            MemberAccess to member value
+               Type: uint256
+               Source: "msg.value"
+              Identifier msg
+                 Type: msg
+                 Source: "msg"
+            Identifier TICKET_AMOUNT
+               Type: uint256
+               Source: "TICKET_AMOUNT"
+      ExpressionStatement
+         Source: "require (won == false)"
+        FunctionCall
+           Type: tuple()
+           Source: "require (won == false)"
+          Identifier require
+             Type: function (bool) pure
+             Source: "require"
+          BinaryOperation using operator ==
+             Type: bool
+             Source: "won == false"
+            Identifier won
+               Type: bool
+               Source: "won"
+            Literal, token: false value: false
+               Type: bool
+               Source: "false"
+      ExpressionStatement
+         Source: "pot += msg.value"
+        Assignment using operator +=
+           Type: uint256
+           Source: "pot += msg.value"
+          Identifier pot
+             Type: uint256
+             Source: "pot"
+          MemberAccess to member value
+             Type: uint256
+             Source: "msg.value"
+            Identifier msg
+               Type: msg
+               Source: "msg"
+      ExpressionStatement
+         Source: "won = true"
+        Assignment using operator =
+           Type: bool
+           Source: "won = true"
+          Identifier won
+             Type: bool
+             Source: "won"
+          Literal, token: true value: true
+             Type: bool
+             Source: "true"
+      ExpressionStatement
+         Source: "gr.winner = msg.sender"
+        Assignment using operator =
+           Type: address
+           Source: "gr.winner = msg.sender"
+          MemberAccess to member winner
+             Type: address
+             Source: "gr.winner"
+            Identifier gr
+               Type: struct EtherLotto.GameRecord storage ref
+               Source: "gr"
+          MemberAccess to member sender
+             Type: address payable
+             Source: "msg.sender"
+            Identifier msg
+               Type: msg
+               Source: "msg"
+      ExpressionStatement
+         Source: "gr.amount = pot - FEE_AMOUNT"
+        Assignment using operator =
+           Type: uint256
+           Source: "gr.amount = pot - FEE_AMOUNT"
+          MemberAccess to member amount
+             Type: uint256
+             Source: "gr.amount"
+            Identifier gr
+               Type: struct EtherLotto.GameRecord storage ref
+               Source: "gr"
+          BinaryOperation using operator -
+             Type: uint256
+             Source: "pot - FEE_AMOUNT"
+            Identifier pot
+               Type: uint256
+               Source: "pot"
+            Identifier FEE_AMOUNT
+               Type: uint256
+               Source: "FEE_AMOUNT"
+      ExpressionStatement
+         Source: "LottoLog [gameNum] = gr"
+        Assignment using operator =
+           Type: struct EtherLotto.GameRecord storage ref
+           Source: "LottoLog [gameNum] = gr"
+          IndexAccess
+             Type: struct EtherLotto.GameRecord storage ref
+             Source: "LottoLog [gameNum]"
+            Identifier LottoLog
+               Type: struct EtherLotto.GameRecord storage ref[] storage ref
+               Source: "LottoLog"
+            Identifier gameNum
+               Type: uint8
+               Source: "gameNum"
+          Identifier gr
+             Type: struct EtherLotto.GameRecord storage ref
+             Source: "gr"
+  FunctionDefinition "getPot" - public
+     Source: "function getPot () public {\r\n        require (won == true );\r\n        if(msg.sender == LottoLog[gameNum].winner ){\r\n            pot = 0;\r\n        }\r\n    }"
+    ParameterList
+       Source: "()"
+    ParameterList
+       Source: ""
+    Block
+       Source: "{\r\n        require (won == true );\r\n        if(msg.sender == LottoLog[gameNum].winner ){\r\n            pot = 0;\r\n        }\r\n    }"
+      ExpressionStatement
+         Source: "require (won == true )"
+        FunctionCall
+           Type: tuple()
+           Source: "require (won == true )"
+          Identifier require
+             Type: function (bool) pure
+             Source: "require"
+          BinaryOperation using operator ==
+             Type: bool
+             Source: "won == true"
+            Identifier won
+               Type: bool
+               Source: "won"
+            Literal, token: true value: true
+               Type: bool
+               Source: "true"
+      IfStatement
+         Source: "if(msg.sender == LottoLog[gameNum].winner ){\r\n            pot = 0;\r\n        }"
+        BinaryOperation using operator ==
+           Type: bool
+           Source: "msg.sender == LottoLog[gameNum].winner"
+          MemberAccess to member sender
+             Type: address payable
+             Source: "msg.sender"
+            Identifier msg
+               Type: msg
+               Source: "msg"
+          MemberAccess to member winner
+             Type: address
+             Source: "LottoLog[gameNum].winner"
+            IndexAccess
+               Type: struct EtherLotto.GameRecord storage ref
+               Source: "LottoLog[gameNum]"
+              Identifier LottoLog
+                 Type: struct EtherLotto.GameRecord storage ref[] storage ref
+                 Source: "LottoLog"
+              Identifier gameNum
+                 Type: uint8
+                 Source: "gameNum"
+        Block
+           Source: "{\r\n            pot = 0;\r\n        }"
+          ExpressionStatement
+             Source: "pot = 0"
+            Assignment using operator =
+               Type: uint256
+               Source: "pot = 0"
+              Identifier pot
+                 Type: uint256
+                 Source: "pot"
+              Literal, token: [no token] value: 0
+                 Type: int_const 0
+                 Source: "0"

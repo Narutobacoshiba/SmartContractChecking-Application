@@ -9,7 +9,6 @@ export class Http {
     this.instance = axios.create({
       baseURL: API_URL
     })
-
     return this.init()
   }
 

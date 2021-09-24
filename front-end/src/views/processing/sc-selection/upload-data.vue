@@ -38,7 +38,7 @@
                     Cancel
                 </div>
                 <div id="update-button" @click="SaveUl">
-                    Update
+                    Save
                 </div>
             </div>
         </div>

@@ -93,6 +93,11 @@ export class SmartContractsService extends BaseService {
         try {
             console.log(id)
             const response = await this.request({ auth: true }).delete(`${this.getUnity()}/api/?id=${id}`)
+            // const data = {
+            //     content: response.data.data,
+            //     headers: response.headers['']
+            // }
+            console.log(response)
             return new ResponseWrapper(response, response.data)
         } catch (error) {
             const message = error.response.data ? error.response.data.error : error.response.statusText
