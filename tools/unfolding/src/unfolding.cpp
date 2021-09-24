@@ -1,4 +1,5 @@
 #include "unfolding.hpp"
+<<<<<<< HEAD
 /** Remove the none alphabet or number
  */
 std::string removeNoneAlnum(const std::string& inp_string){
@@ -138,26 +139,37 @@ std::string UnfoldingModel::source_code(){
  * The main function to process and read the input files (,lna and JSON)
  */
 Unfolding::Unfolding(const std::string& _context, std::stringstream& _sol_stream, nlohmann::json& _sol_json, std::stringstream& _context_stream, const std::string& param){
+=======
+
+/** The main function to process and read the input files (lna)
+ */
+Unfolding::Unfolding(const std::string& _context, std::stringstream& _sol_stream, std::stringstream& _context_stream, const std::string& param){
+>>>>>>> hadt
     context = _context;
 
     std::string new_line;
     
-    getUnfoldFunction(_sol_json,param);
+    unfold_func = split(param,"/");
 
     while (std::getline(_sol_stream, new_line)) {
         if (!new_line.empty()) {
-            _sol_lines.emplace_back(new_line);
+            std::string temp = std::string(new_line);
+            trim_ex(temp);
+            if(temp.length() > 0)
+                _sol_lines.emplace_back(new_line);
         }
     }
-    ptr_sol_line = _sol_lines.begin();
 
     while (std::getline(_context_stream, new_line)) {
         if (!new_line.empty()) {
-            _context_lines.emplace_back(new_line);
+            std::string temp = std::string(new_line);
+            trim_ex(temp);
+            if(temp.length() > 0)
+                _context_lines.emplace_back(new_line);
         }
     }
-    ptr_context_line = _context_lines.begin();
 }
+<<<<<<< HEAD
 /**
  * Get the unfolding
  */
@@ -242,101 +254,219 @@ size_t TransitionHolder::num_sol_place(){
  */
 TransitionHolderPtr Unfolding::get_transition_hodler_by_name(const std::string& _name){
     for(auto it = transitionHolder.begin(); it != transitionHolder.end(); ++it){
+=======
+
+/** Get name of Submodel
+ */
+std::string SubmodelHolder::get_name(){
+    return name;
+}
+/** Add a transition of context file to storage
+ */
+void SubmodelHolder::add_context_transition(TransitionNodePtr _transition){
+    context_transitions.push_back(_transition);
+}
+/** Add a transition of solidity file to storage
+ */
+void SubmodelHolder::add_solidity_transition(TransitionNodePtr _transition){
+    solidity_transitions.push_back(_transition);
+}
+/** Get the number of transition in context file 
+ */
+size_t SubmodelHolder::num_context_transitions(){
+    return context_transitions.size();
+}
+/** Get the number of transition in solidity file 
+ */
+size_t SubmodelHolder::num_solidity_transitions(){
+    return solidity_transitions.size();
+}
+/** Get transition of context file by index
+ */
+TransitionNodePtr SubmodelHolder::get_context_transition(size_t i){
+    return context_transitions[i];
+}
+/** Get transition of solidity file by index
+ */
+TransitionNodePtr SubmodelHolder::get_solidity_transition(size_t i){
+    return solidity_transitions[i];
+}
+/** Add a place of context file to storage
+ */
+void SubmodelHolder::add_context_place(PlaceNodePtr _place){
+    context_places.push_back(_place);
+}
+/** Get place of context file by index
+ */
+PlaceNodePtr SubmodelHolder::get_context_place(size_t i){
+    return context_places[i];
+}
+/** Get the number of place in context file 
+ */
+size_t SubmodelHolder::num_context_places(){
+    return context_places.size();
+}
+/** Add a transition of solidity file to storage
+ */
+void SubmodelHolder::add_solidity_place(PlaceNodePtr _place){
+    solidity_places.push_back(_place);
+}
+/** Get place of solidity file by index
+ */
+PlaceNodePtr SubmodelHolder::get_solidity_place(size_t i){
+    return solidity_places[i];
+}
+/** Get the number of place in solidity file 
+ */
+size_t SubmodelHolder::num_solidity_places(){
+    return solidity_places.size();
+}
+/** Get an object of SubmodelHolder by name
+ */
+SubmodelHolderPtr Unfolding::get_submodel_holder_by_name(const std::string& _name){
+    for(auto it = submodelHolders.begin(); it != submodelHolders.end(); ++it){
+>>>>>>> hadt
         if((*it)->get_name() == _name){
             return (*it);
         }
     }
     return nullptr;
 }
+<<<<<<< HEAD
 /**
  * Add context to the Transition holder
  */
 void Unfolding::add_context_transition(const std::string& _name, const std::string& _transition){
     TransitionHolderPtr temp = get_transition_hodler_by_name(_name);
+=======
+/** Add transition of context file to specific submodel indicated by the name
+ */
+void Unfolding::add_context_transition_to_submodel(const std::string& _name, TransitionNodePtr _transition){
+    SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
+>>>>>>> hadt
     if(temp != nullptr){
-        temp->add_context(_transition);
+        temp->add_context_transition(_transition);
     }else{
-        TransitionHolderPtr new_th = std::make_shared<TransitionHolder>(_name);
-        new_th->add_context(_transition);
-        transitionHolder.push_back(new_th);
+        SubmodelHolderPtr new_th = std::make_shared<SubmodelHolder>(_name);
+        new_th->add_context_transition(_transition);
+        submodelHolders.push_back(new_th);
     }
 }
+<<<<<<< HEAD
 /**
  * Add solidity to the Transition holder
  */
 void Unfolding::add_sol_transition(const std::string& _name, const std::string& _transition){
     TransitionHolderPtr temp = get_transition_hodler_by_name(_name);
+=======
+/** Add transition of solidity file to specific submodel indicated by the name
+ */
+void Unfolding::add_solidity_transition_to_submodel(const std::string& _name, TransitionNodePtr _transition){
+    SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
+>>>>>>> hadt
     if(temp != nullptr){
-        temp->add_sol(_transition);
+        temp->add_solidity_transition(_transition);
     }else{
-        TransitionHolderPtr new_th = std::make_shared<TransitionHolder>(_name);
-        new_th->add_sol(_transition);
-        transitionHolder.push_back(new_th);
+        SubmodelHolderPtr new_th = std::make_shared<SubmodelHolder>(_name);
+        new_th->add_solidity_transition(_transition);
+        submodelHolders.push_back(new_th);
     }
 }
+<<<<<<< HEAD
 /**
  * Add place from the solidity
  */
 void Unfolding::add_sol_place(const std::string& _name, const std::string& _place){
     TransitionHolderPtr temp = get_transition_hodler_by_name(_name);
+=======
+/** Add place of solidity file to specific submodel indicated by the name
+ */
+void Unfolding::add_solidity_place_to_submodel(const std::string& _name, PlaceNodePtr _place){
+    SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
+>>>>>>> hadt
     if(temp != nullptr){
-        temp->add_sol_place(_place);
+        temp->add_solidity_place(_place);
     }else{
-        TransitionHolderPtr new_th = std::make_shared<TransitionHolder>(_name);
-        new_th->add_sol_place(_place);
-        transitionHolder.push_back(new_th);
+        SubmodelHolderPtr new_th = std::make_shared<SubmodelHolder>(_name);
+        new_th->add_solidity_place(_place);
+        submodelHolders.push_back(new_th);
+    }
+}
+/** Add place of context file to specific submodel indicated by the name
+ */
+void Unfolding::add_context_place_to_submodel(const std::string& _name, PlaceNodePtr _place){
+    SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
+    if(temp != nullptr){
+        temp->add_context_place(_place);
+    }else{
+        SubmodelHolderPtr new_th = std::make_shared<SubmodelHolder>(_name);
+        new_th->add_context_place(_place);
+        submodelHolders.push_back(new_th);
     }
 }
 
+<<<<<<< HEAD
 
 /**
  * Get the string line by line and find if it contains a defined string and then process it
  * 
+=======
+/** Read code in lna file and convert to object
+>>>>>>> hadt
  */
-UnfoldingModelPtr Unfolding::unfolding(){
-    model = std::make_shared<UnfoldingModel>("test");
+void Unfolding::analyseLnaFile(const std::string type){
+    if(type == "context"){
+        ptr_pointer_end = _context_lines.end();
+        ptr_pointer_line = _context_lines.begin();
+    }else if(type == "solidity"){
+        ptr_pointer_end = _sol_lines.end();
+        ptr_pointer_line = _sol_lines.begin();
+    }
     
-    while (ptr_context_line != _context_lines.end()){
-        std::string keyword = substr_by_edge(*ptr_context_line,"***","***");
-        if(is_defined_string(keyword)){
-            (ptr_context_line++)++;
-            if(keyword == ColoursDefinitions){
-                std::string def = getContextStaticDefinition();
-                model->add_color(def);
-            }else if(keyword == FunctionsDefinitions){
-                std::string def = getContextStaticDefinition();
-                model->add_function(def);
-            }else if(keyword == PLACES){
-                std::string def = getContextStaticDefinition();
-                model->add_place(def);
-            }else if(keyword == TRANSITIONS){
-                handleDCRContextTransitionDefinitions();
+    std::string current_submodel_name;
+    while (ptr_pointer_line != ptr_pointer_end){       
+        if(retrieve_string_element(*ptr_pointer_line,1," ") == "Function:"){ 
+            current_submodel_name = retrieve_string_element(*ptr_pointer_line,2," ");
+        }else{
+            std::string keyword = get_first_alpha_only_string(*ptr_pointer_line);
+            if(keyword == TRANSITION_TOKEN){
+                TransitionNodePtr transition = handleTransition(ptr_pointer_line,ptr_pointer_end);
+                if(type == "context"){
+                    add_context_transition_to_submodel(current_submodel_name,transition);
+                }else if(type == "solidity"){
+                    add_solidity_transition_to_submodel(current_submodel_name,transition);
+                }
+            }else if(keyword == PLACE_TOKEN){
+                PlaceNodePtr place = handlePlace(ptr_pointer_line,ptr_pointer_end);
+                if(type == "context"){
+                    add_context_place_to_submodel(current_submodel_name,place);
+                }else if(type == "solidity"){
+                    add_solidity_place_to_submodel(current_submodel_name,place);
+                }
+            }else if(keyword == TYPE_TOKEN){
+                ColorNodePtr color = handleColor(ptr_pointer_line,ptr_pointer_end);
+                model->add_member(color);
+            }else if(keyword == FUNCTION_TOKEN){
+                FunctionNodePtr function = handleFunction(ptr_pointer_line,ptr_pointer_end);
+                model->add_member(function);
             }
         }
-        ++ptr_context_line;
-    }
 
-    while (ptr_sol_line != _sol_lines.end()){
-        std::string keyword = substr_by_edge(*ptr_sol_line,"***","***");
-        if(is_defined_string(keyword)){
-            (ptr_sol_line++)++;
-            if(keyword == ColoursDefinitions){
-                std::string def = getSolStaticDefinition();
-                model->add_color(def);
-            }else if(keyword == FunctionsDefinitions){
-                std::string def = getSolStaticDefinition();
-                model->add_function(def);
-            }else if(keyword == PLACES){
-                handleSolPlaces();
-            }else if(keyword == TRANSITIONS){
-                handleSolTransitionDefinitionsDCR();
-            }
-        }
-        ++ptr_sol_line;
+        ptr_pointer_line++;
     }
-    if(context == "dcr"){
+}
+/** Unfolding the solidity file by instructions in the context file  
+ */
+NetNodePtr Unfolding::unfolding(){
+    model = std::make_shared<NetNode>("test");
+
+    analyseLnaFile("context");
+
+    analyseLnaFile("solidity");
+
+    if(context == DCRContext){
         unfolding_dcr_context();
-    }else{
+    }else if(context == FreeContext){
         unfolding_free_context();
     }
 
@@ -348,141 +478,87 @@ UnfoldingModelPtr Unfolding::unfolding(){
 void Unfolding::unfolding_free_context(){
 
 }
+<<<<<<< HEAD
 /**
  * Unfolding for the DCRContext
+=======
+/** Unfolding the solidity file by instructions in the DCR context file  
+>>>>>>> hadt
  */
 void Unfolding::unfolding_dcr_context(){
-    unfoldingTransitionInDCR();
-}
-
-/**
- * read code from all transition holder
- * add cflow of model and of specific submodel to transition of dcr context
- * add cflow of model to input transition, cflow of submodel to output transition of choosen submodel
- */
-void Unfolding::unfoldingTransitionInDCR(){
-    model->add_place("\n\tplace cflow {\n\t\tdom : epsilon;\n\t\tinit : epsilon;\n\t}");
-
-    for(auto it = transitionHolder.begin(); it != transitionHolder.end(); ++it){ // loop through list of transition holder
-        model->add_transition("/*\n * Function: "+(*it)->get_name()+"\n */\n");
-        if((*it)->get_name() == unfold_func){ // if transition holder name == submodel that need unfolding name
-            model->add_place("\n\tplace "+(*it)->get_name()+"_cflow {\n\t\tdom : epsilon;\n\t}");
-            model->add_place("/*\n * Function: "+(*it)->get_name()+"\n */\n");
-            for(size_t i = 0; i < (*it)->num_sol_place(); i++){
-                model->add_place((*it)->get_sol_place(i));
+    for(auto it = submodelHolders.begin(); it != submodelHolders.end(); ++it){
+        string submodel_name = (*it)->get_name();
+        model->add_member(make_shared<CommentNode>("\n/*\n * Function: " + submodel_name + "\n */\n"));
+        if(submodel_name == "state"){
+            for(size_t i = 0; i < (*it)->num_context_places(); i++){
+                model->add_member((*it)->get_context_place(i));
             }
 
-            for(size_t i = 0; i < (*it)->num_context(); i++){
-                std::vector<std::string> temp = split((*it)->get_context(i),"\n");
-                std::stringstream _str;
-                auto st = temp.begin();
-                
-                _str << "\t" << *st << "\n";
-                while(retrieve_string_element(*(++st),0," ") != "in"){
-                    _str << "\t" << *st << "\n";
-                }
-                _str << "\t" << *st << "\n";
-                _str << "\t\t\t" << "cflow : epsilon;" << "\n";
-                while(retrieve_string_element(*(++st),0," ") != "out"){
-                    _str << "\t" << *st << "\n";
-                }
-                _str << "\t" << *st << "\n";
-                _str << "\t\t\t" << (*it)->get_name() + "_cflow : epsilon;" << "\n";
-                st++;
-                while(st != temp.end()){
-                    _str << "\t" << *st << "\n";
-                    st++;
-                } 
+            PlaceNodePtr state_cflow = std::make_shared<PlaceNode>();
+            state_cflow->set_name("cflow");
+            state_cflow->set_domain("epsilon");
+            state_cflow->set_init("epsilon");
+            model->add_member(state_cflow);
 
-                model->add_transition(_str.str());
+            for(size_t i = 0; i < (*it)->num_solidity_places(); i++){
+                model->add_member((*it)->get_solidity_place(i));
             }
+            for(size_t i = 0; i < (*it)->num_context_transitions(); i++){
+                model->add_member((*it)->get_context_transition(i));
+            }
+            for(size_t i = 0; i < (*it)->num_solidity_transitions(); i++){
+                model->add_member((*it)->get_solidity_transition(i));
+            }
+        }else if(std::find(unfold_func.begin(), unfold_func.end(), submodel_name) != unfold_func.end()){
+            PlaceNodePtr cflow = std::make_shared<PlaceNode>();
+            cflow->set_name(submodel_name+"_cflow");
+            cflow->set_domain("epsilon");
+            model->add_member(cflow);
+            
+            for(size_t i = 0; i < (*it)->num_context_places(); i++){
+                model->add_member((*it)->get_context_place(i));
+            }
+            for(size_t i = 0; i < (*it)->num_solidity_places(); i++){
+                model->add_member((*it)->get_solidity_place(i));
+            }
+            for(size_t i = 0; i < (*it)->num_context_transitions(); i++){
+                TransitionNodePtr temp = (*it)->get_context_transition(i);
 
-            bool first_require = true;
-            bool first_n_require = true;
-            for(size_t i = 0; i < (*it)->num_sol(); i++){
-                std::vector<std::string> temp = split((*it)->get_sol(i),"\n");
-                std::stringstream _str;
-                auto st = temp.begin();
-                
-                if((*st).find("_n_revert") != std::string::npos){
-                    if(first_require){
-                        _str <<  *st << "\n";
-                        while(retrieve_string_element(*(st++),0," ") != "in"){
-                            _str <<  *st << "\n";
-                        }
-                        _str << "\t\t\t" << (*it)->get_name() + "_cflow : epsilon;" << "\n";
-                        while(st != temp.end()){
-                            _str << *st << "\n";
-                            st++;
-                        }
-                        first_require = false;
-                    }else{
-                        while(st != temp.end()){
-                            _str <<  *st << "\n";
-                            st++;
-                        }
-                    }
-                }else if((*st).find("_revert") != std::string::npos){
-                    _str <<  *st << "\n";
-                    if(first_n_require){
-                        while(retrieve_string_element(*(st++),0," ") != "in"){
-                            _str <<  *st << "\n";
-                        }
-                        _str << "\t\t\t" << (*it)->get_name() + "_cflow : epsilon;" << "\n";
-                        first_n_require = false;
-                    }
-                    while(retrieve_string_element(*(st++),0," ") != "out"){
-                        _str <<  *st << "\n";
-                    }
-                    _str << "\t\t\t" << "cflow : epsilon;" << "\n";
-                    while(st != temp.end()){
-                        _str << *st << "\n";
-                        st++;
-                    }
-                }else if(i == (*it)->num_sol() - 1){
-                    _str <<  *st << "\n";
-                    while(retrieve_string_element(*(st++),0," ") != "out"){
-                        _str <<  *st << "\n";
-                    }
-                    _str << "\t\t\t" << "cflow : epsilon;" << "\n";
-                    while(st != temp.end()){
-                        _str <<  *st << "\n";
-                        st++;
-                    }
-                }else{
-                    while(st != temp.end()){
-                        _str <<  *st << "\n";
-                        st++;
-                    }
+                ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
+                cflow_arc_in->set_placeName("cflow");
+                cflow_arc_in->set_label("epsilon");
+                temp->add_inArc(cflow_arc_in);
+
+                ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
+                cflow_arc_out->set_placeName(cflow->get_name());
+                cflow_arc_out->set_label("epsilon");
+                temp->add_outArc(cflow_arc_out);
+
+                model->add_member(temp);
+            }
+            for(size_t i = 0; i < (*it)->num_solidity_transitions(); i++){
+                TransitionNodePtr temp = (*it)->get_solidity_transition(i);
+                if(temp->get_in_arc_by_name("S") != nullptr){
+                    ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
+                    cflow_arc_in->set_placeName(cflow->get_name());
+                    cflow_arc_in->set_label("epsilon");
+                    temp->add_inArc(cflow_arc_in);
                 }
 
-                model->add_transition(_str.str());
+                if(temp->get_out_arc_by_name("S") != nullptr){
+                    ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
+                    cflow_arc_out->set_placeName("cflow");
+                    cflow_arc_out->set_label("epsilon");
+                    temp->add_outArc(cflow_arc_out);
+                }
+
+                model->add_member(temp);
             }
         }else{
-            for(size_t i = 0; i < (*it)->num_context(); i++){
-                std::vector<std::string> temp = split((*it)->get_context(i),"\n");
-                std::stringstream _str;
-                auto st = temp.begin();
-                
-                _str << "\t" << *st << "\n";
-                while(retrieve_string_element(*(++st),0," ") != "in"){
-                    _str << "\t" << *st << "\n";
-                }
-                _str << "\t" << *st << "\n";
-                _str << "\t\t\t" << "cflow : epsilon;" << "\n";
-                while(retrieve_string_element(*(++st),0," ") != "out"){
-                    _str << "\t" << *st << "\n";
-                }
-                _str << "\t" << *st << "\n";
-                _str << "\t\t\t" << "cflow : epsilon;" << "\n";
-                st++;
-                while(st != temp.end()){
-                    _str << "\t" << *st << "\n";
-                    st++;
-                } 
-
-                model->add_transition(_str.str());
+            for(size_t i = 0; i < (*it)->num_context_places(); i++){
+                model->add_member((*it)->get_context_place(i));
             }
+<<<<<<< HEAD
         }
     }
 }
@@ -515,28 +591,17 @@ std::vector<std::string> Unfolding::handleElement(std::string _element, std::lis
         if((*_pointer).size() > 3 && retrieve_string_element(*_pointer,0," ") == _element){
             int level = 0;
             bool st_level = true;
+=======
+            for(size_t i = 0; i < (*it)->num_context_transitions(); i++){
+                TransitionNodePtr temp = (*it)->get_context_transition(i);
+>>>>>>> hadt
 
-            std::stringstream _str;
-            while(st_level || (level > 0)){
-                if((*_pointer).find("{") != std::string::npos){
-                    level++;
-                    st_level = false;
-                }
-                if((*_pointer).find("}") != std::string::npos){
-                    level--;
-                }
-                _str << *_pointer <<"\n";
-                _pointer++;
-            }          
-            ret.push_back(_str.str());
-            _pointer--;
-        }
-        _pointer++;
-    }
-    _pointer--;
-    return ret;
-}
+                ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
+                cflow_arc_in->set_placeName("cflow");
+                cflow_arc_in->set_label("epsilon");
+                temp->add_inArc(cflow_arc_in);
 
+<<<<<<< HEAD
 /**
  * Get the code of transition and the name of submodel then store it to transition holder
  * 
@@ -554,25 +619,20 @@ void Unfolding::handleSolTransitionDefinitionsDCR(){
     }
     ptr_sol_line--;
 }  
+=======
+                ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
+                cflow_arc_out->set_placeName("cflow");
+                cflow_arc_out->set_label("epsilon");
+                temp->add_outArc(cflow_arc_out);
+>>>>>>> hadt
 
-/**
- * get code of transition and name of submodel then store it to transition holder
- * 
- */
-void Unfolding::handleDCRContextTransitionDefinitions(){
-    while ((ptr_context_line != _context_lines.end()) && ((*ptr_context_line).find("/***") == std::string::npos)){
-        if((*ptr_context_line).find("Function:") != std::string::npos){ // if line contain "Function:" string then
-            std::string function_name = retrieve_string_element(*ptr_context_line,1,"Function:");// get submodel name
-            std::vector<std::string> transitions = handleElement("transition",ptr_context_line);// get all transitions code of submodel
-            for(auto it = transitions.begin(); it != transitions.end(); ++it){
-                add_context_transition(function_name,*it); // add transition code to transition holder
+                model->add_member(temp);
             }
         }
-        ptr_context_line++;
     }
-    ptr_context_line--;
 }
 
+<<<<<<< HEAD
 /**
  * Get code of place and name of submodel then store it to transition holder
  * 
@@ -600,3 +660,5 @@ void Unfolding::handleSolPlaces(){
         
     }
 }
+=======
+>>>>>>> hadt

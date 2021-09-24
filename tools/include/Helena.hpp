@@ -1,5 +1,5 @@
-#ifndef SOL2CPN_HELENA_H_
-#define SOL2CPN_HELENA_H_
+#ifndef HELENA_HELENA_H_
+#define HELENA_HELENA_H_
 
 #include <algorithm>
 //#include <fstream>
@@ -11,19 +11,15 @@
 //#include <string>
 //#include <vector>
 
-//#include "Utils.hpp"
 #include <vector>
 #include <map>
 
 using namespace std;
 
-const string PlaceTypeNone = "0";
-const string PlaceTypeData = "1";
-const string PlaceTypeControlFlow = "2";
-const string PlaceTypeTempData = "3";
-const string PlaceTypeWaitData = "4";
+namespace HELENA{
 
-//reserved
+/** Declare a list of reserved string
+ */
 const string ASSERT_TOKEN      = "assert";
 const string AND_TOKEN         = "and";
 const string CAPACITY_TOKEN    = "capacity";
@@ -132,11 +128,14 @@ const list<string> ReservedTokensList {
     WHILE_TOKEN,
     WITH_TOKEN
 };
-//net
+/** Declare a net
+ */
 const string Net_Token = "Net";
-//parameters
+/** Declare parameters
+ */
 const string Net_Param_Token = "Net_Param";
-//colors
+/** Declare colors
+ */
 const string Color_Token = "Color";
 const string Range_Color_Token = "Range_Color";
 const string Mod_Color_Token = "Mod_Color";
@@ -148,13 +147,15 @@ const string List_Color_Token = "List_Color";
 const string Set_Color_Token = "Set_Color";
 const string Sub_Color_Token = "Sub_Color";
 //const list<string> ColorsTokensList{};
-//functions
+/** Declare functions
+ */
 const string Func_Prot_Token = "Func_Prot";
 const string Func_Token = "Func";
 const string Param_Token = "Param";
 const string Var_Decl_Token = "Var_Decl";
 //const list<string> FunctionsTokensList{};
-//expressions
+/** Declare the expressions
+ */
 const string Num_Const_Token = "Num_Const";
 const string Func_Call_Token = "Func_Call";
 const string Vector_Access_Token = "Vector_Access";
@@ -173,7 +174,8 @@ const string Container_Aggregate_Token = "Container_Aggregate";
 const string Empty_Token = "Empty";
 const string List_Slice_Token = "List_Slice";
 //const list<string> ExpressionsTokensList{};
-//iterator types
+/** Declare iterator types
+ */
 const string card_iterator_Token = "card_iterator";
 const string mult_iterator_Token = "mult_iterator";
 const string forall_iterator_Token = "forall_iterator";
@@ -183,14 +185,16 @@ const string min_iterator_Token = "min_iterator";
 const string sum_iterator_Token = "sum_iterator";
 const string product_iterator_Token = "product_iterator";
 //const list<string> IteratorTypesTokensList{};
-//unary operators
+/** Declare unary operators
+ */
 const string Pred_Op_Token = "Pred_Op";
 const string Succ_Op_Token = "Succ_Op";
 const string Plus_Op_Token = "Plus_Op";
 const string Minus_Op_Token = "Minus_Op";
 const string Not_Op_Token = "Not_Op";
 //const list<string> UnaryOperatorsTokensList{};
-//binary operators
+/** Declare binary operators
+ */
 const string Mult_Op_Token = "Mult_Op";
 const string Div_Op_Token = "Div_Op";
 const string Mod_Op_Token = "Mod_Op";
@@ -205,7 +209,8 @@ const string Neq_Op_Token = "Neq_Op";
 const string Amp_Op_Token = "Amp_Op";
 const string In_Op_Token = "In_Op";
 //const list<string> BinaryOperatorsTokensList{};
-//statements
+/** Declare the statements
+ */
 const string Assign_Token = "Assign";
 const string If_Then_Else_Token = "If_Then_Else";
 const string Case_Stat_Token = "Case_Stat";
@@ -216,28 +221,33 @@ const string Return_Stat_Token = "Return_Stat";
 const string For_Stat_Token = "For_Stat";
 const string Block_Stat_Token = "Block_Stat";
 //const list<string> StatementsTokensList{};
-//places
+/** Declare the places
+ */
 const string Place_Token = "Place";
 const string Place_Init_Token = "Place_Init";
 const string Place_Capacity_Token = "Place_Capacity";
 const string Place_Type_Token = "Place_Type";
 //const list<string> PlacesTokensList{};
-//transitions
+/** Declare the transitions
+ */
 const string Transition_Token = "Transition";
 const string Transition_Description_Token = "Transition_Description";
 const string Transition_Guard_Token = "Transition_Guard";
 const string Transition_Priority_Token = "Transition_Priority";
 const string Transition_Safe_Token = "Transition_Safe";
 //const list<string> TransitionsokensList{};
-//mappings
+/** Declare the mappings
+ */
 const string Arc_Token = "Arc";
 const string Mapping_Token = "Mapping";
 const string Tuple_Token = "Tuple";
 const string Simple_Tuple_Token = "Simple_Tuple";
 //const list<string> MappingsTokensList{};
-//propositions
+/** Declare the propositions
+ */
 const string Proposition_Token = "Proposition";
-//others
+/** Declare the others
+ */
 const string Assert_Token = "Assert";
 const string Iter_Variable_Token = "Iter_Variable";
 const string Low_High_Range_Token = "Low_High_Range";
@@ -246,10 +256,13 @@ const string A_String_Token = "A_String";
 const string Number_Token = "Number";
 const string List_Token = "List";
 //const list<string> OthersTokensList{};
+/** Declare the LNA node type
+ */
 
 enum LnaNodeType {
     LnaNodeTypeNet,
     LnaNodeTypeNet_Param,
+    LnaNodeTypeComment,
     LnaNodeTypeColor,
     LnaNodeTypeRange_Color,
     LnaNodeTypeMod_Color,
@@ -346,18 +359,6 @@ enum LnaNodeType {
 class LnaNode;
 typedef shared_ptr<LnaNode> LnaNodePtr;
 
-class ColorNode;
-typedef shared_ptr<ColorNode> ColorNodePtr;
-
-class PlaceNode;
-typedef shared_ptr<PlaceNode> PlaceNodePtr;
-
-class FunctionNode;
-typedef shared_ptr<FunctionNode> FunctionNodePtr;
-
-class TransitionNode;
-typedef shared_ptr<TransitionNode> TransitionNodePtr;
-
 class LnaNode {
 public:
     explicit LnaNode(LnaNodeType _node_type) : node_type(_node_type) {}
@@ -396,8 +397,6 @@ private:
 };
 typedef std::shared_ptr<ParameterNode> ParameterNodePtr;
 
-
-
 class NetNode : public LnaNode {
 public:
     NetNode() : LnaNode(LnaNodeTypeNet) {}
@@ -415,34 +414,24 @@ public:
     LnaNodePtr get_member(const unsigned int& x);
     size_t num_members();
 
-    void add_color(const ColorNodePtr& _color);
-    ColorNodePtr get_color_by_name(const string& _name);
-
-    void add_place(const PlaceNodePtr& _place);
-    PlaceNodePtr get_place_by_name(const string& _name);
-
-    void add_transition(const TransitionNodePtr& _transition);
-    TransitionNodePtr get_transiton_by_name(const string& _name);
-
-    void add_state_color(const ColorNodePtr& _color, std::string);
-    ColorNodePtr get_state_color_by_name(const string& _name);
-
-    void add_func_color(const ColorNodePtr& _color);
-    ColorNodePtr get_func_color_by_name(const string& _name);
-
-    void add_function(const FunctionNodePtr& _func);
-    FunctionNodePtr get_function_by_name(const string& _name);
 private:
     std::string name;
     std::vector<ParameterNodePtr> param_nodes;
-    std::vector<ColorNodePtr> color_nodes;
-    std::map<std::string,ColorNodePtr> state_color;
-    std::vector<ColorNodePtr> func_color;
-    std::vector<PlaceNodePtr> place_nodes;
-    std::vector<TransitionNodePtr> transition_nodes;    
-    std::vector<FunctionNodePtr> function_nodes;
 };
 typedef std::shared_ptr<NetNode> NetNodePtr;
+
+class CommentNode : public LnaNode {
+public:
+    CommentNode() : LnaNode(LnaNodeTypeComment) {}
+    CommentNode(const std::string& _comment) : comment(_comment), LnaNode(LnaNodeTypeComment) {}
+    std::string source_code();
+
+    void set_comment(const std::string& _comment);
+    std::string get_comment();
+private:
+    std::string comment;
+};
+typedef std::shared_ptr<CommentNode> CommentNodePtr;
 
 //TODO: define classes for each type of color (range, mod, struct..)..
 class ColorNode : public LnaNode {
@@ -599,7 +588,7 @@ typedef std::shared_ptr<FunctionNode> FunctionNodePtr;
 
 class PlaceNode : public LnaNode {
 public:
-    PlaceNode() : LnaNode(LnaNodeTypePlace), place_type(PlaceTypeNone){}
+    PlaceNode() : LnaNode(LnaNodeTypePlace){}
     std::string source_code();
 
     void set_name(const std::string& _name);
@@ -616,16 +605,12 @@ public:
 
     void set_type(const std::string& _type);
     std::string get_type() const;
-
-    void set_place_type(const std::string& _type);
-    std::string get_place_type() const;
 private:
     std::string name;
     std::string domain;
     std::string init;
     std::string capacity;
     std::string type;
-    std::string place_type;
 };
 typedef std::shared_ptr<PlaceNode> PlaceNodePtr;
 
@@ -655,8 +640,10 @@ public:
     std::string get_name() const;
 
     void add_inArc(const ArcNodePtr& _node);
+    ArcNodePtr get_in_arc_by_name(const std::string& _name);
 
     void add_outArc(const ArcNodePtr& _node);
+    ArcNodePtr get_out_arc_by_name(const std::string& _name);
 
     void add_inhibitArc(const ArcNodePtr& _node);
 
@@ -685,5 +672,7 @@ private:
     std::string safe;
 };
 typedef std::shared_ptr<TransitionNode> TransitionNodePtr;
+
+} // namespace HELENA
 
 #endif //SOL2CPN_HELENA_H_
