@@ -76,6 +76,10 @@ PlaceNodePtr SubNetNode::get_place_tempdata_by_name(const string& _name){
     return nullptr;
 }
 
+std::map<std::string,PlaceNodePtr> SubNetNode::get_place_tempdata(){
+    return tempdata_places;
+}
+
 void SubNetNode::set_wft_transition(const TransitionNodePtr& _trans){
     wait_for_let_transition = _trans;
 }
@@ -99,9 +103,17 @@ NetNodePtr Translator::translate() {
                 state_place->set_name("state");
                 state_place->set_domain("STATE");
                 net->add_place(state_place);
+                genereteInitStateFunction();
+                state_place->set_init("<({1,set_list_GameRecord(4),10,0,0,0,0,{0,0},0,0,false})>");
+                PlaceNodePtr control_place = std::make_shared<PlaceNode>();
+                control_place->set_name("control");
+                control_place->set_domain("epsilon");
+                control_place->set_init("epsilon");
+                net->add_place(control_place);
 
                 for (int i = 0; i < contractNode->num_members(); i++){
                     auto member = contractNode->get_member(i);
+                    
                     if (member->get_node_type() == NodeTypeStructDefinition) {
                         auto structNode = std::static_pointer_cast<StructDefinitionNode>(member);
                         StructColorNodePtr struct_type = translateStruct(structNode);
@@ -129,6 +141,10 @@ NetNodePtr Translator::translate() {
                         TransitionNodePtr end_func = std::make_shared<TransitionNode>();
                         end_func->set_name(func->get_name()+"_endfunc");
 
+                        ArcNodePtr eps = std::make_shared<ArcNode>();
+                        eps->set_placeName(control_place->get_name());
+                        eps->set_label("epsilon");
+                        end_func->add_outArc(eps);
                         for(int i = 0; i < current_subnet->num_in_places(); i++){
                             PlaceNodePtr param = current_subnet->get_in_places(i);
                             ArcNodePtr arc = std::make_shared<ArcNode>();
@@ -141,13 +157,17 @@ NetNodePtr Translator::translate() {
                                 noarc->set_placeName("state");
                                 noarc->set_label("<("+param->get_name()+"_pr.state)>");
                                 end_func->add_outArc(noarc);
-
-                                ArcNodePtr poarc = std::make_shared<ArcNode>();
-                                poarc->set_placeName(func->get_name()+"_parameter");
-                                poarc->set_label("<("+param->get_name()+"_pr.par)>");
-                                end_func->add_outArc(poarc);
                             }
                         }
+                        std::map<std::string,PlaceNodePtr> temp_ps = current_subnet->get_place_tempdata();
+                        for(auto it = temp_ps.begin(); it != temp_ps.end(); ++it){
+                            PlaceNodePtr param = it->second;
+                            ArcNodePtr arc = std::make_shared<ArcNode>();
+                            arc->set_placeName(param->get_name());
+                            arc->set_label("<("+param->get_name()+"_pr)>");
+                            end_func->add_inArc(arc);
+                        }
+
                         net->add_transition(end_func);
                         is_in_function = false;
                     }
@@ -157,11 +177,42 @@ NetNodePtr Translator::translate() {
     return net;
 }
 
+void Translator::genereteInitStateFunction(){
+    FunctionNodePtr init_state = std::make_shared<FunctionNode>();
+    init_state->set_name("set_list_GameRecord");
+    init_state->set_returnType("list_GameRecord");
+
+    ParamNodePtr param = std::make_shared<ParamNode>();
+    param->set_name("n");
+    param->set_type("nat");
+    init_state->add_parameter(param);
+
+    std::string fbody;
+    fbody =fbody + "\tlist_GameRecord rb := empty;\n"+
+                   "\tfor (i in address range 1 .. address (n)) rb := {i , empty} & rb;\n"+
+                   "\treturn rb;\n";
+
+    init_state->set_body(fbody);
+
+    net->add_function(init_state);
+
+    return;
+}
+
 void Translator::createParFuncPlace(FunctionDefinitionNodePtr func){
     PlaceNodePtr func_place = std::make_shared<PlaceNode>();
     func_place->set_name(func->get_name()+"_parameter");
     func_place->set_domain(func->get_name()+"_par");
     /* func_place->set_init("<(0,0,"+")>"); */
+    if(func->get_name() == "EtherLottos"){
+        func_place->set_init("for ( i in address range 1 .. address (10)) <({{i,0},0})>");
+    }else if(func->get_name() == "RestartLotto"){
+        func_place->set_init("for ( i in address range 1 .. address (10)) <({{i,uint(10)},uint(10)})>");
+    }else if(func->get_name() == "playTicket"){
+        func_place->set_init("for ( i in address range 1 .. address (10)) <({{i,uint(10)},uint(10)})>");
+    }else if(func->get_name() == "getPot"){
+        func_place->set_init("for ( i in address range 1 .. address (10)) <({{i,uint(10)},0})>");
+    }
     net->add_place(func_place);
 }
 
@@ -174,7 +225,12 @@ void Translator::createInTransition(FunctionDefinitionNodePtr func){
 
     TransitionNodePtr func_trans = std::make_shared<TransitionNode>();
     func_trans->set_name(func->get_name());
-                        
+    
+    ArcNodePtr eps = std::make_shared<ArcNode>();
+    eps->set_placeName("control");
+    eps->set_label("epsilon");
+    func_trans->add_inArc(eps);
+
     ArcNodePtr state_arc = std::make_shared<ArcNode>();
     state_arc->set_placeName("state");
     state_arc->set_label("<(state_pr)>");
@@ -466,6 +522,7 @@ void Translator::translateAssignment(AssignmentNodePtr assignment){
     std::string left_member = translateRequireExpressionToString(assignment->get_left_hand_operand());
     std::string right_member = translateRequireExpressionToString(assignment->get_right_hand_operand());
 
+    
     if(current_subnet->get_place_tempdata_by_name(left_member) != nullptr){
         left_member = current_subnet->get_place_tempdata_by_name(left_member)->get_name()+"_pr";
     }
@@ -803,13 +860,14 @@ std::string Translator::translateRequireExpressionToString(ASTNodePtr _arg){
         IndexAccessNodePtr index = std::static_pointer_cast<IndexAccessNode>(_arg);
         std::string identifier = translateRequireExpressionToString(index->get_identifier());
         std::string index_value =  translateRequireExpressionToString(index->get_index_value());
-        if(Utils::isInteger(index_value)){
-            ret = identifier+"["+index_value+"]";
+        std::vector<std::string> temp = Utils::split(index_value,".");
+        if(Utils::isInteger(index_value) || net->get_state_color_by_name(temp[temp.size()-1])->get_name() == "uint8"){
+            ret = identifier+"[nat("+index_value+")]";
         } else if(current_subnet->get_place_tempdata_by_name(index_value) != nullptr){
             if(current_subnet->get_place_tempdata_by_name(index_value)->get_domain() == "address"){
-                ret = identifier+"["+current_subnet->get_place_tempdata_by_name(index_value)->get_name()+"_pr].value";
+                ret = identifier+"[nat("+current_subnet->get_place_tempdata_by_name(index_value)->get_name()+"_pr)].value";
             }else{
-                ret = identifier+"["+current_subnet->get_place_tempdata_by_name(index_value)->get_name()+"_pr]";
+                ret = identifier+"[nat("+current_subnet->get_place_tempdata_by_name(index_value)->get_name()+"_pr)]";
             }
         }else{ 
             std::string func_name;
@@ -918,7 +976,7 @@ FunctionNodePtr Translator::createGetMappingIndexFunction(std::string name, std:
 void Translator::translateRequireFunctionCall(ASTNodePtr _arg){
     std::string require_exp = translateRequireExpressionToString(_arg);
     std::vector<PlaceNodePtr> out_places;
-
+    
     TransitionNodePtr revert = std::make_shared<TransitionNode>();
     revert->set_name(current_subnet->get_name()+"_revert"+std::to_string(current_subnet->count));
     revert->set_guard("not("+require_exp+");");
@@ -993,11 +1051,16 @@ void Translator::translateVariableDeclaration(ASTNodePtr _var){
         }else if(varNode->get_type()->get_node_type() == NodeTypeArrayTypeName){
             auto arrayNode = std::static_pointer_cast<ArrayTypeNameNode>(varNode->get_type());
             ListColorNodePtr array_type = translateArray(arrayNode);
+            
             net->add_color(array_type);
+            if(!is_in_function){
+                net->add_state_color(net->get_color_by_name(array_type->get_name()),varNode->get_variable_name());
+            }
         }else if(varNode->get_type()->get_node_type() == NodeTypeUserDefinedTypeName){
             UserDefinedTypeNameNodePtr type = std::static_pointer_cast<UserDefinedTypeNameNode>(varNode->get_type());
             if(!is_in_function){
                 net->add_state_color(net->get_color_by_name(type->get_type_name()),varNode->get_variable_name());
+                
             }else{
                 PlaceNodePtr new_place = std::make_shared<PlaceNode>();
                 new_place->set_domain(type->get_type_name());
@@ -1313,17 +1376,15 @@ void Translator::generateFunctionColor(FunctionDefinitionNodePtr func){
     for(int i = 0; i < func_params->num_parameters(); i++){
         auto param = func_params->get_parameter(i);
         if(param->get_node_type() == NodeTypeVariableDeclaration){
-            auto varParam = std::static_pointer_cast<VariableDeclarationNode>(param);
+            auto varParam = std::static_pointer_cast<VariableDeclarationNode>(param);          
             if(varParam->get_type()->get_node_type() == NodeTypeElementaryTypeName){
                 std::string type_name = std::static_pointer_cast<ElementaryTypeNameNode>(varParam->get_type())->get_type_name();
-                if(net->get_state_color_by_name(type_name) != nullptr){
-                    ComponentNodePtr component = std::make_shared<ComponentNode>();
-                    component->set_name(varParam->get_variable_name());
-                    component->set_type(type_name);
-                    funcParColor->add_component(component);
-                }else{
-                        //error!!! type name does not exist
-                }
+                
+                ComponentNodePtr component = std::make_shared<ComponentNode>();
+                component->set_name(varParam->get_variable_name());
+                component->set_type(type_name);
+                funcParColor->add_component(component);
+                
             }else if(varParam->get_type()->get_node_type() == NodeTypeArrayTypeName){
                 auto arrayNode = std::static_pointer_cast<ArrayTypeNameNode>(varParam->get_type());
                 ListColorNodePtr array_type = translateArray(arrayNode);

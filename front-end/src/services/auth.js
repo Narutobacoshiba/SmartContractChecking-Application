@@ -18,7 +18,7 @@ export class AuthService {
   
   static async makeLogin ({ username, password }) {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`,{username, password}, {useCredentails: true})
+      const response = await axios.post(`${API_URL}/login`,{username, password}, {useCredentails: true})
       _setAuthData({
         accessToken: response.data.accessToken,
         exp: _parseTokenData(response.data.accessToken).exp
@@ -32,7 +32,7 @@ export class AuthService {
   static async makeLogout() {
     try {
       /* const response = await new Http({ auth: true }).post('auth/logout', {}, { useCredentails: true }) */
-      _resetAuthData()
+      // _resetAuthData()
 
       $router.push({ name: 'Login' }).catch(() => { })
       /* return new ResponseWrapper(response, response.data) */

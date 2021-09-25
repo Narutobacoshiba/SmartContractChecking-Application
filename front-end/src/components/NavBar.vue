@@ -9,22 +9,23 @@
         </div>
 
         <div class='nav__mid'>
-            <div class='icon' @click="goURL('list-context')">
-              <a>Contexts</a>
-            </div>
-            <div class='icon' @click="goURL('list-vul')">
-              <a>LTLVuls</a>
-            </div>
-            <div class='icon' @click="goHome()">
+            <div class='icon' @click="goHome()" title="Home">
               <i class="material-icons">home</i>
             </div>
-            <div class='icon' @click="goListSC()">
+            <div id="dropdown">
+            <div class='icon' title="Manage">
               <i class="material-icons">view_list</i>
             </div>
-            <div class='icon' @click="goRoadMap()">
+              <div id="dropdown-content">
+                  <p @click="goURL('list-sc')"><a>Smart Contracts</a></p>
+                  <p @click="goURL('list-context')"><a>Contexts</a></p>
+                  <p @click="goURL('list-vul')"><a>LTL</a></p>
+              </div>
+            </div>
+            <div class='icon' @click="goRoadMap()" title="RoadMap">
               <i class="material-icons">map</i>
             </div>
-            <div class='icon'>
+            <div class='icon' title="Help">
               <i class="material-icons">help</i>
             </div>
         </div>
@@ -150,12 +151,12 @@ nav {
     padding: 10px 2.8vw;
     border-radius: 5px;
     cursor: pointer;
+    align-items: center;
 }
 
 .icon i {
-    font-size: 32px;
+    font-size: 30px;
 }
-
 .icon:hover {
     background-color: #e6e6e9;
     transition: ease-in-out 0.1s;
@@ -226,6 +227,27 @@ a{
     margin-right: 30px;
     background-color: #5fb8ee;
     border-radius: 5px;
+}
+#dropdown-content{
+display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 0;
+  z-index: 1;
+}
+#dropdown:hover #dropdown-content {
+  display: block;
+}
+#dropdown-content p{
+    width: 100%;
+    cursor: pointer;
+    margin: 0;
+    padding: 8px 16px;
+}
+#dropdown p:hover{
+    background-color: #f9f9f9;
 }
 @media only screen and (max-width:720px) {
     .nav__mid {

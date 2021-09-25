@@ -2,12 +2,12 @@
 #include <iostream>
 #include <sstream>
 
-#include "./include/nlohmann/json.hpp"
+#include "../nlohmann/json.hpp"
 #include "./include/ASTAnalyser.hpp"
 #include "./include/Constants.hpp"
 #include "./include/Utils.hpp"
 
-#include "./include/Helena.hpp"
+#include "../helena/Helena.hpp"
 #include "./include/Translator.hpp"
 
 using namespace SOL2CPN;
@@ -15,9 +15,9 @@ using namespace std;
 
 int main(int argc, char** argv){
     
-    string ast_file_name = "./test/blindAuction.ast";
-    string ast_json_file_name = "./test/blindAuction.json";
-    string output_file_name = "./test/blindAuction_generated.lna";
+    string ast_file_name = "./test/test.ast";
+    string ast_json_file_name = "./test/test.json";
+    string output_file_name = "./test/test.lna";
 
     ifstream ast_text_file_stream(ast_file_name);
     ifstream ast_json_file_stream(ast_json_file_name);
@@ -54,21 +54,22 @@ int main(int argc, char** argv){
 
     if (ast_json_content != "") {
         nlohmann::json ast_json = nlohmann::json::parse(ast_json_content);
-     
+        
         ASTAnalyser ast_analyser(ast_text_stream, ast_json, true, sol_name, "");
 
         RootNodePtr root_node = ast_analyser.analyse();
-
+      
         Translator nettranslator(root_node);
-
+        
         NetNodePtr net_node = nettranslator.translate();
-
+        
         string new_source = net_node->source_code();
         if (output_file_name != "") {
             ofstream output_file_stream(output_file_name);
             output_file_stream<<new_source;
             output_file_stream.close();
             cout << "lna file generated in test_files directory: SUCESS" << endl;
+            cout << new_source<<"\n";
         } else {
             cout << "lna file generated in test_files directory: FAILURE" << endl;
         }

@@ -71,6 +71,7 @@ namespace Utils {
             str.erase(0, pos + _delimiter.length());
         }
         result.push_back(str);
+        
         return result;
     }
 

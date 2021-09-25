@@ -13,15 +13,33 @@
         <div class="option input-type">
           <div class="common-option" v-if="isSuperior">
             <label for="common">Common</label>
-            <input class="radio" id="common" value="common" type="radio" v-model="selectOption"/>
+            <input
+              class="radio"
+              id="common"
+              value="common"
+              type="radio"
+              v-model="selectOption"
+            />
           </div>
           <div class="common-option" v-else>
             <label for="common">Pending</label>
-            <input class="radio" id="common" value="pending" type="radio" v-model="selectOption"/>
+            <input
+              class="radio"
+              id="common"
+              value="pending"
+              type="radio"
+              v-model="selectOption"
+            />
           </div>
           <div class="private-option">
             <label for="private">Private</label>
-            <input class="radio" id="private" value="private" type="radio" v-model="selectOption"/>
+            <input
+              class="radio"
+              id="private"
+              value="private"
+              type="radio"
+              v-model="selectOption"
+            />
           </div>
         </div>
         <div class="option input-type" v-if="author === 'admin'">
@@ -32,12 +50,20 @@
         </div>
       </div>
       <div class="editor-area area">
-        <EditorSc v-model="code"/>
+        <EditorSc v-model="code" />
       </div>
       <div class="button-area area">
         <div class="button-add-cancell">
-          <button id="button-add" type="button" @click="clickHandler('save')">Save</button>
-          <button id="button-cancel" type="button" @click="clickHandler('cancel')">Cancel</button>
+          <button id="button-add" type="button" @click="clickHandler('save')">
+            Save
+          </button>
+          <button
+            id="button-cancel"
+            type="button"
+            @click="clickHandler('cancel')"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>
@@ -45,43 +71,54 @@
 </template>
 
 <script>
-import {AddNewSmartContracts} from '../../services/data'
+import { AddNewSmartContracts } from "../../services/data";
 import EditorSc from "../../components/EditorSc.vue";
 
 export default {
   name: "AddSc",
   data() {
     return {
-      nameSc: '',
+      nameSc: "",
       options: this.$route.params.options,
-      code: ""
+      code: "",
     };
   },
   components: { EditorSc },
   methods: {
-    clickHandler(action){
-        if(action == "save"){
-            AddNewSmartContracts(this.hashValue(this.nameSc), this.nameSc, this.options, this.code);
-            this.$router.push(this.$route.params.parent_path);
-        } 
-        else if(action == "cancel"){
-            this.$router.push(this.$route.params.parent_path);
-        }
-    }
+    async clickHandler(action) {
+      if (action == "save") {
+        // chưa chạy được res.status nên comment lại
+
+        // const res = await AddNewSmartContracts(
+        //   this.hashValue(this.nameSc),
+        //   this.nameSc,
+        //   this.options,
+        //   this.code
+        // );
+        // if (res.status && res.status === 200) {
+        //   this.$router.push(this.$route.params.parent_path);
+        // }
+        await AddNewSmartContracts(this.hashValue(this.nameSc), this.nameSc, this.options, this.code);
+        this.$router.push(this.$route.params.parent_path);
+
+      } else if (action == "cancel") {
+        this.$router.push(this.$route.params.parent_path);
+      }
+    },
   },
   computed: {
     selectOption: {
-      get: function(){
-          return this.options
+      get: function () {
+        return this.options;
       },
-      set: function(value){
-        this.options = value
-      }
+      set: function (value) {
+        this.options = value;
+      },
     },
-    isSuperior(){
-      return this.$store.state.user.currentUser.role == 'admin'
-    }
-  }
+    isSuperior() {
+      return this.$store.state.user.currentUser.role == "admin";
+    },
+  },
 };
 </script>
 <style scoped>
@@ -125,11 +162,11 @@ a.router-link-active {
   align-items: center;
 }
 /* header style */
-.title{
+.title {
   padding-top: 8%;
   margin-bottom: 5%;
 }
-.title h1{
+.title h1 {
   font-size: 50px;
 }
 /* name area */
@@ -181,23 +218,23 @@ a.router-link-active {
   position: relative;
   left: 40px;
 }
- input[type='radio'] { 
-     transform: scale(1.6); 
- }
- label{
-   margin-right: 10px;
- }
- label:hover{
-   cursor: pointer;
- }
+input[type="radio"] {
+  transform: scale(1.6);
+}
+label {
+  margin-right: 10px;
+}
+label:hover {
+  cursor: pointer;
+}
 .common-option,
-.private-option{
+.private-option {
   border: 1px solid rgb(241, 240, 240);
   border-radius: 15px;
   width: 100px;
 }
 .common-option:hover,
-.private-option:hover{
+.private-option:hover {
   background-color: #bcc6d4;
 }
 </style>
