@@ -9,12 +9,21 @@
 #include <cctype>
 #include "../../nlohmann/json.hpp"
 
+// takes a string in the given string that is bounded by 2 strings _left and _right
 std::string substr_by_edge(const std::string& _str, const std::string& _left, const std::string& _right); 
+// split a string into a vector<string> based on _delimiter
 std::vector<std::string> split(const std::string& _str, const std::string& _delimiter);
+// trim from both sides but no overwrite
 std::string trim_copy(const std::string& _str);
+// Get the _index[th] element from a string split by _c
 std::string retrieve_string_element(const std::string& _str, const unsigned int& _index, const std::string& _delimiter);
+// Remove none alpha or number or '_' characters from a given string and return
 std::string removeNoneAlnum(const std::string& inp_string);
 
+/** @class UnfoldingModel
+ * 
+ * hold all information about model in form of .lna code
+ */ 
 class UnfoldingModel{
     public:
         UnfoldingModel(const std::string& _name): name(_name){}
@@ -36,6 +45,10 @@ class UnfoldingModel{
 };
 typedef std::shared_ptr<UnfoldingModel> UnfoldingModelPtr;
 
+/** @class TransitionHolder
+ * 
+ *  hold code for transition in context and sol file
+ */
 class TransitionHolder{
     public:
         TransitionHolder(const std::string& _name): name(_name){}
@@ -49,14 +62,20 @@ class TransitionHolder{
         std::string get_sol(size_t i);
         size_t num_sol();
 
+        void add_sol_place(const std::string& _transition);
+        std::string get_sol_place(size_t i);
+        size_t num_sol_place();
+
     private:
         std::string name;
 
+        std::vector<std::string> sol_places;
         std::vector<std::string> context_transition;
         std::vector<std::string> sol_transition;
 };
 typedef std::shared_ptr<TransitionHolder> TransitionHolderPtr;
 
+// Static string in .lna file
 const std::string ColoursDefinitions = " Colours Definitions ";
 const std::string FunctionsDefinitions = " Functions Definitions ";
 const std::string PLACES = " PLACES ";
@@ -80,11 +99,20 @@ class Unfolding{
 
         std::string getContextStaticDefinition();
         std::string getSolStaticDefinition();
+
         void handleDCRContextTransitionDefinitions();
         void handleSolTransitionDefinitionsDCR();
 
+        void handleDCRContextPlaces();
+        void handleSolPlaces();
+        
         void add_context_transition(const std::string& _name, const std::string& _transition);
         void add_sol_transition(const std::string& _name, const std::string& _transition);
+
+        void add_sol_place(const std::string& _name, const std::string& _place);
+
+        std::vector<std::string> handleElement(std::string _element, std::list<std::string>::iterator& _pointer );
+
         TransitionHolderPtr get_transition_hodler_by_name(const std::string& _name);
 
         void unfoldingTransitionInDCR();

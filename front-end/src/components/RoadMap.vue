@@ -5,7 +5,7 @@
     </div>
     <div id="progressbar-section">
       <div id="ps-text">
-        <c>Step {{current_page}} of 6: </c><b>{{pages[current_page-1].name}}</b>
+        <span>Step {{current_page}} of 6: </span><b>{{pages[current_page-1].name}}</b>
       </div>
       <div id="ps-roadmap">
         <li v-for="page in pages" :key="page.id" :class="{ active: page.id <= road_page , chosen: page.id == current_page}" @click="routing(page)">
@@ -112,7 +112,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#ps-text c{
+#ps-text span{
   color: #969b9e;
   text-transform: uppercase;
   font-size: 12px;

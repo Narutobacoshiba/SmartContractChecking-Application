@@ -1,11 +1,3 @@
-"new development branch" 
-# test
-
-branch front-end hiện đang là branch đang phát triển front-end
-
-branch back-end hiện đang là branch đang phát triển back-end
-
-
 ## Back-end environment setup
 #### 1. Update to python 3 
 ```
@@ -26,10 +18,17 @@ python -m pip install django-cors-headers
 ```
 #### 5. Connect to database MySQL
 ```
-pip install mysqlclient
+pip install mysqlclient (if error run: sudo apt-get install python3.x-dev libmysqlclient-dev)
 ```
-#### 6. done setup!
+#### 6. Create a database name "soliditycpn" in MySql
 
+#### 7. Applying migrations to database
+```
+python manage.py migrate
+```
+#### 8. Done setup!
+                                           
+                                           
 
 ## run file back-end 
 ```

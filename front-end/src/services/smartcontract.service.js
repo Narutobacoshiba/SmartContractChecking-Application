@@ -6,7 +6,7 @@ export class SmartContractsService extends BaseService {
 
     static async GetCommonSmartContracts() {
         try {
-            const response = await this.request({ auth: true }).get(`${this.getUnity()}/api/`)
+            const response = await this.request({ auth: true }).get(`${this.getUnity()}/api?type=common`)
             console.log(response)
             // const data = {
             //     content: response.data.data,
@@ -21,12 +21,12 @@ export class SmartContractsService extends BaseService {
 
     static async GetPrivateSmartContracts() {
         try {
-            const response = await this.request({ auth: true }).get(`${this.entity}?type=private`)
-            const data = {
-                content: response.data.data,
-                headers: response.headers['']
-            }
-            return new ResponseWrapper(response, data)
+            const response = await this.request({ auth: true }).get(`${this.getUnity()}/api?type=private`)
+            // const data = {
+            //     content: response.data.data,
+            //     headers: response.headers['']
+            // }
+            return new ResponseWrapper(response, response.data)
         } catch (error) {
             const message = error.response.data ? error.response.data.error : error.response.statusText
             throw new ErrorWrapper(error, message)
@@ -34,12 +34,12 @@ export class SmartContractsService extends BaseService {
     }
     static async GetPendingSmartContracts() {
         try {
-            const response = await this.request({ auth: true }).get(`${this.entity}?type=pending`)
-            const data = {
-                content: response.data.data,
-                headers: response.headers['']
-            }
-            return new ResponseWrapper(response, data)
+            const response = await this.request({ auth: true }).get(`${this.getUnity()}/api?type=pending`)
+            // const data = {
+            //     content: response.data.data,
+            //     headers: response.headers['']
+            // }
+            return new ResponseWrapper(response, response.data)
         } catch (error) {
             const message = error.response.data ? error.response.data.error : error.response.statusText
             throw new ErrorWrapper(error, message)
@@ -68,7 +68,7 @@ export class SmartContractsService extends BaseService {
     }
     /*---------Update Smartcontract--------- */
     static async UpdateSmartContracts(id, sc_name) {
-        const smartContractById = await this.request({ auth: true }).get(`${this.getUnity()}/scbyid?demo=${id}`)
+        const smartContractById = await this.request({ auth: true }).get(`${this.getUnity()}/scbyid?id=${id}`)
         try {
             const paraData = {
                 "id": id,

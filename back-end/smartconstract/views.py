@@ -10,7 +10,8 @@ class SmartConstractAPIView(APIView):
     def get(self,request):
         try:
             if request.method == 'GET':
-                smartConstractDB = SmartConstract.objects.all()
+                sc_type = request.GET['type']
+                smartConstractDB = SmartConstract.objects.filter(type=sc_type)
                 serialiSmartConstract = GetSmartConstractSerializer(smartConstractDB,many=True)
                 return Response(serialiSmartConstract.data,status=status.HTTP_200_OK)
         except:
@@ -35,7 +36,7 @@ class SmartConstractAPIView(APIView):
                 serializeUpdate = GetSmartConstractSerializer(instance=SmartConstractByID,data=request.data)
                 if serializeUpdate.is_valid():
                     serializeUpdate.save()
-                    return Response({"message":"Update Successfull!!!"},status=status.HTTP_202_ACCEPTED)
+                    return Response({"message":"Update Successfully!!!"},status=status.HTTP_202_ACCEPTED)
                 return Response({"message":"SmartConstract Data Invalid!!!"},status=status.HTTP_409_CONFLICT)
         except:
             return Response({"message":"Fail!!"},status=status.HTTP_404_NOT_FOUND)
@@ -44,7 +45,6 @@ class SmartConstractAPIView(APIView):
         try:
             if request.method == 'DELETE':
                 idClient = request.GET['id']
-                print(idClient)
                 SmartConstractByID = SmartConstract.objects.get(id=idClient)
                 SmartConstractByID.delete()
                 return Response('Success',status=status.HTTP_200_OK)
@@ -55,7 +55,7 @@ class SmartConstractAPIView(APIView):
 def getScById(request):
         try:
             if request.method == 'GET':
-                idClient = request.GET['demo']
+                idClient = request.GET['id']
                 smartConstractDB = SmartConstract.objects.get(id=idClient)
                 serialiSmartConstract = GetSmartConstractSerializer(smartConstractDB)
                 return Response(serialiSmartConstract.data,status=status.HTTP_200_OK)

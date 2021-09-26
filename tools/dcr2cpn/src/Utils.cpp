@@ -2,7 +2,8 @@
 
 namespace DCR2CPN {
 namespace Utils {
-
+/** Check to know whether is it is substrings
+ */
 bool isSubOf2(const std::string& ParentNameInput, const std::string& EventNameInput, std::vector<DCR2CPN::Event> listEvent){
     std::string ParentName = ParentNameInput;
     std::string EventName = EventNameInput;
@@ -23,14 +24,15 @@ bool isSubOf2(const std::string& ParentNameInput, const std::string& EventNameIn
     }
     return false;
 }
-
+/** Remove the special characters out of the string
+ */
 std::string removeNoneAlnum(const std::string& inp_string)
 {
     std::string s = inp_string;
     for (int i = 0; i < s.size(); i++) {
         if ((s[i] < 'A' || s[i] > 'Z') &&
             (s[i] < 'a' || s[i] > 'z') && 
-            (s[i] < '0' || s[i] > '9'))
+            (s[i] < '0' || s[i] > '9') && s[i] != '_')
         {  
             s.erase(i, 1);
             i--;

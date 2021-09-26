@@ -1,5 +1,10 @@
 <template>
   <div id="body">
+    <div id="showConfirmation" v-if="showConfirmation">
+        <div id="removeSC-holder">
+            <confirm @cancel="closeConfirm" @confirm="cfDeleteSC()" :dialog="deleteDialog"/>
+        </div>
+    </div>
     <div id="first-section"></div>
     <div id="second-section"></div>
     <div id="third-section">
@@ -122,10 +127,12 @@ import {
   GetPendingSmartContracts,
   GetPrivateSmartContracts,
   DeleteSmartContracts,
-  AddNewSmartContractsInfor,
+  AcceptPendingSmartContracts,
 } from "../../services/data";
 
+import ConfirmationDialog from "../../components/ConfirmationDialog.vue" 
 export default {
+  components: {'confirm': ConfirmationDialog},
   data() {
     return {
       chosen_table: "common",
@@ -138,13 +145,16 @@ export default {
       num_of_record: 7,
       num_of_page: 0,
       pageNum: 1,
+      showConfirmation: false,
+      deleteDialog: {},
+      scDelete: null
     };
   },
   mounted() {
-    // this.list_smart_contracts.common = GetCommonSmartContracts();
     this.fetchData();
-    this.list_smart_contracts.private = GetPrivateSmartContracts();
-    this.list_smart_contracts.pending = GetPendingSmartContracts();
+    // this.list_smart_contracts.common = GetCommonSmartContracts();
+    // this.list_smart_contracts.private = GetPrivateSmartContracts();
+    // this.list_smart_contracts.pending = GetPendingSmartContracts();
   },
   computed: {
     GetTableName() {
@@ -208,9 +218,12 @@ export default {
     },
   },
   methods: {
+    // get common contracts
     async fetchData() {
       console.log('Lay Data')
       this.list_smart_contracts.common = await GetCommonSmartContracts();
+      this.list_smart_contracts.private = await GetPrivateSmartContracts();
+      this.list_smart_contracts.pending = await GetPendingSmartContracts();
     },
     inc(value) {
       return value + 1;
@@ -240,6 +253,7 @@ export default {
     },
     ChooseTable(value) {
       this.chosen_table = value;
+      this.fetchData();
     },
     addSmartContract() {
       this.$router.push({
@@ -248,18 +262,38 @@ export default {
       });
     },
     deleteSC(sc_id, sc_name, option) {
-      if (
-        confirm(
-          "Are you sure to delete the Smart Contract named: '" + sc_name + "' ?"
-        )
-      ) {
-        DeleteSmartContracts(sc_id, option);
-        let list_smart_contracts_afterdelete =  this.list_smart_contracts.common.filter((i)=>{
-          return i.id != sc_id
-        })
-        this.list_smart_contracts.common=list_smart_contracts_afterdelete
-      }
+      
+        this.deleteDialog={title: "Delete Smart Contract", message:  "Are you sure to delete the Smart Contract named: '" + sc_name + "' ?", confirmbtn: 'Delete'}
+        this.showConfirmation = true;
+        this.scDelete = {sc_id: sc_id, option: option}
     },
+    cfDeleteSC(){
+      let sc_id = this.scDelete.sc_id;
+      let option = this.scDelete.option
+      DeleteSmartContracts(sc_id, option);
+        if (option == "common"){
+          let list_smart_contracts_afterdelete =  this.list_smart_contracts.common.filter((i)=>{
+          return i.id != sc_id
+          })
+          this.list_smart_contracts.common=list_smart_contracts_afterdelete
+        }else if (option == "private"){
+          let list_smart_contracts_afterdelete =  this.list_smart_contracts.private.filter((i)=>{
+          return i.id != sc_id
+          })
+          this.list_smart_contracts.private=list_smart_contracts_afterdelete
+        }else if (option == "pending"){
+          let list_smart_contracts_afterdelete =  this.list_smart_contracts.pending.filter((i)=>{
+          return i.id != sc_id
+          })
+          this.list_smart_contracts.pending=list_smart_contracts_afterdelete
+        }
+        
+        // this.fetchData();
+        this.closeConfirm()
+    },
+    closeConfirm(){
+            this.showConfirmation = false
+        },
     editSC(sc_id, sc_name) {
       this.$router.push({
         name: "EditSc",
@@ -267,8 +301,16 @@ export default {
       });
     },
     acceptPendingSC(sc_id, sc_name) {
-      AddNewSmartContractsInfor(sc_id, sc_name, "common");
-      DeleteSmartContracts(sc_id, "pending");
+       if (
+        confirm(
+          "Are you sure to accept the pending Smart Contract named: '" + sc_name + "' ?"
+        )
+      ) {
+        AcceptPendingSmartContracts(sc_id, sc_name);
+      
+        this.fetchData();
+        }
+     
     },
     goPage(value) {
       this.pageNum = value;
@@ -468,5 +510,21 @@ export default {
 }
 #itb-cnpage i:hover {
   color: #424141;
+}
+
+ /*---- showConfirmation */
+ #showConfirmation{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+}
+#removeSC-holder{
+    margin-top: 200px;
 }
 </style>
