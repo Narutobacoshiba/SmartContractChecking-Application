@@ -44,6 +44,7 @@ export default {
   },
   created(){
       //get vulnerability by id from db: name, description
+      this.initData();
   },
   components: { LTLEditor },
   methods: {
