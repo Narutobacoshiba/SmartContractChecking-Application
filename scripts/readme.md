@@ -14,4 +14,4 @@ create database soliditycpn
 ```
 #### 4. Open and run all scripts on VSS following the order. 
 ```
-The scripts do not create data for History and HistoryType table, the file 15 í optional, only run if you want to correct the table name in MySQL
+The scripts do not create data for History and HistoryType table, the file 15 is optional, only run if you want to correct the table name in MySQL
