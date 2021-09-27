@@ -1,150 +1,8 @@
 #include "unfolding.hpp"
-<<<<<<< HEAD
-/** Remove the none alphabet or number
- */
-std::string removeNoneAlnum(const std::string& inp_string){
-    std::string s = inp_string;
-    for (int i = 0; i < s.size(); i++) {
-        if ((s[i] < 'A' || s[i] > 'Z') &&
-            (s[i] < 'a' || s[i] > 'z') && 
-            (s[i] < '0' || s[i] > '9') && s[i] != '_')
-        {  
-            s.erase(i, 1);
-            i--;
-        }
-    }
-    return s;
-}
-/** Extract the string by edge 
- */
-std::string substr_by_edge(const std::string& _str, const std::string& _left, const std::string& _right) {
-    auto left = _str.find(_left);
-    auto right = _str.rfind(_right);
-    if (left == std::string::npos || right == std::string::npos) {
-        return "";
-    } else {
-        return _str.substr(_left.length() + left, right - _left.length() - left);
-    }
-}
-/** 
- * Split the string by the delimiter
- */
-std::vector<std::string> split(const std::string& _str, const std::string& _delimiter) {
-    std::vector<std::string> result;
-    std::string str = std::string(_str);
-    size_t pos = 0;
-    std::string token;
-    while ((pos = str.find(_delimiter)) != std::string::npos) {
-        token = str.substr(0, pos);
-        result.push_back(token);
-        str.erase(0, pos + _delimiter.length());
-    }
-    result.push_back(str);
-        
-    return result;
-}
-/**
- * Cut and copy the string 
- */
-std::string trim_copy(const std::string& _str) {
-    return _str.substr(_str.find_first_not_of(' '), _str.find_last_not_of(' ') - _str.find_first_not_of(' ') + 1);
-}
-/**
- * Retrieve an element of the string by delimiter
- */
-std::string retrieve_string_element(const std::string& _str, const unsigned int& _index, const std::string& _delimiter) {
-    std::string new_str= trim_copy(_str);
-    std::vector<std::string> v_str = split(new_str, _delimiter);
-    if (_index < v_str.size()) {
-        return removeNoneAlnum(v_str[_index]);
-    } else {
-        return "";
-    }
-}
-/**
- * Check whether it is a defined string
- */
-bool is_defined_string(const std::string& _name){
-    auto it = std::find(defined_string.begin(), defined_string.end(), _name);
-    if(it != defined_string.end()){
-        return true;
-    }
-    return false;
-}
-/**
- * Add colours to the model
- */
-void UnfoldingModel::add_color(const std::string& _color){
-    coloursDef.push_back(_color);
-}
-/**
- * Add places to the model
- */
-void UnfoldingModel::add_place(const std::string& _place){
-    placesDef.push_back(_place);
-}
-/**
- * Add functions to the model
- */
-void UnfoldingModel::add_function(const std::string& _function){
-    functionDef.push_back(_function);
-}
-/**
- * Add transition to the model
- */
-void UnfoldingModel::add_transition(const std::string& _transition){
-    transitionDef.push_back(_transition);
-}
-/**
- * Create the comments inside the output file
- * get source code of model
- */
-std::string UnfoldingModel::source_code(){
-    std::stringstream result;
-
-    result << name << "{\n";
-    result << "\n/**************************\n" 
-           <<   "*** Colours Definitions ***\n"
-           <<   "**************************/\n\n";
-    for (auto it = coloursDef.begin(); it != coloursDef.end(); ++it) {
-        result << *it;
-    }
-    result << "\n/****************************\n" 
-           <<   "*** Functions Definitions ***\n"
-           <<   "****************************/\n\n";
-    for (auto it = functionDef.begin(); it != functionDef.end(); ++it) {
-        result << *it;
-    }
-    result << "\n/*************\n" 
-           <<   "*** PLACES ***\n"
-           <<   "*************/\n\n";
-    for (auto it = placesDef.begin(); it != placesDef.end(); ++it) {
-        result << *it;
-    }
-    result << "\n/******************\n" 
-           <<   "*** TRANSITIONS ***\n"
-           <<   "******************/\n\n";
-    for (auto it = transitionDef.begin(); it != transitionDef.end(); ++it) {
-        result << *it;
-    }
-    result << "\n/**************\n" 
-           <<   "*** ANOTHER ***\n"
-           <<   "**************/\n\n";
-    result << "\n}";
-    return result.str();
-}
-
-
-/**
- * The main function to process and read the input files (,lna and JSON)
- */
-Unfolding::Unfolding(const std::string& _context, std::stringstream& _sol_stream, nlohmann::json& _sol_json, std::stringstream& _context_stream, const std::string& param){
-=======
 
 /** The main function to process and read the input files (lna)
  */
 Unfolding::Unfolding(const std::string& _context, std::stringstream& _sol_stream, std::stringstream& _context_stream, const std::string& param){
->>>>>>> hadt
     context = _context;
 
     std::string new_line;
@@ -169,92 +27,6 @@ Unfolding::Unfolding(const std::string& _context, std::stringstream& _sol_stream
         }
     }
 }
-<<<<<<< HEAD
-/**
- * Get the unfolding
- */
-void Unfolding::getUnfoldFunction(nlohmann::json& _sol_json,const std::string& param){
-    /* auto global_variables = _sol_json.at("globalVariables");
-    for(size_t i = 0; i < global_variables.size(); i++){
-        auto g_variable = global_variables[i];
-        if(param == g_variable.at("name")){
-            unfold_func = "_all_";
-        }
-    }
-
-    auto functions = _sol_json.at("functions");
-    for(size_t i = 0; i < functions.size(); i++){
-
-    } */
-    unfold_func = split(param,"/")[1];
-}
-/**
- * Get name of the Transition
- */
-std::string TransitionHolder::get_name(){
-    return name;
-}
-/**
- * Add contexts to the Transition holder
- */
-void TransitionHolder::add_context(const std::string& _transition){
-    context_transition.push_back(_transition);
-}
-/**
- * Add transition from solidity to the collection
- */
-void TransitionHolder::add_sol(const std::string& _transition){
-    sol_transition.push_back(_transition);
-}
-/**
- * Get quantity of the context
- */
-size_t TransitionHolder::num_context(){
-    return context_transition.size();
-}
-/**
- * Get quantity of the transitions in solidity 
- */
-size_t TransitionHolder::num_sol(){
-    return sol_transition.size();
-}
-/**
- * Get context
- */
-std::string TransitionHolder::get_context(size_t i){
-    return context_transition[i];
-}
-/**
- * Get transition from solidity
- */
-std::string TransitionHolder::get_sol(size_t i){
-    return sol_transition[i];
-}
-
-/**
-* Add place from solidity
-*/
-void TransitionHolder::add_sol_place(const std::string& _place){
-    sol_places.push_back(_place);
-}
-/**
-* Get place from solidity
-*/
-std::string TransitionHolder::get_sol_place(size_t i){
-    return sol_places[i];
-}
-/**
-* Get quantity of place in solidity
-*/
-size_t TransitionHolder::num_sol_place(){
-    return sol_places.size();
-}
-/**
- * Get transition holder using its name
- */
-TransitionHolderPtr Unfolding::get_transition_hodler_by_name(const std::string& _name){
-    for(auto it = transitionHolder.begin(); it != transitionHolder.end(); ++it){
-=======
 
 /** Get name of Submodel
  */
@@ -325,25 +97,16 @@ size_t SubmodelHolder::num_solidity_places(){
  */
 SubmodelHolderPtr Unfolding::get_submodel_holder_by_name(const std::string& _name){
     for(auto it = submodelHolders.begin(); it != submodelHolders.end(); ++it){
->>>>>>> hadt
         if((*it)->get_name() == _name){
             return (*it);
         }
     }
     return nullptr;
 }
-<<<<<<< HEAD
-/**
- * Add context to the Transition holder
- */
-void Unfolding::add_context_transition(const std::string& _name, const std::string& _transition){
-    TransitionHolderPtr temp = get_transition_hodler_by_name(_name);
-=======
 /** Add transition of context file to specific submodel indicated by the name
  */
 void Unfolding::add_context_transition_to_submodel(const std::string& _name, TransitionNodePtr _transition){
     SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
->>>>>>> hadt
     if(temp != nullptr){
         temp->add_context_transition(_transition);
     }else{
@@ -352,18 +115,10 @@ void Unfolding::add_context_transition_to_submodel(const std::string& _name, Tra
         submodelHolders.push_back(new_th);
     }
 }
-<<<<<<< HEAD
-/**
- * Add solidity to the Transition holder
- */
-void Unfolding::add_sol_transition(const std::string& _name, const std::string& _transition){
-    TransitionHolderPtr temp = get_transition_hodler_by_name(_name);
-=======
 /** Add transition of solidity file to specific submodel indicated by the name
  */
 void Unfolding::add_solidity_transition_to_submodel(const std::string& _name, TransitionNodePtr _transition){
     SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
->>>>>>> hadt
     if(temp != nullptr){
         temp->add_solidity_transition(_transition);
     }else{
@@ -372,18 +127,10 @@ void Unfolding::add_solidity_transition_to_submodel(const std::string& _name, Tr
         submodelHolders.push_back(new_th);
     }
 }
-<<<<<<< HEAD
-/**
- * Add place from the solidity
- */
-void Unfolding::add_sol_place(const std::string& _name, const std::string& _place){
-    TransitionHolderPtr temp = get_transition_hodler_by_name(_name);
-=======
 /** Add place of solidity file to specific submodel indicated by the name
  */
 void Unfolding::add_solidity_place_to_submodel(const std::string& _name, PlaceNodePtr _place){
     SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
->>>>>>> hadt
     if(temp != nullptr){
         temp->add_solidity_place(_place);
     }else{
@@ -405,14 +152,7 @@ void Unfolding::add_context_place_to_submodel(const std::string& _name, PlaceNod
     }
 }
 
-<<<<<<< HEAD
-
-/**
- * Get the string line by line and find if it contains a defined string and then process it
- * 
-=======
 /** Read code in lna file and convert to object
->>>>>>> hadt
  */
 void Unfolding::analyseLnaFile(const std::string type){
     if(type == "context"){
@@ -472,18 +212,11 @@ NetNodePtr Unfolding::unfolding(){
 
     return model;
 }
-/**
- * Unfolding for the Free-context
- */
+
 void Unfolding::unfolding_free_context(){
 
 }
-<<<<<<< HEAD
-/**
- * Unfolding for the DCRContext
-=======
 /** Unfolding the solidity file by instructions in the DCR context file  
->>>>>>> hadt
  */
 void Unfolding::unfolding_dcr_context(){
     for(auto it = submodelHolders.begin(); it != submodelHolders.end(); ++it){
@@ -558,73 +291,18 @@ void Unfolding::unfolding_dcr_context(){
             for(size_t i = 0; i < (*it)->num_context_places(); i++){
                 model->add_member((*it)->get_context_place(i));
             }
-<<<<<<< HEAD
-        }
-    }
-}
-/**
- * Get the definition of the static context
- */
-std::string Unfolding::getContextStaticDefinition(){
-    std::stringstream _str;
-    while(((++ptr_context_line) != _context_lines.end()) && ((*ptr_context_line).find("/***") == std::string::npos)){
-        _str << "\t" << *ptr_context_line << "\n";
-    }
-    return _str.str();
-}
-/**
- * Get the definition of the static solidity
- */
-std::string Unfolding::getSolStaticDefinition(){
-    std::stringstream _str;
-    while(((++ptr_sol_line) != _sol_lines.end()) && ((*ptr_sol_line).find("/***") == std::string::npos)){
-        _str << *ptr_sol_line << "\n";
-    }
-    return _str.str();
-}
-/**
- * Handle the solidity transition
- */
-std::vector<std::string> Unfolding::handleElement(std::string _element, std::list<std::string>::iterator& _pointer ){
-    std::vector<std::string> ret;
-    while ((_pointer != _sol_lines.end() && _pointer != _context_lines.end()) && ((*_pointer).find("/*") == std::string::npos)){
-        if((*_pointer).size() > 3 && retrieve_string_element(*_pointer,0," ") == _element){
-            int level = 0;
-            bool st_level = true;
-=======
             for(size_t i = 0; i < (*it)->num_context_transitions(); i++){
                 TransitionNodePtr temp = (*it)->get_context_transition(i);
->>>>>>> hadt
 
                 ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
                 cflow_arc_in->set_placeName("cflow");
                 cflow_arc_in->set_label("epsilon");
                 temp->add_inArc(cflow_arc_in);
 
-<<<<<<< HEAD
-/**
- * Get the code of transition and the name of submodel then store it to transition holder
- * 
- */
-void Unfolding::handleSolTransitionDefinitionsDCR(){
-    while ((ptr_sol_line != _sol_lines.end()) && ((*ptr_sol_line).find("/***") == std::string::npos)){
-        if((*ptr_sol_line).find("Function:") != std::string::npos){ // if line contain "Function:" string then
-            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Function:"); // get submodel name
-            std::vector<std::string> transitions = handleElement("transition",ptr_sol_line); // get all transitions code of submodel
-            for(auto it = transitions.begin(); it != transitions.end(); ++it){
-                add_sol_transition(function_name,*it); // add transition code to transition holder
-            }
-        }
-        ptr_sol_line++;
-    }
-    ptr_sol_line--;
-}  
-=======
                 ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
                 cflow_arc_out->set_placeName("cflow");
                 cflow_arc_out->set_label("epsilon");
                 temp->add_outArc(cflow_arc_out);
->>>>>>> hadt
 
                 model->add_member(temp);
             }
@@ -632,33 +310,3 @@ void Unfolding::handleSolTransitionDefinitionsDCR(){
     }
 }
 
-<<<<<<< HEAD
-/**
- * Get code of place and name of submodel then store it to transition holder
- * 
- */
-void Unfolding::handleSolPlaces(){
-    while ((ptr_sol_line != _sol_lines.end()) && ((*ptr_sol_line).find("/***") == std::string::npos)){
-        if((*ptr_sol_line).find("Function:") != std::string::npos){ // if line contain "Function:" string then
-            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Function:");// get submodel name
-            std::vector<std::string> transitions = handleElement("place",ptr_sol_line);// get all places code of submodel
-            for(auto it = transitions.begin(); it != transitions.end(); ++it){
-                add_sol_place(function_name,*it);// add places code to transition holder
-            }
-        }else if((*ptr_sol_line).find("Init:") != std::string::npos){// if line contain "Init:" string then
-            std::string function_name = retrieve_string_element(*ptr_sol_line,1,"Init:");// get submodel name
-            std::vector<std::string> transitions = handleElement("place",ptr_sol_line);// get all places code of submodel
-            for(auto it = transitions.begin(); it != transitions.end(); ++it){
-                if(function_name == "state"){ // if it is the place for the state, add it directly to the model
-                    model->add_place(*it);
-                }else{  // else place to transition holder
-                    add_sol_place(function_name,*it);
-                }
-            }
-        }
-        ptr_sol_line++;
-        
-    }
-}
-=======
->>>>>>> hadt
