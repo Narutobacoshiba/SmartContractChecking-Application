@@ -29,4 +29,4 @@ to transform Solidity code to Helena (.lna file)
 ```
 #### 8. unfolding: 
 ```
-to unfolding the context based on inputed functions
+to unfold the context based on inputed functions
