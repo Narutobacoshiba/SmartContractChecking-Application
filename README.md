@@ -1,48 +1,16 @@
-"new development branch" 
-# test
-
-branch front-end hiện đang là branch đang phát triển front-end
-
-branch back-end hiện đang là branch đang phát triển back-end
-
-
-## Back-end environment setup
-#### 1. Update to python 3 
+# Project structure
+## 1. back-end: 
 ```
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+Contain back-end source codes (python - Django)
 ```
-#### 2. Install Django and Django REST framework into the virtual environment
+## 2. front-end: 
 ```
-pip install django
-pip install djangorestframework
+Contain front-end source codes (javascript-VueJS)
 ```
-#### 3. Install jwt
+## 3. scripts: 
 ```
-pip install djangorestframework-simplejwt
+Contain all scripts to create Database (sql-MySQL)
 ```
-#### 4. Adds CORS (Cross-Origin Resource Sharing) headers to responses.
+## 4. tools: 
 ```
-python -m pip install django-cors-headers
-```
-#### 5. Connect to database MySQL
-```
-pip install mysqlclient
-```
-#### 6. Create a database name "testcrud" in MySql
-
-#### 7. Applying migrations to database
-```
-python manage.py migrate
-```
-#### 8. Done setup!
-                                           
-                                           
-
-## run file back-end 
-```
-python manage.py runserver
-```
-## run file front-end
-```
-npm run serve
-```
+Contain all tools to process core businesses (C/C++, Helena)

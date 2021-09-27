@@ -54,7 +54,6 @@ export default {
       if(!confirm(`Do you want to delete context ${ct_name}`)){
         return
       }
-      console.log(id);
       const response = await DeleteContext(id);
       if (response.status === 200) {
           await this.initData()
