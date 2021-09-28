@@ -210,6 +210,8 @@ NetNodePtr Unfolding::unfolding(){
         unfolding_free_context();
     }
 
+    CommentNodePtr prop_area = make_shared<CommentNode>("\n/*** proposition ***/\n");
+    model->add_member(prop_area);
     return model;
 }
 

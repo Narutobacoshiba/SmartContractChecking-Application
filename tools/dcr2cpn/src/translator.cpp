@@ -320,7 +320,7 @@ TransitionNodePtr SubNet::createTransition(){
         guard_string << cMilestone[cMilestone.size()-1];
         guard_string << "|) = 1)";
     }
-
+    
     trans->set_guard(guard_string.str());
 
     return trans;

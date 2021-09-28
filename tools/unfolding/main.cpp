@@ -51,9 +51,9 @@ int main(int argc, char** argv){
 
     ofstream myfile;
     if(OUT_FILE_NAME.compare("") == 0){
-        myfile.open (SOL_LNA_FILE_NAME.substr(0, SOL_LNA_FILE_NAME.find('.'))+".lna");
+        myfile.open ("./output/"+SOL_LNA_FILE_NAME.substr(0, SOL_LNA_FILE_NAME.find('.'))+".lna");
     }else{
-        myfile.open (OUT_FILE_NAME+".lna");
+        myfile.open ("./output/"+OUT_FILE_NAME+".lna");
     }
     myfile << model->source_code();
     myfile.close();

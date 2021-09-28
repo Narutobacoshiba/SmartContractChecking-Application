@@ -5,8 +5,8 @@
 #include <string>
 #include<vector>
 #include "./src/ltl2prop.hpp"
-#include "../cli11/CLI11.hpp"
-#include "../nlohmann/json.hpp"
+#include "../include/cli11/CLI11.hpp"
+#include "../include/nlohmann/json.hpp"
 
 using namespace std;
 
@@ -56,7 +56,7 @@ int main(int argc, char** argv){
     LTLTranslator translator = LTLTranslator(lna_stream,lna_json,ltl_text_stream);
     std::map<std::string,std::string> out = translator.translate();
 
-    /* std::string outfile_name;
+    std::string outfile_name;
     if(OUT_FILE_NAME.compare("") == 0){
         outfile_name = LNA_FILE_NAME.substr(0, LNA_FILE_NAME.find('.'));
     }else{
@@ -64,14 +64,14 @@ int main(int argc, char** argv){
     }
 
     ofstream lna_file;
-    lna_file.open(outfile_name+".lna");
+    lna_file.open("./output/"+outfile_name+".lna");
     lna_file << out["lna"];
     lna_file.close();
 
     ofstream prop_file;
-    prop_file.open(outfile_name+".prop.lna");
+    prop_file.open("./output/"+outfile_name+".prop.lna");
     prop_file << out["prop"];
-    prop_file.close(); */
+    prop_file.close();
 
     return 0;
 }
