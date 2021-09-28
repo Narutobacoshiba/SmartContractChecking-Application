@@ -89,7 +89,7 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-# config for database mysql
+# config for database mysql, change PASSWORD to yours 
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'soliditycpn',
