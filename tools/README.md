@@ -19,14 +19,10 @@ to process tasks related to Helena
 ```
 to convert from LTL formula to Helena (.lna file)
 ```
-#### 6. nlohmann: 
-```
-to help unfoding tool
-```
-#### 7. solidity2cpn:
+#### 6. solidity2cpn:
 ```
 to transform Solidity code to Helena (.lna file)
 ```
-#### 8. unfolding: 
+#### 7. unfolding: 
 ```
 to unfold the context based on inputed functions
