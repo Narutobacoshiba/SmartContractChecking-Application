@@ -9,7 +9,7 @@ class DemoMiddleWare:
 
     def __call__(self,request):
         response = self.get_response(request)
-        try:
+        #try:
             # path = request.path
             # if path.__eq__("/login"):
             #     print(request.path)
@@ -24,8 +24,8 @@ class DemoMiddleWare:
             #         return response
             #     else:
             #         return JsonResponse({"status":False,"message":"Token is Not Valid"},status=status.HTTP_401_UNAUTHORIZED,safe=False)
-            return response
-        except Exception as e:
-            return JsonResponse({"status":False},status=status.HTTP_401_UNAUTHORIZED,safe=False)
+        return response
+        # except Exception as e:
+        #     return JsonResponse({"status":False},status=status.HTTP_401_UNAUTHORIZED,safe=False)
 
     

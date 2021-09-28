@@ -3,8 +3,8 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '',
-    database="Project"
+    passwd = '123456',
+    database="soliditycpn"
 )
 pass1= hash("1234567")
 pass2= hash("qwerty")

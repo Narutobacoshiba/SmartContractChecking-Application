@@ -138,16 +138,16 @@ export function GetSmartContractCode(id) {
 //     listPendingSmartContracts.push({ id: sc_id, name: sc_name, type: "pending" })
 //   }
 // }
-export async function AddNewSmartContracts(sc_id, sc_name, options) {
+export async function AddNewSmartContracts(sc_id, sc_name, options, content) {
   // AddNewSmartContractsInfor(sc_id,sc_name,options)
   // SmartContractCode[sc_id] = code
-  var d = new Date,
-    dformat = [d.getFullYear(),
-    d.getMonth() + 1, d.getDate()].join('-') + ' ' +
-      [d.getHours(),
-      d.getMinutes(),
-      d.getSeconds()].join(':');
-  await SmartContractsService.CreateSmartContracts(sc_id.words[0], sc_name, dformat, options)
+  // var d = new Date,
+  //   dformat = [d.getFullYear(),
+  //   d.getMonth() + 1, d.getDate()].join('-') + ' ' +
+  //     [d.getHours(),
+  //     d.getMinutes(),
+  //     d.getSeconds()].join(':');
+  await SmartContractsService.CreateSmartContracts(sc_id.words[0], sc_name, options, content)
 }
 
 export async function UpdateSmartContractCode(sc_id, name_sc, code) {
@@ -155,7 +155,7 @@ export async function UpdateSmartContractCode(sc_id, name_sc, code) {
   //   SmartContractCode[sc_id] = code
   // }
   console.log(code)
-  await SmartContractsService.UpdateSmartContracts(sc_id, name_sc)
+  await SmartContractsService.UpdateSmartContracts(sc_id, name_sc, code)
 }
 /* --------------------Delete SmartContract----------------- */
 export function DeleteSmartContracts(sc_id, options) {
@@ -163,16 +163,16 @@ export function DeleteSmartContracts(sc_id, options) {
   SmartContractsService.DeleteSmartContracts(sc_id)
 }
 /* --------------------Accept Pending SmartContract----------------- */
-export  function AcceptPendingSmartContracts(sc_id, sc_name) {
+export function AcceptPendingSmartContracts(sc_id, name_sc, code) {
   //console.log(sc_id)
-  SmartContractsService.DeleteSmartContracts(sc_id)
-  var d = new Date,
-  dformat = [d.getFullYear(),
-  d.getMonth() + 1, d.getDate()].join('-') + ' ' +
-    [d.getHours(),
-    d.getMinutes(),
-    d.getSeconds()].join(':');
-   SmartContractsService.CreateSmartContracts(++sc_id,sc_name,dformat,"common")
+  SmartContractsService.AcceptPendingSmartContracts(sc_id, name_sc, code)
+  // var d = new Date,
+  // dformat = [d.getFullYear(),
+  // d.getMonth() + 1, d.getDate()].join('-') + ' ' +
+  //   [d.getHours(),
+  //   d.getMinutes(),
+  //   d.getSeconds()].join(':');
+  //SmartContractsService.CreateSmartContracts(sc_id,sc_name,"common")
 }
 
 

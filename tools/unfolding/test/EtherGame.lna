@@ -15,7 +15,7 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 **************************/
 	type ADDRESS : range 0 .. 100;
 	
-	type UINT : range 0 .. (int'last);/**/
+	type UINT : range 0 .. (int'last);
 	
 	type USER : struct { ADDRESS adr; UINT balance;};
 	
@@ -67,28 +67,28 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 *************/
 //these 3 places would be part of the free context in a final full model
 /*
-* Init: state
+* Function: state
 */
    place S {
    	dom : STATE;
    	init : <( {UINT(cb), UINT(v1), UINT(v2), UINT(v3), UINT(v4), UINT(v5), UINT(v6), initRedeemableEther(users)} )>;
    }
 /*
-* Init: play
+* Function: play
 */
    place P_Play {
    	dom : PLAY_PAR;
-   	//init : for (i in ADDRESS range 1 .. ADDRESS (users)) <( {{i , UINT(i*100)},UINT(1)} )>;
+   	init : for (i in ADDRESS range 1 .. ADDRESS (users)) <( {{i , UINT(i*100)},UINT(1)} )>;
    }
 /*
-* Init: claimReward
+* Function: claimReward
 */
    place P_ClaimReward {
    	dom : CLAIM_REWARD_PAR;
    }
 
 /*
- *  Function: play
+ * Function: play
  */
    place PLAY_P1 {
    	dom : PLAY_STATE;
@@ -122,7 +122,7 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
    }
    
 /*
- *  Function: claimReward
+ * Function: claimReward
  */
    place CLAIM_REWARD_P1 {
    	dom : CLAIM_REWARD_STATE;
@@ -139,22 +139,22 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 ******************/
 
 /*
- *  Function: play
+ * Function: play
  */
 	transition PLAY_revert1 {
 		in {
-			//S : <( s )>;
-			//P_Play : <( p )>;
+			S : <( s )>;
+			P_Play : <( p )>;
 		}
 		out {
-			//S : <( s )>;
+			S : <( s )>;
 		}
-		//guard : not (p.value = 1);
+		guard : not (p.value = 1);
 	}
 	transition PLAY_n_revert1 {
 		in {
-			//S : <( s )>;
-			//P_Play : <( p )>;
+			S : <( s )>;
+			P_Play : <( p )>;
 		}
 		out {
 			PLAY_P1 : <( {s,p} )>;
@@ -306,22 +306,22 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 		}
 	}
 /*
- *  Function: claimReward
+ * Function: claimReward
  */
 	transition CLAIM_REWARD_revert1 {
 		in {
-			//S : <( s )>;
-			//P_ClaimReward : <( p )>;
+			S : <( s )>;
+			P_ClaimReward : <( p )>;
 		}
 		out {
-			//S : <( s )>;
+			S : <( s )>;
 		}
-		//guard : not (s.contractBalance = s.finalMileStone);
+		guard : not (s.contractBalance = s.finalMileStone);
 	}
 	transition CLAIM_REWARD_n_revert1 {
 		in {
-			//S : <( s )>;
-			//P_ClaimReward : <( p )>;
+			S : <( s )>;
+			P_ClaimReward : <( p )>;
 		}
 		out {
 			CLAIM_REWARD_P1 : <( {s,p} )>;
@@ -333,7 +333,7 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 			CLAIM_REWARD_P1 : <( sp )>;
 		}
 		out {
-			//S : <( sp.state )>;
+			S : <( sp.state )>;
 		}
 		guard : not (getElement(sp.state.redeemableEther,sp.claimRewardPar.sender.adr).uint > 0);
 	}
@@ -364,8 +364,7 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 			CLAIM_REWARD_P3 : <( sp )>;
 		}
 		out {
-			//S : <( sp.state :: (contractBalance := sp.state.contractBalance - getElement(sp.state.redeemableEther,sp.claimRewardPar.sender.adr).uint) )>;
+			S : <( sp.state :: (contractBalance := sp.state.contractBalance - getElement(sp.state.redeemableEther,sp.claimRewardPar.sender.adr).uint) )>;
 		}
 	}
-	
 }

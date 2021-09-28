@@ -54,12 +54,13 @@
               <div class="name-cell table-cell">
                 {{ sc.name }}
               </div>
+               
               <div class="date-modified-cell table-cell">
-                {{ convertDate(sc.date_modified) }}
+                <!-- {{ convertDate(sc.date_modified) }} -->
               </div>
               <div class="action-cell table-cell">
                 <div v-if="chosen_table != 'pending'">
-                  <i class="material-icons" @click="editSC(sc.id, sc.name)"
+                  <i class="material-icons" @click="editSC(sc.id, sc.name, sc.content)"
                     >edit</i
                   >
                   <i
@@ -69,12 +70,12 @@
                   >
                 </div>
                 <div v-else>
-                  <i class="material-icons" @click="editSC(sc.id, sc.name)"
+                  <i class="material-icons" @click="editSC(sc.id, sc.name, sc.content)"
                     >edit</i
                   >
                   <i
                     class="material-icons"
-                    @click="acceptPendingSC(sc.id, sc.name)"
+                    @click="acceptPendingSC(sc.id, sc.name, sc.content)"
                     >check_circle_outline</i
                   >
                   <i
@@ -294,19 +295,19 @@ export default {
     closeConfirm(){
             this.showConfirmation = false
         },
-    editSC(sc_id, sc_name) {
+    editSC(sc_id, sc_name, sc_code) {
       this.$router.push({
         name: "EditSc",
-        params: { sc_id: sc_id, name: sc_name, parent_path: "/list-sc" },
+        params: { sc_id: sc_id, name: sc_name, code: sc_code, parent_path: "/list-sc" },
       });
     },
-    acceptPendingSC(sc_id, sc_name) {
+    acceptPendingSC(sc_id, sc_name, sc_code) {
        if (
         confirm(
           "Are you sure to accept the pending Smart Contract named: '" + sc_name + "' ?"
         )
       ) {
-        AcceptPendingSmartContracts(sc_id, sc_name);
+        AcceptPendingSmartContracts(sc_id, sc_name, sc_code);
       
         this.fetchData();
         }
