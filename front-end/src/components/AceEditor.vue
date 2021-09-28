@@ -1,9 +1,9 @@
 <template>
   <div id="ace-editor">
+    <!-- <h1>Hello demo {{codeSC}}</h1> -->
     <div class="tool-bar"></div>
     <editor
-      v-model="code"
-      @keyup="$emit('update:code', code)"
+      v-model="contentSC"
       @init="editorInit"
       lang="solidity"
       theme="chrome"
@@ -17,16 +17,20 @@
 export default {
   data() {
     return {
-      // content:this.code
+      contentSC:"//add your code here"
     };
   },
-  model: {
-    prop: "code",
-    event: "input",
+  watch:{
+    codeSC:function(newVal, oldVal){
+      console.log(`propchange oldVal:${oldVal}, newVal:${newVal}`)
+      this.contentSC = this.codeSC
+    },
+    contentSC:function(newVal, oldVal){
+      console.log(`propchange oldVal:${oldVal}, newVal:${newVal}`)
+      this.$emit('changeSC',newVal)
+    },
   },
-  props: {
-    code: String,
-  },
+  props:["codeSC"],
   components: {
     editor: require("vue2-ace-editor"),
   },

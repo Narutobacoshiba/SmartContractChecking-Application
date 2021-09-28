@@ -2,8 +2,8 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '',
-    database="Project"
+    passwd = '123456',
+    database="soliditycpn"
 )
 mycursor = db.cursor()
 sqlFomular = "INSERT INTO SmartContract (name,type,content,description,aid) VALUES (%s,%s,%s,%s,%s)"

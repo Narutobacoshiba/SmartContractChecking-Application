@@ -3,7 +3,7 @@ db = mysql.connector.connect(
     host = "localhost",
     user="root",
     passwd = "123456",
-    database="Project"
+    database="soliditycpn"
 )
 mycursor = db.cursor()
 #mycursor.execute("CREATE DATABASE Project") # cau lenh nay chay 1 lan xong xuoc di ,go cai comment o tren connect

@@ -56,8 +56,6 @@ export default {
     };
   },
   mounted() {
-    if (this.list_property.length > 0)
-      this.selected_property = this.list_property[0];
   },
   methods: {
     updateCode(){

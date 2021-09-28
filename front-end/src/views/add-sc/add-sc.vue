@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="editor-area area">
-        <EditorSc v-model="code" />
+        <ace-editor v-bind:codeSC="demoEditSC" @changeSC="updateContent($event)"/>
       </div>
       <div class="button-area area">
         <div class="button-add-cancell">
@@ -72,30 +72,40 @@
 
 <script>
 import { AddNewSmartContracts } from "../../services/data";
-import EditorSc from "../../components/EditorSc.vue";
-
+// import {AceEditor} from "../../components/AceEditor.vue";
+import AceEditor from '../../components/AceEditor.vue';
 export default {
+  components: {AceEditor},
   name: "AddSc",
   data() {
     return {
       nameSc: "",
       options: this.$route.params.options,
       code: "",
+      demoEditSC: "test add sc"
     };
   },
-  components: { EditorSc },
   methods: {
+    updateContent(value){
+      //console.log(value)
+      this.demoEditSC = value;
+    },
     async clickHandler(action) {
       if (action == "save") {
-        const res = await AddNewSmartContracts(
-          this.hashValue(this.nameSc),
-          this.nameSc,
-          this.options,
-          this.code
-        );
-        if (res.status && res.status === 200) {
-          this.$router.push(this.$route.params.parent_path);
-        }
+        // chưa chạy được res.status nên comment lại
+
+        // const res = await AddNewSmartContracts(
+        //   this.hashValue(this.nameSc),
+        //   this.nameSc,
+        //   this.options,
+        //   this.code
+        // );
+        // if (res.status && res.status === 200) {
+        //   this.$router.push(this.$route.params.parent_path);
+        // }
+        await AddNewSmartContracts(this.hashValue(this.nameSc), this.nameSc, this.options, this.demoEditSC);
+        this.$router.push(this.$route.params.parent_path);
+
       } else if (action == "cancel") {
         this.$router.push(this.$route.params.parent_path);
       }

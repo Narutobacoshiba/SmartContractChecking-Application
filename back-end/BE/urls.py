@@ -21,9 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('smartconstract/',include('smartconstract.urls')),
     path('login',views.loginpage),
-    path('context/',include('context.urls')),
-    path('ltl/',include('LTLpro.urls')),
-    path('calltool/',include('calltool.urls')),
-    
-
-    ]
+    path('context/',include('context.urls'))
+]
