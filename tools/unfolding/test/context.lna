@@ -13,9 +13,9 @@ type vchange : list[event_id] of mvalue with capacity N;
 type cvalue : struct { event_id id;boolean cv2;};
 type vcondition : list[event_id] of cvalue with capacity N;
 
-/**************************
+/****************************
 *** Functions Definitions ***
-**************************/
+****************************/
 
 function cvalue () -> marking_value{
 	marking_value m := empty;
@@ -35,16 +35,16 @@ function confirm_condition () -> boolean{
 	return ret;
 }
 function confirm_milestone () -> boolean{
-	boolean ret := 1;	
-	for(v in vc){
+	boolean ret := 1;	for(v in vc){
 		if(v.cv1 = 1 and v.cv2 = 1) ret := 0;
 	}
 	return ret;
 }
 
-/**************************
+/*************
 *** PLACES ***
-**************************/
+*************/
+
 /*
  * Function: state
  */
@@ -53,9 +53,9 @@ place marking {
 	init : <(|0,0|,|0,0|,|1,1|)>;
 }
 
-/**************************
+/******************
 *** TRANSITIONS ***
-**************************/
+******************/
 
 
 /*
@@ -83,10 +83,5 @@ transition claimReward {
 	}
 	guard : (include[1] = 1) and (confirm_condition(|{include[0],execute[0]}|) = 1);
 }
-
-/**************************
-*** ANOTHER ***
-**************************/
-
 
 }

@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <set>
-#include "../../include/cli11/CLI11.hpp"
+#include "../include/cli11/CLI11.hpp"
 #include "include/translator.hpp"
 #include "include/DCR.hpp"
 
@@ -26,9 +26,9 @@ int main(int argc, char** argv)
     
     ofstream myfile;
     if(OUT_FILE_NAME.compare("") == 0){
-        myfile.open (DCR_XML_FILE.substr(0, DCR_XML_FILE.find('.'))+".lna");
+        myfile.open ("./output/"+DCR_XML_FILE.substr(0, DCR_XML_FILE.find('.'))+".lna");
     }else{
-        myfile.open (OUT_FILE_NAME+".lna");
+        myfile.open ("./output/"+OUT_FILE_NAME+".lna");
     }
     
     myfile << net->source_code();
