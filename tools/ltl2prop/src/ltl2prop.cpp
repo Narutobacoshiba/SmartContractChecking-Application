@@ -1,8 +1,8 @@
 #include "./ltl2prop.hpp"
 #include "../../include/Utils.hpp"
 
-
-
+/** The main function to process and read the input files (lna,json,ltl)
+ */
 LTLTranslator::LTLTranslator(std::stringstream& _lna_stream, const nlohmann::json& lna_json, std::stringstream& _ltl_stream){
     std::string new_line;
 
@@ -24,6 +24,8 @@ LTLTranslator::LTLTranslator(std::stringstream& _lna_stream, const nlohmann::jso
     createMap();
 }
 
+/** Create a map to map between the ltl formula and the helena ltl prop formula
+ */
 void LTLTranslator::createMap(){
     MappingOp[OR_OP] = OR_OP_PROP;
     MappingOp[AND_OP] = AND_OP_PROP;
@@ -33,6 +35,8 @@ void LTLTranslator::createMap(){
     MappingOp[UNTIL_OP] = UNTIL_OP_PROP;
 }
 
+/** Read variable information from json file and store
+ */
 void LTLTranslator::handleVariable(const nlohmann::json& lna_json){
     auto gvs = lna_json.at("globalVariables");
     for(size_t i = 0; i < gvs.size(); i++){
@@ -50,40 +54,48 @@ void LTLTranslator::handleVariable(const nlohmann::json& lna_json){
     }
 }
 
-
+/** Check if _name is defined as const
+ */
 bool LTLTranslator::is_const_definition(const std::string& _name){
     if(constDefinitions.find(_name) != constDefinitions.end()){
         return true;
     }
     return false;
 }
-
+/** Get value of _name (_name is defined as const)
+ */
 std::string LTLTranslator::get_const_definition_value(const std::string& _name){
     if(is_const_definition(_name)){
         return constDefinitions[_name];
     }
     return "";
 }
-
+/** Check if _name is  global variable
+ */
 bool LTLTranslator::is_global_variable(const std::string& _name){
     if(global_variables.find(_name) != global_variables.end()){
         return true;
     }
     return false;
 }
+/** Get global variable placetype by input
+ */
 std::string LTLTranslator::get_global_variable_placetype(const std::string& _name){
     if(is_global_variable(_name)){
         return global_variables[_name];
     }
     return "";
 }
-
+/** Check if _name is local variable
+ */
 bool LTLTranslator::is_local_variable(const std::string& _name){
     if(local_variables.find(_name) != local_variables.end()){
         return true;
     }
     return false;
 }
+/** Get local variable placetype by input
+ */
 std::string LTLTranslator::get_local_variable_placetype(const std::string& _name){
     if(is_local_variable(_name)){
         return local_variables[_name];
@@ -91,7 +103,8 @@ std::string LTLTranslator::get_local_variable_placetype(const std::string& _name
     return "";
 }
 
-
+/** Read ltl,lna,json file as input and output lna and prop.lna file
+ */
 std::map<std::string,std::string> LTLTranslator::translate(){
     std::string propety;
 
@@ -127,7 +140,8 @@ std::map<std::string,std::string> LTLTranslator::translate(){
     result["prop"] = propety;
     return result;
 }
-
+/** Analyse const definition
+ */
 void LTLTranslator::handleConst(){
     std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
     
@@ -137,7 +151,8 @@ void LTLTranslator::handleConst(){
     constDefinitions[variable] = value;
 }
 
-
+/** Analyse proposition definition
+ */
 void LTLTranslator::handleProposition(){
     std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
 
@@ -147,7 +162,8 @@ void LTLTranslator::handleProposition(){
     
     propositions.push_back("proposition " + prop_name + ":\n\t" + expression + ";\n");
 }
-
+/** Analyse property definition
+ */
 std::string LTLTranslator::handleProperty(){
     std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
 
@@ -166,7 +182,8 @@ std::string LTLTranslator::handleProperty(){
     
     return "ltl property " + property_name + ":\n\t" + property.str()+";\n";
 }
-
+/** Convert proposition expression to proposition in lna file
+ */
 std::string LTLTranslator::handleExpression(std::string _exp){
     std::vector<std::string> els = splitExpression(_exp);
     std::stringstream result;
@@ -187,7 +204,12 @@ std::string LTLTranslator::handleExpression(std::string _exp){
     }
     return result.str();
 }
-
+/** Split expression string into list of element
+ *      example:
+ *          std::string input = "(F(is_valid))";
+ *          std::vector<std::string> out = splitExpression(input);
+ *          output = {"(","F","(","is_valid",")",")"}
+ */
 std::vector<std::string> LTLTranslator::splitExpression(std::string _exp){
     std::vector<std::string> result;
     std::vector<char> temp;
