@@ -419,8 +419,9 @@ NetNodePtr Translator::translate(){
                 }else if((*rel).compare("response") == 0){
                     if(eventSource->get_name().compare(eventDest->get_name()) == 0){
                         events_self_response[eventSource->get_name()] = true;
+                    }else{
+                        eventSource->add_responsecvparams("{"+eventDest->get_id()+",1}");
                     }
-                    eventSource->add_responsecvparams("{"+eventDest->get_id()+",1}");
                 }else if((*rel).compare("condition") == 0){
                     eventDest->add_ccondition("{include["+eventSource->get_id()+"],execute["+eventSource->get_id()+"]}");
                 }else if((*rel).compare("milestone") == 0){

@@ -35,7 +35,8 @@ function confirm_condition () -> boolean{
 	return ret;
 }
 function confirm_milestone () -> boolean{
-	boolean ret := 1;	for(v in vc){
+	boolean ret := 1;	
+	for(v in vc){
 		if(v.cv1 = 1 and v.cv2 = 1) ret := 0;
 	}
 	return ret;
@@ -44,7 +45,9 @@ function confirm_milestone () -> boolean{
 /**************************
 *** PLACES ***
 **************************/
-
+/*
+ * Function: state
+ */
 place marking {
 	dom : marking_value*marking_value*marking_value;
 	init : <(|0,0|,|0,0|,|1,1|)>;
@@ -56,8 +59,8 @@ place marking {
 
 
 /*
-*  Function: play
-*/
+ * Function: play
+ */
 transition play {
 	in {
 		marking : <(execute,response,include)>;
@@ -65,12 +68,12 @@ transition play {
 	out {
 		marking : <(execute,cvalue(response,|{0,0}|),include)>;
 	}
-	guard : (include[0] = 1)
+	guard : (include[0] = 1);
 }
 
 /*
-*  Function: claimReward
-*/
+ * Function: claimReward
+ */
 transition claimReward {
 	in {
 		marking : <(execute,response,include)>;
@@ -78,7 +81,7 @@ transition claimReward {
 	out {
 		marking : <(execute,cvalue(response,|{1,0}|),cvalue(include,|{0,1}|))>;
 	}
-	guard : (include[1] = 1) and (confirm_condition(|{include[0],execute[0]}|) = 1)
+	guard : (include[1] = 1) and (confirm_condition(|{include[0],execute[0]}|) = 1);
 }
 
 /**************************
