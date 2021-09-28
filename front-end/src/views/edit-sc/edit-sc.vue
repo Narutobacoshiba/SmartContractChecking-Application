@@ -9,7 +9,7 @@
         <input class="input-name input-type" type="text" v-model="nameSc" />
       </div>
       <div class="editor-area area">
-        <EditorSc v-model="code"/>
+        <ace-editor v-bind:codeSC="demoEditSC" @changeSC="updateContent($event)"/>
       </div>
       <div class="button-area area">
         <div class="button-add-cancell">
@@ -22,23 +22,34 @@
 </template>
 
 <script>
-import {GetSmartContractCode, UpdateSmartContractCode} from "../../services/data"
-import EditorSc from "../../components/EditorSc.vue";
+import {UpdateSmartContractCode} from "../../services/data"
+// import EditorSc from "../../components/EditorSc.vue";
+import AceEditor from '../../components/AceEditor.vue';
 export default {
-  components: { EditorSc },
+  components: {AceEditor },
   name: "EditSc",
+
   data() {
     return {
       nameSc: this.$route.params.name,
-      code: GetSmartContractCode(this.$route.params.sc_id)
+      //code: GetSmartContractCode(this.$route.params.sc_id),
+      code: this.$route.params.code,
+      demoEditSC: "test edit sc"
     };
   },
+  mounted(){
+      this.demoEditSC = this.code
+  },
   methods:{
+    updateContent(value){
+      //console.log(value)
+      this.demoEditSC = value;
+    },
     async clickHandler(param){
       if(param == "save"){
         // UpdateSmartContractCode(this.$route.params.sc_id, this.code)
         // this.$router.push(this.$route.params.parent_path);
-        await UpdateSmartContractCode(this.$route.params.sc_id, this.nameSc,this.code)
+        await UpdateSmartContractCode(this.$route.params.sc_id, this.nameSc,this.demoEditSC)
         this.$router.push({
           name:"ListSc"
           })

@@ -2,7 +2,7 @@ from .serializer import GetSmartConstractSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import SmartConstract
+from .models import Smartcontract
 from rest_framework.decorators import api_view
 # Create your views here.
 
@@ -11,7 +11,7 @@ class SmartConstractAPIView(APIView):
         try:
             if request.method == 'GET':
                 sc_type = request.GET['type']
-                smartConstractDB = SmartConstract.objects.filter(type=sc_type)
+                smartConstractDB = Smartcontract.objects.filter(type=sc_type)
                 serialiSmartConstract = GetSmartConstractSerializer(smartConstractDB,many=True)
                 return Response(serialiSmartConstract.data,status=status.HTTP_200_OK)
         except:
@@ -32,7 +32,7 @@ class SmartConstractAPIView(APIView):
         try:
             if request.method == 'PUT':
                 idClient = request.data['id']
-                SmartConstractByID = SmartConstract.objects.get(id=idClient)
+                SmartConstractByID = Smartcontract.objects.get(id=idClient)
                 serializeUpdate = GetSmartConstractSerializer(instance=SmartConstractByID,data=request.data)
                 if serializeUpdate.is_valid():
                     serializeUpdate.save()
@@ -45,7 +45,7 @@ class SmartConstractAPIView(APIView):
         try:
             if request.method == 'DELETE':
                 idClient = request.GET['id']
-                SmartConstractByID = SmartConstract.objects.get(id=idClient)
+                SmartConstractByID = Smartcontract.objects.get(id=idClient)
                 SmartConstractByID.delete()
                 return Response('Success',status=status.HTTP_200_OK)
         except:
@@ -56,7 +56,7 @@ def getScById(request):
         try:
             if request.method == 'GET':
                 idClient = request.GET['id']
-                smartConstractDB = SmartConstract.objects.get(id=idClient)
+                smartConstractDB = Smartcontract.objects.get(id=idClient)
                 serialiSmartConstract = GetSmartConstractSerializer(smartConstractDB)
                 return Response(serialiSmartConstract.data,status=status.HTTP_200_OK)
         except:

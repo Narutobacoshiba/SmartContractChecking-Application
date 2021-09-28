@@ -10,8 +10,8 @@ loc = city+ " " + region+ " " + country
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '',
-    database="Project"
+    passwd = '123456',
+    database="soliditycpn"
 )
 def InsertIMG(FilePath):
     with open(FilePath,"rb") as File :
@@ -22,12 +22,12 @@ def InsertIMG(FilePath):
 mycursor = db.cursor()
 sqlFomular = "INSERT INTO Contact (firstname,lastname,email,phone,birthdate,avartar,address,aid) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
 multi = [
-    ("Le","Duc Anh","anhld@fpt.edu.vn","0984268930",datetime.datetime.now(),InsertIMG("./image/index.jpeg"),str(loc),1),
-    ("Le","Anh Son","sonla@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG("./image/index1.jpeg"),str(loc),2),
-    ("Nguyen","Minh Hanh","hanhnm@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG("./image/index2.jpeg"),str(loc),3),
-    ("Nguyen","Minh Duc","ducnm@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG("./image/index3.jpg"),str(loc),4),
-    ("Nguyen","Thanh Ha","hant@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG("./image/index4.jpg"),str(loc),5),
-    ("Tran","Van Cuong","cuongtv@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG("./image/index5.jpg"),str(loc),6),
+    ("Le","Duc Anh","anhld@fpt.edu.vn","0984268930",datetime.datetime.now(),InsertIMG(r"E:\Hanh\fpt\2021-SUMMER\LAB_Sum21\Fintech Fullstack\hanhNM\SmartContractChecking-Application\scripts\image\index.jpeg"),str(loc),1),
+    ("Le","Anh Son","sonla@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG(r"E:\Hanh\fpt\2021-SUMMER\LAB_Sum21\Fintech Fullstack\hanhNM\SmartContractChecking-Application\scripts\image\index.jpeg"),str(loc),2),
+    ("Nguyen","Minh Hanh","hanhnm@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG(r"E:\Hanh\fpt\2021-SUMMER\LAB_Sum21\Fintech Fullstack\hanhNM\SmartContractChecking-Application\scripts\image\index.jpeg"),str(loc),3),
+    ("Nguyen","Minh Duc","ducnm@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG(r"E:\Hanh\fpt\2021-SUMMER\LAB_Sum21\Fintech Fullstack\hanhNM\SmartContractChecking-Application\scripts\image\index.jpeg"),str(loc),4),
+    ("Nguyen","Thanh Ha","hant@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG(r"E:\Hanh\fpt\2021-SUMMER\LAB_Sum21\Fintech Fullstack\hanhNM\SmartContractChecking-Application\scripts\image\index.jpeg"),str(loc),5),
+    ("Tran","Van Cuong","cuongtv@fpt.edu.vn","0123456789",datetime.datetime.now(),InsertIMG(r"E:\Hanh\fpt\2021-SUMMER\LAB_Sum21\Fintech Fullstack\hanhNM\SmartContractChecking-Application\scripts\image\index.jpeg"),str(loc),6),
 ]
 mycursor.executemany(sqlFomular,multi)
 db.commit()

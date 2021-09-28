@@ -3,8 +3,8 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '',
-    database="Project"
+    passwd = '123456',
+    database="soliditycpn"
 )
 mycursor = db.cursor()
 mycursor.excute("""ALTER TABLE old_table_name RENAME SmartContract;""")

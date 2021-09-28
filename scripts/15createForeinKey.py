@@ -4,7 +4,7 @@ db = mysql.connector.connect(
     host = "localhost",
     user="root",
     passwd = '123456',
-    database="Project"
+    database="soliditycpn"
 )
 mycursor = db.cursor()
 mycursor.execute("""alter table Contact ADD CONSTRAINT fk_id1 FOREIGN KEY(aid)

@@ -4,7 +4,7 @@ db = mysql.connector.connect(
     host = "localhost",
     user="root",
     passwd = '123456',
-    database="Project"
+    database="soliditycpn"
 )
 def InsertContent(FilePath):
     with open(FilePath,"rb") as File :
