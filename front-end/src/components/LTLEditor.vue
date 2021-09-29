@@ -56,9 +56,8 @@ export default {
     };
   },
   mounted() {
-   
   },
-  watch: {
+   watch: {
     code:function (newVal){
       this.ltlcode = newVal
       document.getElementById("textarea-input").innerHTML = this.ltlcode;
@@ -70,7 +69,6 @@ export default {
     } 
   },
   methods: {
-   
     updateCode(){
         this.$emit("update", this.ltlcode)
     },
@@ -94,7 +92,7 @@ export default {
     },
     insertSymbol(symbol) {
       let selection = window.getSelection();
-      if (selection.rangeCount == 0) return;
+      if (selection.rangeCount == 0) return; 
       let range = selection.getRangeAt(0);
       range.insertNode(document.createTextNode(unescape(symbol)));
       range.collapse(false);

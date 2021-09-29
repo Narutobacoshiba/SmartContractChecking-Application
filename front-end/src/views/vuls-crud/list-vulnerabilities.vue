@@ -22,7 +22,6 @@
 
 <script>
 import {GetLtl, DeleteLtl} from "../../services/data"
-
 export default {
     data(){
         return {

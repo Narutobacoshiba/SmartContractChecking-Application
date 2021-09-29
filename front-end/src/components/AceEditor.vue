@@ -1,8 +1,9 @@
 <template>
   <div id="ace-editor">
+    <!-- <h1>Hello demo {{codeSC}}</h1> -->
     <div class="tool-bar"></div>
     <editor
-      v-model="fomular"
+      v-model="contentSC"
       @init="editorInit"
       lang="solidity"
       theme="chrome"
@@ -16,22 +17,22 @@
 export default {
   data() {
     return {
-      fomular: "",
+      contentSC:"//add your code here"
     };
   },
-  props: ["codeModel"],
+  watch:{
+    codeSC:function(newVal, oldVal){
+      console.log(`propchange oldVal:${oldVal}, newVal:${newVal}`)
+      this.contentSC = this.codeSC
+    },
+    contentSC:function(newVal, oldVal){
+      console.log(`propchange oldVal:${oldVal}, newVal:${newVal}`)
+      this.$emit('changeSC',newVal)
+    },
+  },
+  props:["codeSC"],
   components: {
     editor: require("vue2-ace-editor"),
-  },
-  watch: {
-    codeModel: function (newVal, oldVal) {
-      console.log(`Props Changed: ${oldVal} to ${newVal}`);
-      this.fomular = this.codeModel;
-    },
-    fomular: function(newVal,oldVal){
-      console.log(`Fomular Changed: ${oldVal} to ${newVal}`);
-      this.$emit('changed',newVal)
-    }
   },
   methods: {
     editorInit: function () {
