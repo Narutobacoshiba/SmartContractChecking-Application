@@ -2,8 +2,7 @@
   <div id="ace-editor">
     <div class="tool-bar"></div>
     <editor
-      v-model="code"
-      @keyup="$emit('update:code', code)"
+      v-model="fomular"
       @init="editorInit"
       lang="solidity"
       theme="chrome"
@@ -17,18 +16,22 @@
 export default {
   data() {
     return {
-      // content:this.code
+      fomular: "",
     };
   },
-  model: {
-    prop: "code",
-    event: "input",
-  },
-  props: {
-    code: String,
-  },
+  props: ["codeModel"],
   components: {
     editor: require("vue2-ace-editor"),
+  },
+  watch: {
+    codeModel: function (newVal, oldVal) {
+      console.log(`Props Changed: ${oldVal} to ${newVal}`);
+      this.fomular = this.codeModel;
+    },
+    fomular: function(newVal,oldVal){
+      console.log(`Fomular Changed: ${oldVal} to ${newVal}`);
+      this.$emit('changed',newVal)
+    }
   },
   methods: {
     editorInit: function () {

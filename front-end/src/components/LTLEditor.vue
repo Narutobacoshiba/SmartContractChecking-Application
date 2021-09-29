@@ -56,10 +56,21 @@ export default {
     };
   },
   mounted() {
-    if (this.list_property.length > 0)
-      this.selected_property = this.list_property[0];
+   
+  },
+  watch: {
+    code:function (newVal){
+      this.ltlcode = newVal
+      document.getElementById("textarea-input").innerHTML = this.ltlcode;
+      this.resetContent()
+    },
+    ltlcode: function (newVal){
+      this.$emit('change',newVal)
+      console.log(newVal);
+    } 
   },
   methods: {
+   
     updateCode(){
         this.$emit("update", this.ltlcode)
     },

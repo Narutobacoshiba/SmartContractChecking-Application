@@ -36,15 +36,14 @@ export class LtlService extends BaseService {
 
     /*---------Update Smartcontract--------- */
     static async UpdateLtl(id, ltl_name, description, fomular) {
-        const LTLById = await this.request({ auth: true }).get(`${this.getUnity()}/ltlbyid?id=${id}`)
-            // console.log(ContextById,ct_name,ct_description)
+        // const LTLById = await this.request({ auth: true }).get(`${this.getUnity()}/ltlbyid?id=${id}`)
+        // console.log(ContextById,ct_name,ct_description)
         try {
             const paraData = {
                 "id": id,
                 "name": ltl_name,
                 "fomular": fomular,
                 "description": description,
-                "ltl": LTLById.data.ltl,
                 "type": "Property",
                 "tpid": "1",
             }

@@ -7,7 +7,6 @@
       <div class="row" id="name-section">
         <div class="title col-2">Name</div>
         <div class="col-10"><input class="form-control" type="text" v-model="name" /></div>
-        {{ name }}
       </div>
       <div class="row">
         <div class="title col-2">Description</div>
@@ -50,7 +49,7 @@ export default {
           if (this.name === undefined||this.code === undefined||this.description === undefined){
           return
         }
-        const response=  await CreateLtl(this.name, this.description, this.fomualar)
+        const response=  await CreateLtl(this.name, this.description, this.code)
         console.log(response)
             this.$router.push(this.$route.params.parent_path);
         } 

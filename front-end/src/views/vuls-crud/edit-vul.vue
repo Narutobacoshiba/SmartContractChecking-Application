@@ -14,7 +14,7 @@
       </div>
       <div class="editor-area">
           <span class="title">Formular</span>
-        <LTLEditor :code="code" @update="updateCode"/>
+            <LTLEditor :code="codeModel" @change="changedLTL($event)"/>
       </div>
       <div id="group-btn">
           <button id="button-add" type="button" @click="clickHandler('save')">Save</button>
@@ -25,43 +25,46 @@
 </template>
 
 <script>
-import LTLEditor from "../../components/LTLEditor.vue"
+import LTLEditor from "../../components/LTLEditor.vue";
 import { GetLtlById,UpdateLtl } from "../../services/data"
 export default {
   data() {
     return {
       id: this.$route.params.vul_id,
-      code: "",
+      codeModel: "",
       name: "",
       description: "",
-      ltl: {name: String, code: String, description: String},
+      ltl: {name: String, fomular: String, description: String},
     };
   },
+  watch: {
+    codeModel: function (newVal){
+      console.log(newVal);
+    }
+  },
   mounted(){
-      let el = document.getElementById("textarea-input");
-      el.style.height = 180 + 'px';
+   
       // this.initData();
   },
-  created(){
+  async created(){
       //get vulnerability by id from db: name, description
-      this.initData();
+      await this.initData();
   },
   components: { LTLEditor },
   methods: {
+     
     async initData() {
       const data = await GetLtlById(this.id);
       this.initModelLTL(data);
-      this.code= data.ltl;
+      this.codeModel= data.fomular;
       this.name= data.name;
       this.description= data.description;
     },
-      updateCode(code){
-          this.code = code
-      },
+    
     Save(){
         //   Save LTL vulnerability into database
-        return UpdateLtl(this.id, this.name, this.description);
-    },
+        return UpdateLtl(this.id, this.name, this.description, this.codeModel);
+      },
   
   async clickHandler(action){
         if(action == "save"){
@@ -75,14 +78,18 @@ export default {
     },
     initModelLTL(modelLTL){
       this.ltl.name= modelLTL.name;
-      this.ltl.code= modelLTL.code;
+      this.ltl.fomular= modelLTL.fomular;
       this.ltl.description= modelLTL.description;
     },
     CheckchangeLTL(){
 return this.ltl.name.trim() === this.name.trim()
-&& this.ltl.code.trim() === this.code.trim()
+&& this.ltl.fomular.trim() === this.fomular.trim()
 && this.ltl.description.trim() === this.description.trim()
     },
+    changedLTL(value){
+      console.log(`Parent: ${value}`)
+      this.codeModel=value
+    }
   },
   computed: {
   }
