@@ -3,7 +3,7 @@ import requests
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '123456',
+    passwd = '22042001',
     database="soliditycpn"
 )
 def InsertContent(FilePath):
@@ -13,8 +13,8 @@ def InsertContent(FilePath):
 mycursor = db.cursor()
 sqlFomular = "INSERT INTO Context (name,context,description) VALUES (%s,%s,%s)"
 multi = [
-    ("DCR",InsertContent("./XMLfile/test.xml"),"Use for SC1"),
-("BPMN",InsertContent("./XMLfile/test0.xml"),"Use for SC2"),
+    ("DCR",InsertContent("C:/Users/PC/Desktop/SmartContractChecking-Application/scripts/XMLfile/test.xml"),"Use for SC1"),
+("BPMN",InsertContent("C:/Users/PC/Desktop/SmartContractChecking-Application/scripts/XMLfile/test0.xml"),"Use for SC2"),
 ]
 mycursor.executemany(sqlFomular,multi)
 db.commit()

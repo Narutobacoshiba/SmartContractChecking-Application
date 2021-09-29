@@ -6,64 +6,108 @@
     <div class="body">
       <div class="row" id="name-section">
         <div class="title col-2">Name</div>
-        <div class="col-10"><input class="form-control" type="text" v-model="name" /></div>
+        <div class="col-10">
+          <input class="form-control" type="text" v-model="name" />
+        </div>
       </div>
       <div class="row">
         <div class="title col-2">Description</div>
-        <div class="col-10"><textarea spellcheck="false" rows="5" class="form-control" type="text" v-model="description"></textarea></div>
+        <div class="col-10">
+          <textarea
+            spellcheck="false"
+            rows="5"
+            class="form-control"
+            type="text"
+            v-model="description"
+          ></textarea>
+        </div>
       </div>
       <div class="editor-area">
-          <span class="title">Formular</span>
-        <LTLEditor :code="code" @update="updateCode"/>
+        <span class="title">Formular</span>
+        <LTLEditor :code.sync="codeModel" @change="changedLTL($event)" />
       </div>
       <div id="group-btn">
-          <button id="button-add" type="button" @click="clickHandler('save')">Save</button>
-          <button id="button-cancel" type="button" @click="clickHandler('cancel')">Cancel</button>
+        <button id="button-add" type="button" @click="clickHandler('save')">
+          Save
+        </button>
+        <button
+          id="button-cancel"
+          type="button"
+          @click="clickHandler('cancel')"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import LTLEditor from "../../components/LTLEditor.vue"
+import LTLEditor from "../../components/LTLEditor.vue";
+import { GetLtlById, UpdateLtl } from "../../services/data";
 export default {
   data() {
     return {
       id: this.$route.params.vul_id,
-      code: "",
+      codeModel: "",
       name: "",
-      description: ""
+      description: "",
+      ltl: { name: String, fomular: String, description: String },
     };
   },
-  mounted(){
-      let el = document.getElementById("textarea-input");
-      el.style.height = 180 + 'px';
+  watch: {
+    codeModel: function(newVal) {
+      console.log(newVal);
+    },
   },
-  created(){
-      //get vulnerability by id from db: name, description
+  mounted() {
+    // this.initData();
+  },
+  async created() {
+    //get vulnerability by id from db: name, description
+    await this.initData();
   },
   components: { LTLEditor },
   methods: {
-      updateCode(code){
-          this.code = code
-      },
-    Save(){
-        //   Save LTL vulnerability into database
+    async initData() {
+      const data = await GetLtlById(this.id);
+      this.initModelLTL(data);
+      this.codeModel = data.fomular;
+      this.name = data.name;
+      this.description = data.description;
     },
 
-    clickHandler(action){
-        if(action == "save"){
-            this.Save()
-            this.$router.push(this.$route.params.parent_path);
-        } 
-        else if(action == "cancel"){
-            if(!this.$route.params.parent_path) this.$router.push('/');
-            else this.$router.push(this.$route.params.parent_path);
-        }
-    }
+    Save() {
+      return UpdateLtl(this.id, this.name, this.description, this.codeModel);
+    },
+
+    async clickHandler(action) {
+      if (action == "save") {
+        await this.Save();
+        this.$router.push(this.$route.params.parent_path);
+      } else if (action == "cancel") {
+        if (!this.$route.params.parent_path) this.$router.push("/");
+        else this.$router.push(this.$route.params.parent_path);
+      }
+    },
+    initModelLTL(modelLTL) {
+      this.ltl.name = modelLTL.name;
+      this.ltl.fomular = modelLTL.fomular;
+      this.ltl.description = modelLTL.description;
+    },
+    CheckchangeLTL() {
+      return (
+        this.ltl.name.trim() === this.name.trim() &&
+        this.ltl.fomular.trim() === this.fomular.trim() &&
+        this.ltl.description.trim() === this.description.trim()
+      );
+    },
+    changedLTL(value) {
+      console.log(`Parent: ${value}`);
+      this.codeModel = value;
+    },
   },
-  computed: {
-  }
+  computed: {},
 };
 </script>
 <style scoped>
@@ -73,7 +117,7 @@ export default {
   height: 100%;
   margin: 0;
 }
-#header{
+#header {
   text-align: center;
   font-size: 35px;
   font-weight: bold;
@@ -86,11 +130,11 @@ export default {
   width: 700px;
   margin: auto;
 }
-.title{
-    font-size: 18px;
+.title {
+  font-size: 18px;
 }
-#name-section{
-    margin-bottom: 30px;
+#name-section {
+  margin-bottom: 30px;
 }
 /* editor area */
 .editor-area {
@@ -100,7 +144,7 @@ export default {
   /* left: 40px; */
 }
 /* button style */
-#group-btn{
+#group-btn {
   width: 100%;
   align-items: center;
   display: flex;

@@ -1,10 +1,10 @@
 import { BaseService, ErrorWrapper, ResponseWrapper } from "./base";
-export class LtlService extends BaseService{
+export class LtlService extends BaseService {
     /* Type Object API */
     static getUnity() {
-        return 'ltl'
-    }
-    /*---------Get All Of Row In  Table---------- */
+            return 'ltl'
+        }
+        /*---------Get All Of Row In  Table---------- */
     static async GetAllLtl() {
         try {
             const response = await this.request({ auth: true }).get(`${this.getUnity()}/api/`)
@@ -16,13 +16,14 @@ export class LtlService extends BaseService{
     }
 
     /*---------Create New--------- */
-    static async CreateLtl(ltl_name,formula,description) {
+    static async CreateLtl(ltl_name, description, fomular) {
         try {
             const paraData = {
                 "name": ltl_name,
-                "formula": formula,
-                "description": description
-                //edit here
+                "fomular": fomular,
+                "description": description,
+                "type": "Property",
+                "tpid": "2"
             }
             const response = await this.request({ auth: true }).post(`${this.getUnity()}/api/`, paraData)
             return new ResponseWrapper(response, response.data)
@@ -34,24 +35,28 @@ export class LtlService extends BaseService{
 
 
     /*---------Update Smartcontract--------- */
-        static async UpdateLtl(name,formula,ct_description) {
-        const ContextById = await this.request({ auth: true }).get(`${this.getUnity()}/ltlbyid?id=${id}`)
+    static async UpdateLtl(id, ltl_name, description, fomular) {
+        // const LTLById = await this.request({ auth: true }).get(`${this.getUnity()}/ltlbyid?id=${id}`)
         // console.log(ContextById,ct_name,ct_description)
         try {
             const paraData = {
+                "id": id,
                 "name": ltl_name,
-                "formula": formula,
-                "description": ct_description
+                "fomular": fomular,
+                "description": description,
+                "type": "Property",
+                "tpid": "1",
             }
-            }
+
             const response = await this.request({ auth: true }).put(`${this.getUnity()}/api/`, paraData)
             return new ResponseWrapper(response, response.data)
         } catch (error) {
             const message = error.response.data ? error.response.data.error : error.response.statusText
             console.log(error)
             throw new ErrorWrapper(error, message)
-           
+
         }
+    }
 
     /*---------Delete Smartcontract--------- */
     static async DeleteLtl(id) {

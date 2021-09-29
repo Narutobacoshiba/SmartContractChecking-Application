@@ -7,7 +7,6 @@ type vchange : list[event_id] of mvalue with capacity N;
 type cvalue : struct { event_id id;boolean cv2;};
 type vcondition : list[event_id] of cvalue with capacity N;
 function cvalue () -> marking_value{
-
 	marking_value m := empty;
 	for(v in mv){
 		m := m & v;
@@ -18,7 +17,6 @@ function cvalue () -> marking_value{
 	return m;
 }
 function confirm_condition () -> boolean{
-
 	boolean ret := 1;
 	for(v in vc){
 		if(v.cv1 = 1 and v.cv2 = 0) ret := 0;
@@ -26,9 +24,7 @@ function confirm_condition () -> boolean{
 	return ret;
 }
 function confirm_milestone () -> boolean{
-
-	boolean ret := 1;	
-	for(v in vc){
+	boolean ret := 1;	for(v in vc){
 		if(v.cv1 = 1 and v.cv2 = 1) ret := 0;
 	}
 	return ret;
@@ -46,33 +42,27 @@ type CLAIM_REWARD_RETURN : struct { USER sender;};
 type PLAY_STATE : struct { STATE state;PLAY_PAR playPar;};
 type CLAIM_REWARD_STATE : struct { STATE state;CLAIM_REWARD_PAR claimRewardPar;};
 function initRedeemableEther (nat n) -> LIST_REDEEMABLE_ETHER{
-
 		LIST_REDEEMABLE_ETHER l := empty;
       		for (i in ADDRESS range 1 .. ADDRESS (n)) l := {i,UINT(0)} & l;
       		return l;
    
 }
 function getElement (LIST_REDEEMABLE_ETHER lre, ADDRESS adr) -> STRUCT_REDEEMABLE_ETHER{
-
 	   	int i := 0;
 	   	while (i<lre'size and lre[i].adr!=adr) i := i+1;
 	   	if(i<lre'size)
 	   		return lre[i];
 	   	else
 	   		return {0,0};
-
 }
 function getIndex (LIST_REDEEMABLE_ETHER lre, ADDRESS adr) -> int{
-
 	   	int i := 0;
 	   	while (i<lre'size and lre[i].adr!=adr) i := i+1;
 	   	if(i<lre'size)
 	   		return i;
 	   	else
 	   		return -1;
-
 }
-
 /*
  * Function: state
  */
@@ -88,7 +78,6 @@ place S {
 	dom : STATE;
 	init : <( {UINT(cb), UINT(v1), UINT(v2), UINT(v3), UINT(v4), UINT(v5), UINT(v6), initRedeemableEther(users)} )>;
 }
-
 /*
  * Function: play
  */
@@ -315,7 +304,6 @@ transition PLAY_return {
 		cflow : epsilon;
 	}
 }
-
 /*
  * Function: claimReward
  */
@@ -329,5 +317,8 @@ transition claimReward {
 		cflow : epsilon;
 	}
 }
+/*** proposition ***/
+proposition outOfRange:
+	 ( exists (t in S | (t->1).depositedWei < 0) )  |  ( exists (t in S | (t->1).depositedWei > 10) ) ;
 
 }

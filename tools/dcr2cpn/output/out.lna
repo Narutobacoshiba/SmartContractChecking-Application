@@ -13,9 +13,9 @@ type vchange : list[event_id] of mvalue with capacity N;
 type cvalue : struct { event_id id;boolean cv2;};
 type vcondition : list[event_id] of cvalue with capacity N;
 
-/**************************
+/****************************
 *** Functions Definitions ***
-**************************/
+****************************/
 
 function cvalue () -> marking_value{
 	marking_value m := empty;
@@ -41,63 +41,47 @@ function confirm_milestone () -> boolean{
 	return ret;
 }
 
-/**************************
+/*************
 *** PLACES ***
-**************************/
+*************/
 
+/*
+ * Function: state
+ */
 place marking {
 	dom : marking_value*marking_value*marking_value;
 	init : <(|0,0|,|0,0|,|1,1|)>;
 }
-place cflow {
-	dom : epsilon;
-	init : epsilon;
-}
-place play_cflow {
-	dom : epsilon;
-}
-place claimReward_cflow {
-	dom : epsilon;
-}
 
-/**************************
+/******************
 *** TRANSITIONS ***
-**************************/
+******************/
 
 
 /*
-*  Function: play
-*/
+ * Function: play
+ */
 transition play {
 	in {
 		marking : <(execute,response,include)>;
-		cflow : epsilon;
 	}
 	out {
 		marking : <(execute,cvalue(response,|{0,0}|),include)>;
-		cflow : epsilon;
 	}
-	guard : (include[0] = 1)
+	guard : (include[0] = 1);
 }
 
 /*
-*  Function: claimReward
-*/
+ * Function: claimReward
+ */
 transition claimReward {
 	in {
 		marking : <(execute,response,include)>;
-		cflow : epsilon;
 	}
 	out {
 		marking : <(execute,cvalue(response,|{1,0}|),cvalue(include,|{0,1}|))>;
-		cflow : epsilon;
 	}
-	guard : (include[1] = 1) and (confirm_condition(|{include[0],execute[0]}|) = 1)
+	guard : (include[1] = 1) and (confirm_condition(|{include[0],execute[0]}|) = 1);
 }
-
-/**************************
-*** ANOTHER ***
-**************************/
-
 
 }

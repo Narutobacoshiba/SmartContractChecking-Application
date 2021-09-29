@@ -1,65 +1,8 @@
 #include "./ltl2prop.hpp"
+#include "../../include/Utils.hpp"
 
-std::string substr_by_edge(const std::string& _str, const std::string& _left, const std::string& _right) {
-    auto left = _str.find(_left);
-    auto right = _str.rfind(_right);
-    if (left == std::string::npos || right == std::string::npos) {
-        return "";
-    } else {
-        return _str.substr(_left.length() + left, right - _left.length() - left);
-    }
-}
-std::vector<std::string> split(const std::string& _str, const std::string& _delimiter) {
-    std::vector<std::string> result;
-    std::string str = std::string(_str);
-    size_t pos = 0;
-    std::string token;
-    while ((pos = str.find(_delimiter)) != std::string::npos) {
-        token = str.substr(0, pos);
-        result.push_back(token);
-        str.erase(0, pos + _delimiter.length());
-    }
-    result.push_back(str);
-        
-    return result;
-}
-
-std::string trim_copy(const std::string& _str) {
-    return _str.substr(_str.find_first_not_of(' '), _str.find_last_not_of(' ') - _str.find_first_not_of(' ') + 1);
-}
-
-std::string retrieve_string_element(const std::string& _str, const unsigned int& _index, const std::string& _delimiter) {
-    std::string new_str= trim_copy(_str);
-    std::vector<std::string> v_str = split(new_str, _delimiter);
-    if (_index < v_str.size()) {
-        return v_str[_index];
-    } else {
-        return "";
-    }
-}
-
-std::string removeNoneAlnum(const std::string& inp_string){
-    std::string s = inp_string;
-    for (int i = 0; i < s.size(); i++) {
-        if ((s[i] < 'A' || s[i] > 'Z') &&
-            (s[i] < 'a' || s[i] > 'z') && 
-            (s[i] < '0' || s[i] > '9') && s[i] != '_')
-        {  
-            s.erase(i, 1);
-            i--;
-        }
-    }
-    return s;
-}
-
-bool is_defined_string(const std::string& _name){
-    auto it = std::find(defined_string.begin(), defined_string.end(), _name);
-    if(it != defined_string.end()){
-        return true;
-    }
-    return false;
-}
-
+/** The main function to process and read the input files (lna,json,ltl)
+ */
 LTLTranslator::LTLTranslator(std::stringstream& _lna_stream, const nlohmann::json& lna_json, std::stringstream& _ltl_stream){
     std::string new_line;
 
@@ -76,11 +19,24 @@ LTLTranslator::LTLTranslator(std::stringstream& _lna_stream, const nlohmann::jso
         }
     }
     ptr_ltl_line = ltl_lines.begin();
-
-    handleVariable(lna_json);
     
+    handleVariable(lna_json);
+    createMap();
 }
 
+/** Create a map to map between the ltl formula and the helena ltl prop formula
+ */
+void LTLTranslator::createMap(){
+    MappingOp[OR_OP] = OR_OP_PROP;
+    MappingOp[AND_OP] = AND_OP_PROP;
+    MappingOp[NOT_OP] = NOT_OP_PROP;
+    MappingOp[GLOBAL_OP] = GLOBAL_OP_PROP;
+    MappingOp[FINNALY_OP] = FINNALY_OP_PROP;
+    MappingOp[UNTIL_OP] = UNTIL_OP_PROP;
+}
+
+/** Read variable information from json file and store
+ */
 void LTLTranslator::handleVariable(const nlohmann::json& lna_json){
     auto gvs = lna_json.at("globalVariables");
     for(size_t i = 0; i < gvs.size(); i++){
@@ -98,40 +54,48 @@ void LTLTranslator::handleVariable(const nlohmann::json& lna_json){
     }
 }
 
-
+/** Check if _name is defined as const
+ */
 bool LTLTranslator::is_const_definition(const std::string& _name){
     if(constDefinitions.find(_name) != constDefinitions.end()){
         return true;
     }
     return false;
 }
-
+/** Get value of _name (_name is defined as const)
+ */
 std::string LTLTranslator::get_const_definition_value(const std::string& _name){
     if(is_const_definition(_name)){
         return constDefinitions[_name];
     }
     return "";
 }
-
+/** Check if _name is  global variable
+ */
 bool LTLTranslator::is_global_variable(const std::string& _name){
     if(global_variables.find(_name) != global_variables.end()){
         return true;
     }
     return false;
 }
+/** Get global variable placetype by input
+ */
 std::string LTLTranslator::get_global_variable_placetype(const std::string& _name){
     if(is_global_variable(_name)){
         return global_variables[_name];
     }
     return "";
 }
-
+/** Check if _name is local variable
+ */
 bool LTLTranslator::is_local_variable(const std::string& _name){
     if(local_variables.find(_name) != local_variables.end()){
         return true;
     }
     return false;
 }
+/** Get local variable placetype by input
+ */
 std::string LTLTranslator::get_local_variable_placetype(const std::string& _name){
     if(is_local_variable(_name)){
         return local_variables[_name];
@@ -139,25 +103,47 @@ std::string LTLTranslator::get_local_variable_placetype(const std::string& _name
     return "";
 }
 
-
+/** Read ltl,lna,json file as input and output lna and prop.lna file
+ */
 std::map<std::string,std::string> LTLTranslator::translate(){
+    std::string propety;
+
     while (ptr_ltl_line != ltl_lines.end()){
         std::string keyword = retrieve_string_element(*ptr_ltl_line,0," ");
-        if(is_defined_string(keyword)){
+        if(std::find(TokensDefine.begin(), TokensDefine.end(), keyword) != TokensDefine.end()){
             if(keyword == CONST_STRING){
                 handleConst();
             }else if(keyword == PROPOSITION_STRING){
                 handleProposition();
             }else if(keyword == PROPERTY_STRING){
-                
+                propety = handleProperty();
             }
         }
         ++ptr_ltl_line;
     }
-}
 
+    std::stringstream lna_result;
+    while (ptr_lna_line != lna_lines.end()){
+        if(substr_by_edge(*ptr_lna_line,"/*** "," ***/") == PROPOSITION_AREA){
+            lna_result << *ptr_lna_line << "\n"; 
+            for(auto it = propositions.begin(); it != propositions.end(); ++it){
+                lna_result << (*it) << "\n";
+            }
+        }else{
+            lna_result << *ptr_lna_line << "\n";
+        }
+        ++ptr_lna_line;
+    }
+
+    std::map<std::string, std::string> result;
+    result["lna"] = lna_result.str();
+    result["prop"] = propety;
+    return result;
+}
+/** Analyse const definition
+ */
 void LTLTranslator::handleConst(){
-    std::string definition = retrieve_string_element(*ptr_ltl_line,1,CONST_STRING);
+    std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
     
     std::string variable = removeNoneAlnum(retrieve_string_element(definition,0,"="));
     std::string value = removeNoneAlnum(retrieve_string_element(definition,1,"="));
@@ -165,48 +151,78 @@ void LTLTranslator::handleConst(){
     constDefinitions[variable] = value;
 }
 
-
+/** Analyse proposition definition
+ */
 void LTLTranslator::handleProposition(){
-    std::string definition = retrieve_string_element(*ptr_ltl_line,1,PROPOSITION_STRING);
+    std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
+
     std::string prop_name = removeNoneAlnum(retrieve_string_element(definition,0,":"));
     std::string prop_def = retrieve_string_element(definition,1,":");
     std::string expression = handleExpression(prop_def);
-    std::cout << expression << "\n";
+    
+    propositions.push_back("proposition " + prop_name + ":\n\t" + expression + ";\n");
 }
+/** Analyse property definition
+ */
+std::string LTLTranslator::handleProperty(){
+    std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
 
+    std::string property_name = removeNoneAlnum(split_ex(definition,":",2)[0]);
+    std::string property_def = split_ex(definition,":",2)[1];
+    std::vector<std::string> els = splitExpression(property_def);
 
+    std::stringstream property;
+    for(auto it = els.begin(); it != els.end(); ++it){
+        if(MappingOp.find(*it) != MappingOp.end()){
+            property << MappingOp[*it] << " ";
+        }else{
+            property << *it << " ";
+        }
+    }
+    
+    return "ltl property " + property_name + ":\n\t" + property.str()+";\n";
+}
+/** Convert proposition expression to proposition in lna file
+ */
 std::string LTLTranslator::handleExpression(std::string _exp){
     std::vector<std::string> els = splitExpression(_exp);
     std::stringstream result;
     for(size_t i = 0; i < els.size();){
-        if(els[i] == "<" || els[i] == ">" || els[i] == "="){
+        if(std::find(ComparisonOperator.begin(), ComparisonOperator.end(), els[i]) != ComparisonOperator.end()){
             if(is_global_variable(els[i-1])){
                 std::string v = get_global_variable_placetype(els[i-1]);
-                result << "exists (t in S|(t->1)." << split(v,".")[1] << " " + els[i] + " " << get_const_definition_value(els[i+1]) << ")";
+                result << "exists (t in S | (t->1)." << split(v,".")[1] << " " + els[i] + " " << get_const_definition_value(els[i+1]) << ")";
             }else if(is_local_variable(els[i-1])){
-
+                std::string v = get_local_variable_placetype(els[i-1]);
+                result << "exists (t in " + v +"| t->1 " << " " + els[i] + " " << get_const_definition_value(els[i+1]) << ")";
             }
             i+=1;
-        }else if (els[i] == "(" || els[i] == ")" || els[i] == "v"){
+        }else if (std::find(BooleanOperator.begin(), BooleanOperator.end(), els[i]) != BooleanOperator.end() || els[i] == OPEN_PARENTHESES || els[i] == CLOSE_PARENTHESES){
             result << " " + els[i] + " ";
         }
         i++;
     }
     return result.str();
 }
-
+/** Split expression string into list of element
+ *      example:
+ *          std::string input = "(F(is_valid))";
+ *          std::vector<std::string> out = splitExpression(input);
+ *          output = {"(","F","(","is_valid",")",")"}
+ */
 std::vector<std::string> LTLTranslator::splitExpression(std::string _exp){
     std::vector<std::string> result;
     std::vector<char> temp;
 
     for(int i = 0; i < _exp.length(); i++){
-        if(_exp[i] == '(' || _exp[i] == ')'){
+        if(_exp[i] == '(' || _exp[i] == ')' || 
+        std::find(BooleanOperator.begin(), BooleanOperator.end(), std::string(1,_exp[i])) != BooleanOperator.end()){
             if(temp.size() > 0)   
                 result.push_back(std::string(temp.begin(), temp.end()));
 
             result.push_back(std::string(1,_exp[i]));
             temp.clear();
-        }else if(_exp[i] == ' '){
+        }else if(_exp[i] == ' ' || _exp[i] == ';'){
             if(temp.size() > 0)   
                 result.push_back(std::string(temp.begin(), temp.end()));
             temp.clear();
