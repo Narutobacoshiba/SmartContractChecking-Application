@@ -98,7 +98,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'soliditycpn',
         'USER': 'root',
-        'PASSWORD': '123456789',
+        'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -149,7 +149,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'acount.User'
+AUTH_USER_MODEL = 'acount.Account'
 
 CORS_ALLOW_CREDENTIALS = True
 

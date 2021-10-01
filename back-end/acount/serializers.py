@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import User
+from .models import Account
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib import auth
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Account
         fields = ['username', 'password', 'role']
         extra_kwargs = {
             'password': {'write_only': True}
@@ -29,7 +29,7 @@ class LoginSerializer(serializers.ModelSerializer):
     tokens = serializers.SerializerMethodField()
 
     def get_tokens(self, obj):
-        user = User.objects.get(username=obj['username'])
+        user = Account.objects.get(username=obj['username'])
 
         return {
             'refresh': user.tokens()['refresh'],
@@ -37,13 +37,13 @@ class LoginSerializer(serializers.ModelSerializer):
         }
 
     class Meta:
-        model = User
+        model = Account
         fields = ['username', 'password',  'tokens']
 
     def validate(self, attrs):
         username = attrs.get('username', '')
         password = attrs.get('password', '')
-        filtered_user_by_username = User.objects.filter(username=username)
+        filtered_user_by_username = Account.objects.filter(username=username)
         user = auth.authenticate(username=username, password=password)
 
         if not user:
