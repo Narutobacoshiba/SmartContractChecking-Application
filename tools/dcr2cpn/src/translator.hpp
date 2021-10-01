@@ -2,11 +2,13 @@
 #define DCR2CPN_TRANSLATOR_H_
 
 #include "DCR.hpp"
-#include "Helena.hpp"
+#include "../../include/Helena.hpp"
 #include <string>
 
 namespace DCR2CPN {
 
+
+bool isSubOf2(const std::string& ParentNameInput, const std::string& EventNameInput, std::vector<DCR2CPN::Event> listEvent);
 /** 
  *  This function use to load dcr xml file and put it into dcr class  
  */
@@ -38,7 +40,7 @@ class SubNet {
         void add_ccondition(const std::string& param);
         
         /** Create transition based on added relations  */
-        TransitionNodePtr createTransition();
+        HELENA::TransitionNodePtr createTransition();
 
     private:
         std::string name;
@@ -71,7 +73,7 @@ class Translator {
         std::string get_subnet_id(const std::string& subnet_name );
 
         /** translate a dcr class obj into helena code */
-        NetNodePtr translate();
+        HELENA::NetNodePtr translate();
 
         /** generate static code for colours definitions (.lna file) */
         void generateInitColours();
@@ -82,7 +84,7 @@ class Translator {
 
     private:
         DCRClass dcrClass;
-        NetNodePtr net;
+        HELENA::NetNodePtr net;
         std::map<std::string, SubNetPtr> subnets;
 };
 

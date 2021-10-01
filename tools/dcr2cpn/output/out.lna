@@ -1,9 +1,4 @@
 test(N := 2) {
-
-/**************************
-*** Colours Definitions ***
-**************************/
-
 type boolean : range 0 .. 1;
 type count : range 0 .. N;
 subtype event_id : count range 0 .. (count'last-1);
@@ -12,11 +7,6 @@ type mvalue : struct { event_id id;boolean vl;};
 type vchange : list[event_id] of mvalue with capacity N;
 type cvalue : struct { event_id id;boolean cv2;};
 type vcondition : list[event_id] of cvalue with capacity N;
-
-/****************************
-*** Functions Definitions ***
-****************************/
-
 function cvalue () -> marking_value{
 	marking_value m := empty;
 	for(v in mv){
@@ -41,10 +31,6 @@ function confirm_milestone () -> boolean{
 	return ret;
 }
 
-/*************
-*** PLACES ***
-*************/
-
 /*
  * Function: state
  */
@@ -52,11 +38,6 @@ place marking {
 	dom : marking_value*marking_value*marking_value;
 	init : <(|0,0|,|0,0|,|1,1|)>;
 }
-
-/******************
-*** TRANSITIONS ***
-******************/
-
 
 /*
  * Function: play

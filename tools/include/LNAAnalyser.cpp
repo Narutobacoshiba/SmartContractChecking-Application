@@ -40,7 +40,7 @@ string handleElementBody(list<string>::iterator& _iter, list<string>::iterator _
     }while(_iter != _end_iter && level != 0);
     --_iter;
     
-    return _str.str().substr(st_sub+1,ed_sub-2-st_sub);
+    return _str.str().substr(st_sub+2,ed_sub-3-st_sub);
 }
 
 /** Get all arc node in input block
