@@ -60,6 +60,7 @@ export default {
     login() {
       const response  = AuthService.makeLogin({username:this.username,password:this.password})
       response.then((res)=>{
+        console.log(res)
         if(res.status===200&&res.data.success===true){
           this.$router.push({
             name:"Index"
