@@ -98,7 +98,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'soliditycpn',
         'USER': 'root',
-        'PASSWORD': '123456789',
+        'PASSWORD': '22042001',
         'HOST': 'localhost',
         'PORT': '3306',
     }
