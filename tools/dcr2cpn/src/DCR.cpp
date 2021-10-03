@@ -1,4 +1,4 @@
-#include "../include/DCR.hpp"
+#include "./DCR.hpp"
 
 namespace DCR2CPN{
     
