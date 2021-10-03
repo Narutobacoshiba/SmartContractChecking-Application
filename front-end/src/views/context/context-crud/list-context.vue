@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { GetContext, DeleteContext } from "../../services/data";
+import { GetContext, DeleteContext } from "../../../services/data";
 export default {
   data() {
     return {

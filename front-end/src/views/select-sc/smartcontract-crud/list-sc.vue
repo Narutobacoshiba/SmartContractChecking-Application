@@ -129,9 +129,9 @@ import {
   GetPrivateSmartContracts,
   DeleteSmartContracts,
   AcceptPendingSmartContracts,
-} from "../../services/data";
+} from "../../../services/data";
 
-import ConfirmationDialog from "../../components/ConfirmationDialog.vue" 
+import ConfirmationDialog from "../../../components/ConfirmationDialog.vue" 
 export default {
   components: {'confirm': ConfirmationDialog},
   data() {

@@ -71,9 +71,9 @@
 </template>
 
 <script>
-import { AddNewSmartContracts } from "../../services/data";
+import { AddNewSmartContracts } from "../../../services/data";
 // import {AceEditor} from "../../components/AceEditor.vue";
-import AceEditor from '../../components/AceEditor.vue';
+import AceEditor from '../../../components/AceEditor.vue';
 export default {
   components: {AceEditor},
   name: "AddSc",

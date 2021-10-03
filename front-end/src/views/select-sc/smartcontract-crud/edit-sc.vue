@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import {UpdateSmartContractCode} from "../../services/data"
+import {UpdateSmartContractCode} from "../../../services/data"
 // import EditorSc from "../../components/EditorSc.vue";
-import AceEditor from '../../components/AceEditor.vue';
+import AceEditor from '../../../components/AceEditor.vue';
 export default {
   components: {AceEditor },
   name: "EditSc",

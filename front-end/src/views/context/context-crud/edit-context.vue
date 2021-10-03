@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <div id="header">Create a new Context</div>
+    <div id="header">Edit a Context</div>
     <div class="body">
       <div class="row" id="name-section">
         <div class="title col-2">Name</div>
@@ -20,7 +20,7 @@
       </div>
       <div class="editor-area">
         <span class="title">Formular</span>
-        <EditorSc v-model="code" />
+        <EditorSc :code.sync="code" />
       </div>
       <div id="group-btn">
         <button id="button-add" type="button" @click="clickHandler('save')">
@@ -39,45 +39,58 @@
 </template>
 
 <script>
-import EditorSc from "../../components/EditorSc.vue";
-import { CreateContext } from "../../services/data";
+import EditorSc from "../../../components/TextEditor.vue";
+import { GetContextById, UpdateContext } from "../../../services/data";
 export default {
+  created() {
+    this.initData();
+  },
   data() {
     return {
-      code: "pragma solidity >=0.4.22 <0.6.0;\npragma solidity ^0.5.6 ;\ncontract Ballot {\n}",
+      context_id: this.$route.params.context_id,
+      code: "",
       name: "",
       description: "",
+      context: { name: String, code: String, description: String },
     };
   },
   components: { EditorSc },
   methods: {
-    checkValidateContext() {
-      if (this.code !== "" && this.name !== "" && this.description !== "") {
-        return true;
-      }
-      return false;
+    async initData() {
+      const data = await GetContextById(this.context_id);
+      this.initModelContext(data);
+      this.code = data.content;
+      this.name = data.name;
+      this.description = data.description;
+    },
+    SaveContext() {
+      return UpdateContext(this.context_id, this.name, this.description);
     },
     async clickHandler(action) {
       if (action == "save") {
-        //check validation of field context
-        if (!this.checkValidateContext()) {
-          alert('You must enter data to field!!!')
-          return;
-        }
-        const response = await CreateContext(
-          this.name,
-          this.description,
-          this.code
-        );
-        if (response && response.status === 201) {
-          // this.$router.push(this.$route.params.parent_path);
-          this.$router.push({name:"ListContext"});
+        if (!this.checkChangeConText()) {
+          const res = await this.SaveContext();
+          if (res.status && res.status === 200) {
+            this.$router.push(this.$route.params.parent_path);
+          }
+        }else{
+          alert('You do not edit!')
         }
       } else if (action == "cancel") {
         if (!this.$route.params.parent_path) this.$router.push("/");
         else this.$router.push(this.$route.params.parent_path);
       }
     },
+    initModelContext(modelContext) {
+      this.context.name = modelContext.name;
+      this.context.code = modelContext.content;
+      this.context.description = modelContext.description;
+    },
+    checkChangeConText(){
+      return this.context.name.trim() === this.name.trim() 
+      && this.context.code.trim() === this.code.trim() 
+      && this.context.description.trim() === this.description.trim()
+    }
   },
   computed: {},
 };
