@@ -163,6 +163,34 @@ void Unfolding::analyseLnaFile(const std::string type){
         ptr_pointer_line = _sol_lines.begin();
     }
     
+    while(ptr_pointer_line != ptr_pointer_end){
+        std::string model_name = get_first_alpha_only_string(*ptr_pointer_line);
+        if(model_name.length() > 0){
+            if(type == "solidity"){
+                model->set_name(model_name);
+            }
+
+            std::string parameter_def = substr_by_edge(*ptr_pointer_line,"(",")");
+            std::vector<std::string> parameters = split(parameter_def,",");
+            if(parameters.size() > 0){
+                for(auto it = parameters.begin(); it != parameters.end(); ++it){
+                    std::vector<std::string> param = split_ex(*it,":=",2);
+                    if(param.size() == 2){
+                        trim_ex(param[0]);
+                        trim_ex(param[1]);
+
+                        ParameterNodePtr mpr = std::make_shared<ParameterNode>();
+                        mpr->set_name(param[0]);
+                        mpr->set_number(param[1]);
+                        model->add_parameter(mpr);
+                    }
+                }
+            }
+            break;
+        }
+        ptr_pointer_line++;
+    }
+
     std::string current_submodel_name;
     while (ptr_pointer_line != ptr_pointer_end){       
         if(retrieve_string_element(*ptr_pointer_line,1," ") == "Function:"){ 
@@ -198,7 +226,7 @@ void Unfolding::analyseLnaFile(const std::string type){
 /** Unfolding the solidity file by instructions in the context file  
  */
 NetNodePtr Unfolding::unfolding(){
-    model = std::make_shared<NetNode>("test");
+    model = std::make_shared<NetNode>();
 
     analyseLnaFile("context");
 
