@@ -1,6 +1,6 @@
 const minThreshold = 0
 const maxThreshold = 10
 
-proposition outOfRange: (depositedWei < minThreshold) | (depositedWei > maxThreshold);
+proposition outOfRange: (minThreshold < 'currentBalance') | ('depositedWei' > maxThreshold);
 
-property prop: !outOfRange;
+property prop: !outOfRange & {'currentBalance' < 10};

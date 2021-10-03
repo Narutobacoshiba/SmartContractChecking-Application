@@ -63,20 +63,25 @@ const std::string UNTIL_OP_PROP = "until";
 
 const std::string PROPOSITION_AREA = "proposition";
 
+int precedence_of_op(std::string _op);
+
 class LTLTranslator{
     public:
         LTLTranslator(std::stringstream& _lna_stream, const nlohmann::json& lna_json, std::stringstream& _ltl_stream);
         void handleVariable(const nlohmann::json& lna_json);
         std::map<std::string,std::string>  translate(); 
 
-        void handleConst();
-        void handleProposition();
+        void handleConstDefinition();
+        void handlePropositionDefinition();
         
-        std::string handleProperty();
+        void handlePropertyDefinition();
 
-        std::string handleExpression(std::string _exp);
-        std::vector<std::string> splitExpression(std::string _exp);
+        std::vector<std::string> infixToPostfixExpression(const std::string& _exp);
+        std::vector<std::string> splitExpression(const std::string& _exp);
+        
+        std::string handleNoNamePropositionDefinition(const std::string& _def);
 
+        std::string analysePropositionExpression(const std::string& _exp);
         bool is_const_definition(const std::string& _name);
         std::string get_const_definition_value(const std::string& _name);
 
@@ -99,6 +104,8 @@ class LTLTranslator{
         std::map<std::string,std::string> local_variables;
         std::map<std::string,std::string> global_variables;
         std::vector<std::string> propositions;
+        std::string property_string;
+        int current_noname_proposition = 1;
 };
 
 #endif

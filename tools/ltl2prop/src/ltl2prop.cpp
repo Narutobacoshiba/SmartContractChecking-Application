@@ -1,6 +1,17 @@
 #include "./ltl2prop.hpp"
 #include "../../include/Utils.hpp"
 
+
+int precedence_of_op(std::string _op){
+    if(_op == NOT_OP || _op == GLOBAL_OP || _op == FINNALY_OP){
+        return 2;
+    }else if(_op == OR_OP || _op == AND_OP || _op == UNTIL_OP || 
+            std::find(ComparisonOperator.begin(), ComparisonOperator.end(), _op) != ComparisonOperator.end()){
+        return 1;
+    }
+    return 0;
+}
+
 /** The main function to process and read the input files (lna,json,ltl)
  */
 LTLTranslator::LTLTranslator(std::stringstream& _lna_stream, const nlohmann::json& lna_json, std::stringstream& _ltl_stream){
@@ -106,17 +117,15 @@ std::string LTLTranslator::get_local_variable_placetype(const std::string& _name
 /** Read ltl,lna,json file as input and output lna and prop.lna file
  */
 std::map<std::string,std::string> LTLTranslator::translate(){
-    std::string propety;
-
     while (ptr_ltl_line != ltl_lines.end()){
         std::string keyword = retrieve_string_element(*ptr_ltl_line,0," ");
         if(std::find(TokensDefine.begin(), TokensDefine.end(), keyword) != TokensDefine.end()){
             if(keyword == CONST_STRING){
-                handleConst();
+                handleConstDefinition();
             }else if(keyword == PROPOSITION_STRING){
-                handleProposition();
+                handlePropositionDefinition();
             }else if(keyword == PROPERTY_STRING){
-                propety = handleProperty();
+                handlePropertyDefinition();
             }
         }
         ++ptr_ltl_line;
@@ -137,12 +146,12 @@ std::map<std::string,std::string> LTLTranslator::translate(){
 
     std::map<std::string, std::string> result;
     result["lna"] = lna_result.str();
-    result["prop"] = propety;
+    result["prop"] = property_string;
     return result;
 }
 /** Analyse const definition
  */
-void LTLTranslator::handleConst(){
+void LTLTranslator::handleConstDefinition(){
     std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
     
     std::string variable = removeNoneAlnum(retrieve_string_element(definition,0,"="));
@@ -153,18 +162,133 @@ void LTLTranslator::handleConst(){
 
 /** Analyse proposition definition
  */
-void LTLTranslator::handleProposition(){
+void LTLTranslator::handlePropositionDefinition(){
     std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
 
     std::string prop_name = removeNoneAlnum(retrieve_string_element(definition,0,":"));
     std::string prop_def = retrieve_string_element(definition,1,":");
-    std::string expression = handleExpression(prop_def);
     
-    propositions.push_back("proposition " + prop_name + ":\n\t" + expression + ";\n");
+    std::string finnal_expression = analysePropositionExpression(prop_def);
+
+    propositions.push_back("proposition " + prop_name + ":\n\t" + finnal_expression + ";\n");
+}
+
+std::string LTLTranslator::handleNoNamePropositionDefinition(const std::string& _def){
+    std::string proposition_name = "proposition_number_" + std::to_string(current_noname_proposition);
+    current_noname_proposition++;
+
+    std::string expression = substr_by_edge(_def,"{","}");
+    std::cout<<expression<<"\n";
+    std::string finnal_expression = analysePropositionExpression(expression);
+
+    propositions.push_back("proposition " + proposition_name + ":\n\t" + finnal_expression + ";\n");
+    return proposition_name;
+}
+
+std::string LTLTranslator::analysePropositionExpression(const std::string& _exp){
+    std::vector<std::string> expression = infixToPostfixExpression(_exp);
+
+    std::vector<std::string> opr;
+    for(auto it = expression.begin(); it != expression.end(); ++it){
+        if(std::find(ComparisonOperator.begin(), ComparisonOperator.end(), *it) != ComparisonOperator.end()){
+            if(opr.size() >= 2){
+                std::stringstream temp_exp;
+                std::string first_opr = opr.back();
+                opr.pop_back();
+                std::string second_opr = opr.back();
+                opr.pop_back();
+                
+                if(first_opr.find("'") != std::string::npos){
+                    std::string first_opr_name = substr_by_edge(first_opr,"'","'");
+                    trim_ex(first_opr_name);
+                    std::string first_v;
+                    if(is_global_variable(first_opr_name)){
+                        std::string v = get_global_variable_placetype(first_opr_name);
+                        temp_exp << "exists (t1 in S | ";
+                        first_v = "(t1->1)." + split(v,".")[1];
+                    }else if(is_local_variable(first_opr_name)){
+                        std::string v = get_local_variable_placetype(first_opr_name);
+                        temp_exp << "exists (t1 in " + v +" | ";
+                        first_v = "t1->1";
+                    }
+                
+                    if(second_opr.find("'") != std::string::npos){
+                        std::string second_opr_name = substr_by_edge(second_opr,"'","'");
+                        trim_ex(second_opr);
+
+                        if(is_global_variable(second_opr_name)){
+                            std::string v = get_global_variable_placetype(second_opr_name);
+                            temp_exp << "exists (t2 in S | (t2->1)." << split(v,".")[1] << " " + *it << " " + first_v << "))";
+                        }else if(is_local_variable(second_opr_name)){
+                            std::string v = get_local_variable_placetype(second_opr_name);
+                            temp_exp << "exists (t in " + v +" | t->1" << " " + *it << " " + first_v << "))";
+                        }
+                    }else if(is_const_definition(second_opr)){
+                        temp_exp << get_const_definition_value(second_opr) << " " + *it << " " + first_v << ")";
+                    }else{
+                        temp_exp << second_opr << " " + *it << " " + first_v << ")";
+                    }
+                }else{
+                    if(is_const_definition(first_opr)){
+                        first_opr = get_const_definition_value(first_opr);
+                    }
+
+                    if(second_opr.find("'") != std::string::npos){
+                        std::string second_opr_name = substr_by_edge(second_opr,"'","'");
+                        trim_ex(second_opr);
+
+                        if(is_global_variable(second_opr_name)){
+                            std::string v = get_global_variable_placetype(second_opr_name);
+                            temp_exp << "exists (t2 in S | (t2->1)." << split(v,".")[1] << " " + *it << " " + first_opr << "))";
+                        }else if(is_local_variable(second_opr_name)){
+                            std::string v = get_local_variable_placetype(second_opr_name);
+                            temp_exp << "exists (t in " + v +" | t->1" << " " + *it << " " + first_opr << "))";
+                        }
+                    }else if(is_const_definition(second_opr)){
+                        temp_exp << get_const_definition_value(second_opr) << " " + *it << " " + first_opr << ")";
+                    }else{
+                        temp_exp << second_opr << " " + *it << " " + first_opr << ")";
+                    }
+                }
+                opr.push_back(temp_exp.str());
+            }else{
+                //error
+            }
+            
+        }else if(*it == OR_OP || *it == AND_OP){
+            if(opr.size() >= 2){
+                std::string first_opr = opr.back();
+                opr.pop_back();
+                std::string second_opr = opr.back();
+                opr.pop_back();
+
+                opr.push_back(second_opr + " " + *it + " " + first_opr);
+            }else{
+                //error
+            }
+        }else if(*it == NOT_OP){
+            if(opr.size() >= 1){
+                std::string first_opr = opr.back();
+                opr.pop_back();
+
+                opr.push_back(*it + " " + first_opr);
+            }else{
+                //error
+            }
+        }else{
+            opr.push_back(*it);
+        }
+    }
+    if(opr.size() == 1){
+        return opr.back();
+    }else{
+        //error
+        return "";
+    }
 }
 /** Analyse property definition
  */
-std::string LTLTranslator::handleProperty(){
+void LTLTranslator::handlePropertyDefinition(){
     std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
 
     std::string property_name = removeNoneAlnum(split_ex(definition,":",2)[0]);
@@ -173,63 +297,109 @@ std::string LTLTranslator::handleProperty(){
 
     std::stringstream property;
     for(auto it = els.begin(); it != els.end(); ++it){
-        if(MappingOp.find(*it) != MappingOp.end()){
+      
+        if((*it).find("{") != std::string::npos){
+            std::string prop_name = handleNoNamePropositionDefinition(*it);
+            property << prop_name << " ";
+        }else if(MappingOp.find(*it) != MappingOp.end()){
             property << MappingOp[*it] << " ";
         }else{
             property << *it << " ";
         }
     }
     
-    return "ltl property " + property_name + ":\n\t" + property.str()+";\n";
+    property_string = "ltl property " + property_name + ":\n\t" + property.str()+";\n";
 }
 /** Convert proposition expression to proposition in lna file
  */
-std::string LTLTranslator::handleExpression(std::string _exp){
+std::vector<std::string> LTLTranslator::infixToPostfixExpression(const std::string& _exp){
     std::vector<std::string> els = splitExpression(_exp);
-    std::stringstream result;
-    for(size_t i = 0; i < els.size();){
-        if(std::find(ComparisonOperator.begin(), ComparisonOperator.end(), els[i]) != ComparisonOperator.end()){
-            if(is_global_variable(els[i-1])){
-                std::string v = get_global_variable_placetype(els[i-1]);
-                result << "exists (t in S | (t->1)." << split(v,".")[1] << " " + els[i] + " " << get_const_definition_value(els[i+1]) << ")";
-            }else if(is_local_variable(els[i-1])){
-                std::string v = get_local_variable_placetype(els[i-1]);
-                result << "exists (t in " + v +"| t->1 " << " " + els[i] + " " << get_const_definition_value(els[i+1]) << ")";
+    std::vector<std::string> opt_stack;
+    std::vector<std::string> opr_stack;
+    int cout = 0;
+
+    while(cout < els.size()){
+        if(els[cout] == OPEN_PARENTHESES){
+            opr_stack.push_back(els[cout]);
+        }else if(els[cout] == CLOSE_PARENTHESES){
+            while(opr_stack.back() != OPEN_PARENTHESES){
+                opt_stack.push_back(opr_stack.back());
+                opr_stack.pop_back();
             }
-            i+=1;
-        }else if (std::find(BooleanOperator.begin(), BooleanOperator.end(), els[i]) != BooleanOperator.end() || els[i] == OPEN_PARENTHESES || els[i] == CLOSE_PARENTHESES){
-            result << " " + els[i] + " ";
+            opr_stack.pop_back();
+        }else if(std::find(ComparisonOperator.begin(), ComparisonOperator.end(), els[cout]) != ComparisonOperator.end() ||
+                std::find(BooleanOperator.begin(), BooleanOperator.end(), els[cout]) != BooleanOperator.end() ||
+                std::find(LTLOperator.begin(), LTLOperator.end(), els[cout]) != LTLOperator.end()){
+            while(opr_stack.size() > 0 && precedence_of_op(els[cout]) <= precedence_of_op(opr_stack.back())){
+                opt_stack.push_back(opr_stack.back());
+                opr_stack.pop_back();
+            }
+            opr_stack.push_back(els[cout]);
+        }else{
+            opt_stack.push_back(els[cout]);
         }
-        i++;
+        cout++;
     }
-    return result.str();
+    while(opr_stack.size() > 0){
+        opt_stack.push_back(opr_stack.back());
+        opr_stack.pop_back();
+    }
+
+    return opt_stack;
 }
+
 /** Split expression string into list of element
  *      example:
  *          std::string input = "(F(is_valid))";
  *          std::vector<std::string> out = splitExpression(input);
  *          output = {"(","F","(","is_valid",")",")"}
  */
-std::vector<std::string> LTLTranslator::splitExpression(std::string _exp){
+std::vector<std::string> LTLTranslator::splitExpression(const std::string& _exp){
     std::vector<std::string> result;
     std::vector<char> temp;
+    int cout = 0;
 
-    for(int i = 0; i < _exp.length(); i++){
-        if(_exp[i] == '(' || _exp[i] == ')' || 
-        std::find(BooleanOperator.begin(), BooleanOperator.end(), std::string(1,_exp[i])) != BooleanOperator.end()){
-            if(temp.size() > 0)   
+    while(cout < _exp.length()){
+        if(_exp[cout] == '(' || _exp[cout] == ')' || 
+        std::find(BooleanOperator.begin(), BooleanOperator.end(), std::string(1,_exp[cout])) != BooleanOperator.end()){
+            if(temp.size() > 0){
                 result.push_back(std::string(temp.begin(), temp.end()));
+                temp.clear();
+            }  
 
-            result.push_back(std::string(1,_exp[i]));
-            temp.clear();
-        }else if(_exp[i] == ' ' || _exp[i] == ';'){
-            if(temp.size() > 0)   
+            result.push_back(std::string(1,_exp[cout]));
+        }else if(_exp[cout] == ' ' || _exp[cout] == ';'){
+            if(temp.size() > 0){
                 result.push_back(std::string(temp.begin(), temp.end()));
-            temp.clear();
+                temp.clear();
+            }  
+        }else if(_exp[cout] == '{'){
+            if(temp.size() > 0){
+                result.push_back(std::string(temp.begin(), temp.end()));
+                temp.clear();
+            }  
+            
+            while(_exp[cout] != '}' && cout < _exp.length()){
+                temp.push_back(_exp[cout]); 
+                cout++;
+            }
+
+            if(cout < _exp.length()){
+                temp.push_back('}');
+                result.push_back(std::string(temp.begin(), temp.end()));
+                temp.clear();
+            }
+            
         }else{
-            temp.push_back(_exp[i]);
+            temp.push_back(_exp[cout]);
         }
+        cout++;
     }
+
+    if(temp.size() > 0){
+        result.push_back(std::string(temp.begin(), temp.end()));
+        temp.clear();
+    }  
 
     return result;
 }

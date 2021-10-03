@@ -319,6 +319,9 @@ transition claimReward {
 }
 /*** proposition ***/
 proposition outOfRange:
-	 ( exists (t in S | (t->1).depositedWei < 0) )  |  ( exists (t in S | (t->1).depositedWei > 10) ) ;
+	exists (t1 in PLAY_currentBalance | 0 < t1->1) | exists (t2 in S | (t2->1).depositedWei > 10));
+
+proposition proposition_number_1:
+	exists (t in PLAY_currentBalance | t->1 < 10));
 
 }
