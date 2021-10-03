@@ -1,18 +1,22 @@
+from enum import unique
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,  UserManager
 from rest_framework_simplejwt.tokens import RefreshToken
 # Create your models here.
-class User(AbstractBaseUser):
-    username = models.CharField(max_length=250, unique=True)
-    password = models.CharField(max_length=250, unique=True)
-    role = models.CharField(max_length=10)
+
+class Account(AbstractBaseUser):
+    username = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True, unique=True)
+    password = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
+    role = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'account'
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
-
     objects = UserManager()
-    class Meta:
-        db_table = "account"
 
     def __str__(self):
         return self.username
@@ -27,18 +31,16 @@ class User(AbstractBaseUser):
 
 
 class Contact(models.Model):
-    firstname = models.CharField(max_length=50)
-    lastname = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
-    phone = models.CharField(max_length=50)
-    birthdate = models.DateTimeField()
-    avartar = models.ImageField(upload_to='img')
-    address = models.CharField(max_length=150)
-    aid = models.ForeignKey('User', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.id
+    firstname = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
+    lastname = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
+    email = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
+    phone = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
+    birthdate = models.DateTimeField(blank=True, null=True)
+    avartar = models.TextField(blank=True, null=True)
+    address = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
+    aid = models.ForeignKey(Account, models.DO_NOTHING, db_column='aid')
 
     class Meta:
-        db_table = "contact"
+        managed = False
+        db_table = 'contact'
 

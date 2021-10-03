@@ -1,13 +1,18 @@
 <template>
   <div class="form">
-    <label>Full Name:</label>
-    <input type="text" required v-model="fullname" placeholder="Full Name" />
-
     <label>Username:</label>
-    <input type="text" required v-model="username" placeholder="User Name" />
+    <input type="text" required v-model="username" placeholder="Username" />
 
     <label>Password:</label>
-    <input type="password" required v-model="password" placeholder="Password" />
+    <input type="text" required v-model="password" placeholder="Password" />
+
+    <label>Re-enter Password:</label>
+    <input
+      type="password"
+      required
+      v-model="repassword"
+      placeholder="Re-enter password"
+    />
     <div v-if="error" class="error">{{ error }}</div>
 
     <div class="submit">
@@ -25,20 +30,34 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "login",
   data() {
     return {
       username: "",
       password: "",
-      fullname: "",
+      repassword: "",
       terms: false,
       error: "",
     };
   },
   methods: {
-    register(){
-    }
+    register() {
+      console.log(this.username, this.password)
+      axios
+        .post("http://127.0.0.1:8000/auth/register/", {
+          username: this.username,
+          password: this.password,
+          role: "user",
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
@@ -90,8 +109,8 @@ button {
 .submit {
   text-align: center;
 }
-#register-btn{
-    width: 50%;
+#register-btn {
+  width: 50%;
 }
 .error {
   color: #ff0062;
