@@ -52,36 +52,7 @@ std::string NetNode::source_code() {
         result << ")";        
     }
     result << " {\n";
-<<<<<<<< HEAD:tools/dcr2cpn/src/Helena.cpp
-    result << "\n/**************************\n" 
-           <<   "*** Colours Definitions ***\n"
-           <<   "**************************/\n\n";
-    for (auto it = color_nodes.begin(); it != color_nodes.end(); ++it) {
-        result << (*it)->source_code();
-    }
-    result << "\n/****************************\n" 
-           <<   "*** Functions Definitions ***\n"
-           <<   "****************************/\n\n";
-    for (auto it = function_nodes.begin(); it != function_nodes.end(); ++it) {
-        result << (*it)->source_code();
-    }
-    result << "\n/*************\n" 
-           <<   "*** PLACES ***\n"
-           <<   "*************/\n\n"
-           <<   "/*\n * Function: state\n */\n";
-    for (auto it = place_nodes.begin(); it != place_nodes.end(); ++it) {
-        result << (*it)->source_code();
-    }
-    result << "\n/******************\n" 
-           <<   "*** TRANSITIONS ***\n"
-           <<   "******************/\n\n";
-    for (auto it = transition_nodes.begin(); it != transition_nodes.end(); ++it) {
-        result << "\n/*"
-               << "\n * Function: " + (*it)->get_name()
-               << "\n */\n";
-========
     for (auto it = lna_nodes.begin(); it != lna_nodes.end(); ++it) {
->>>>>>>> dev:tools/include/Helena.cpp
         result << (*it)->source_code();
     }
     result << "\n}";
@@ -550,11 +521,11 @@ std::string TransitionNode::source_code() {
         result += "\t}\n";
     }
     if (guard != "")
-        result += "\tguard : " + guard + ";\n";
+        result += "\tguard : " + guard + "\n";
     if (priority != "")
-        result += "\tpriority : " + priority + ";\n";
+        result += "\tpriority : " + priority + "\n";
     if (description != "")
-        result += "\tdescription : " + description + ";\n";
+        result += "\tdescription : " + description + "\n";
     if (safe != "")
         result += "\tsafe\n";
     result += "}\n";

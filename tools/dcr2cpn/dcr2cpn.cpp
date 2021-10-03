@@ -5,6 +5,7 @@
 #include "../include/cli11/CLI11.hpp"
 #include "./src/translator.hpp"
 #include "./src/DCR.hpp"
+
 using namespace std;
 using namespace DCR2CPN;
 using namespace HELENA;
