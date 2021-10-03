@@ -2,14 +2,11 @@
 #define HELENA_HELENA_H_
 
 #include <algorithm>
-//#include <fstream>
-//#include <iostream>
+
 #include <list>
-//#include <map>
+
 #include <memory>
 #include <sstream>
-//#include <string>
-//#include <vector>
 
 #include <vector>
 #include <map>
@@ -18,6 +15,15 @@ using namespace std;
 
 namespace HELENA{
 
+<<<<<<<< HEAD:tools/dcr2cpn/include/Helena.hpp
+const string PlaceTypeNone = "0";
+const string PlaceTypeData = "1";
+const string PlaceTypeControlFlow = "2";
+const string PlaceTypeTempData = "3";
+const string PlaceTypeWaitData = "4";
+
+========
+>>>>>>>> dev:tools/include/Helena.hpp
 /** Declare a list of reserved string
  */
 const string ASSERT_TOKEN      = "assert";
@@ -258,7 +264,10 @@ const string List_Token = "List";
 //const list<string> OthersTokensList{};
 /** Declare the LNA node type
  */
+<<<<<<<< HEAD:tools/dcr2cpn/include/Helena.hpp
+========
 
+>>>>>>>> dev:tools/include/Helena.hpp
 enum LnaNodeType {
     LnaNodeTypeNet,
     LnaNodeTypeNet_Param,

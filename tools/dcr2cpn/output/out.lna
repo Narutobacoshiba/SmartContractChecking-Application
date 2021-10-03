@@ -1,9 +1,4 @@
 test(N := 2) {
-
-/**************************
-*** Colours Definitions ***
-**************************/
-
 type boolean : range 0 .. 1;
 type count : range 0 .. N;
 subtype event_id : count range 0 .. (count'last-1);
@@ -12,11 +7,14 @@ type mvalue : struct { event_id id;boolean vl;};
 type vchange : list[event_id] of mvalue with capacity N;
 type cvalue : struct { event_id id;boolean cv2;};
 type vcondition : list[event_id] of cvalue with capacity N;
+<<<<<<<< HEAD:tools/unfolding/test/context.lna
 
 /****************************
 *** Functions Definitions ***
 ****************************/
 
+========
+>>>>>>>> dev:tools/dcr2cpn/output/out.lna
 function cvalue () -> marking_value{
 	marking_value m := empty;
 	for(v in mv){
@@ -41,10 +39,13 @@ function confirm_milestone () -> boolean{
 	return ret;
 }
 
+<<<<<<<< HEAD:tools/unfolding/test/context.lna
 /*************
 *** PLACES ***
 *************/
 
+========
+>>>>>>>> dev:tools/dcr2cpn/output/out.lna
 /*
  * Function: state
  */
@@ -53,11 +54,14 @@ place marking {
 	init : <(|0,0|,|0,0|,|1,1|)>;
 }
 
+<<<<<<<< HEAD:tools/unfolding/test/context.lna
 /******************
 *** TRANSITIONS ***
 ******************/
 
 
+========
+>>>>>>>> dev:tools/dcr2cpn/output/out.lna
 /*
  * Function: play
  */

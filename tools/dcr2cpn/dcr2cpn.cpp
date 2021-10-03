@@ -3,11 +3,11 @@
 #include <vector>
 #include <set>
 #include "../include/cli11/CLI11.hpp"
-#include "include/translator.hpp"
-#include "include/DCR.hpp"
-
+#include "./src/translator.hpp"
+#include "./src/DCR.hpp"
 using namespace std;
 using namespace DCR2CPN;
+using namespace HELENA;
 
 int main(int argc, char** argv)
 {   
