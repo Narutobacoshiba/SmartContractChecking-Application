@@ -1,16 +1,17 @@
 <template>
-    <EditSc />
+    <CreateSC />
 </template>
 
 <script>
-import EditSc from "./edit-sc/edit-sc.vue"
+import CreateSC from "./add-sc/add-sc.vue"
 
 export default ({
     data(){
         return {
+
         }
     },
-    components: {EditSc}
+    components: {CreateSC}
 })
 </script>
 

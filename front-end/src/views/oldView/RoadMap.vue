@@ -1,16 +1,17 @@
 <template>
-    <EditSc />
+    <RoadMap />
 </template>
 
 <script>
-import EditSc from "./edit-sc/edit-sc.vue"
+import RoadMap from "./roadmap/roadmap.vue"
 
 export default ({
     data(){
         return {
+
         }
     },
-    components: {EditSc}
+    components: {RoadMap}
 })
 </script>
 

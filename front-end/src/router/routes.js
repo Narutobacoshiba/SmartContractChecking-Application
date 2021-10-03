@@ -1,18 +1,11 @@
 import Index from "../views/Index.vue";
-import ListSc from "../views/List-sc.vue"
-import EditSc from "../views/Edit-Sc.vue"
-import AddSc from "../views/Add-Sc.vue"
-import Processing from "../views/Processing.vue"
-import CreateCsp from "../views/Create-Csp.vue"
-import RoadMap from "../views/RoadMap.vue"
 import Login from "../views/Login.vue"
 import Register from "../views/Register.vue"
-import AddContext from "../views/context-crud/add-context.vue"
-import EditContext from "../views/context-crud/edit-context.vue"
-import ListContext from "../views/context-crud/list-context.vue"
-import AddVul from "../views/vuls-crud/add-vul.vue"
-import EditVul from "../views/vuls-crud/edit-vul.vue"
-import ListVul from "../views/vuls-crud/list-vulnerabilities.vue"
+import SelectSc from "../views/SelectSc.vue"
+import SelectContext from "../views/SelectContext.vue"
+import InitialMarkingSetting from "../views/InitialMarkingSetting.vue"
+import ListSc from "../views/List-sc.vue"
+import AddSc from "../views/Add-Sc.vue"
 import { DOMAIN_TITLE } from '../.env'
 
 export const routes = [
@@ -35,6 +28,39 @@ export const routes = [
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | register` },
   },
   {
+    path: "/select-sc",
+    name: "SelectSc",
+    component: SelectSc,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | select sc` },
+  },
+  {
+    path: "/context",
+    name: "SelectContext",
+    component: SelectContext,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | select context` },
+  },
+  {
+    path: "/initialmarking",
+    name: "Initial",
+    component: InitialMarkingSetting,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Initial` },
+  },
+  {
+    path: "/list-sc",
+    name: "ListSc",
+    component: ListSc,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | list smart contracts` },
+  },{
+    path: "/add-sc",
+    name: "AddSc",
+    component: AddSc,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | create smart contracts` },
+    props: true
+  },
+]
+
+/*
+{
     path: "/list-sc",
     name: "ListSc",
     component: ListSc,
@@ -116,4 +142,4 @@ export const routes = [
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Edit an LTL Vulnerability` },
     props: true
   },
-]
+*/
