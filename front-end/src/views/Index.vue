@@ -71,7 +71,7 @@ export default ({
                   this.$store.commit('data/SetUsedState',true)
                   this.$store.commit('data/SetDateState',current_date)
                   this.$store.commit("data/SetProcessView","sc-selection")
-                  this.$router.push("/process")
+                  this.$router.push({name:'ListOfCheckedTransactions'})
               }
           }
       },
@@ -84,12 +84,12 @@ export default ({
         this.$store.commit('data/SetUsedState',true)
         this.$store.commit('data/SetDateState',current_date)
         this.$store.commit("data/SetProcessView","sc-selection")
-        this.$router.push("/process")
+        this.$router.push({name:'ListOfCheckedTransactions'})
         this.closeDialog()
       },
       resumeProcess(){
         this.$store.commit("data/SetProcessView",this.pages[this.$store.getters["data/GetRoadPage"]-1].view)
-        this.$router.push("/process")
+        this.$router.push({name:'ListOfCheckedTransactions'})
       },
       getCPDateModified(){
         var date = new Date(this.$store.state.data.date_modified)
