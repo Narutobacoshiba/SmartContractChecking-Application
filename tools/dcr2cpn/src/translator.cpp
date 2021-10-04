@@ -528,7 +528,7 @@ void Translator::generateInitColours(){
     ComponentNodePtr cv1 = std::make_shared<ComponentNode>();
     cv1->set_name("cv1");
     cv1->set_type("boolean");
-    cvalue->add_component(id);
+    cvalue->add_component(cv1);
 
     ComponentNodePtr cv2 = std::make_shared<ComponentNode>();
     cv2->set_name("cv2");
@@ -571,19 +571,35 @@ void Translator::generateInitFunctions(){
     FunctionNodePtr cvalue = std::make_shared<FunctionNode>();
     cvalue->set_name("cvalue");
     cvalue->set_returnType("marking_value");
+    ParamNodePtr mv = std::make_shared<ParamNode>();
+    mv->set_name("mv");
+    mv->set_type("marking_value");
+    cvalue->add_parameter(mv);
+    ParamNodePtr lc = std::make_shared<ParamNode>();
+    lc->set_name("lc");
+    lc->set_type("vchange");
+    cvalue->add_parameter(lc);
     cvalue->set_body("\tmarking_value m := empty;\n\tfor(v in mv){\n\t\tm := m & v;\n\t}\n\tfor(v in lc){\n\t\tm[v.id] := v.vl;\n\t}\n\treturn m;");
     net->add_member(cvalue);
 
     FunctionNodePtr confirm_condition = std::make_shared<FunctionNode>();
     confirm_condition->set_name("confirm_condition");
     confirm_condition->set_returnType("boolean");
+    ParamNodePtr vc_c = std::make_shared<ParamNode>();
+    vc_c->set_name("vc");
+    vc_c->set_type("vcondition");
+    confirm_condition->add_parameter(vc_c);
     confirm_condition->set_body("\tboolean ret := 1;\n\tfor(v in vc){\n\t\tif(v.cv1 = 1 and v.cv2 = 0) ret := 0;\n\t}\n\treturn ret;");
     net->add_member(confirm_condition);
 
     FunctionNodePtr confirm_milestone = std::make_shared<FunctionNode>();
     confirm_milestone->set_name("confirm_milestone");
     confirm_milestone->set_returnType("boolean");
-    confirm_milestone->set_body("\tboolean ret := 1;\b\tfor(v in vc){\n\t\tif(v.cv1 = 1 and v.cv2 = 1) ret := 0;\n\t}\n\treturn ret;");
+    ParamNodePtr vc_m = std::make_shared<ParamNode>();
+    vc_m->set_name("vc");
+    vc_m->set_type("vcondition");
+    confirm_milestone->add_parameter(vc_m);
+    confirm_milestone->set_body("\tboolean ret := 1;\n\tfor(v in vc){\n\t\tif(v.cv1 = 1 and v.cv2 = 1) ret := 0;\n\t}\n\treturn ret;");
     net->add_member(confirm_milestone);
 }
 

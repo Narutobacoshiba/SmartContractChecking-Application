@@ -1,4 +1,4 @@
-#include "./ltl2prop.hpp"
+#include "./translator.hpp"
 #include "../../include/Utils.hpp"
 
 
@@ -178,7 +178,6 @@ std::string LTLTranslator::handleNoNamePropositionDefinition(const std::string& 
     current_noname_proposition++;
 
     std::string expression = substr_by_edge(_def,"{","}");
-    std::cout<<expression<<"\n";
     std::string finnal_expression = analysePropositionExpression(expression);
 
     propositions.push_back("proposition " + proposition_name + ":\n\t" + finnal_expression + ";\n");
@@ -190,6 +189,11 @@ std::string LTLTranslator::analysePropositionExpression(const std::string& _exp)
 
     std::vector<std::string> opr;
     for(auto it = expression.begin(); it != expression.end(); ++it){
+        std::string op = *it;
+        if(MappingOp.find(op) != MappingOp.end()){
+            op = MappingOp[op];
+        }
+
         if(std::find(ComparisonOperator.begin(), ComparisonOperator.end(), *it) != ComparisonOperator.end()){
             if(opr.size() >= 2){
                 std::stringstream temp_exp;
@@ -218,15 +222,15 @@ std::string LTLTranslator::analysePropositionExpression(const std::string& _exp)
 
                         if(is_global_variable(second_opr_name)){
                             std::string v = get_global_variable_placetype(second_opr_name);
-                            temp_exp << "exists (t2 in S | (t2->1)." << split(v,".")[1] << " " + *it << " " + first_v << "))";
+                            temp_exp << "exists (t2 in S | (t2->1)." << split(v,".")[1] << " " + op << " " + first_v << "))";
                         }else if(is_local_variable(second_opr_name)){
                             std::string v = get_local_variable_placetype(second_opr_name);
-                            temp_exp << "exists (t in " + v +" | t->1" << " " + *it << " " + first_v << "))";
+                            temp_exp << "exists (t in " + v +" | t->1" << " " + op << " " + first_v << "))";
                         }
                     }else if(is_const_definition(second_opr)){
-                        temp_exp << get_const_definition_value(second_opr) << " " + *it << " " + first_v << ")";
+                        temp_exp << get_const_definition_value(second_opr) << " " + op << " " + first_v << ")";
                     }else{
-                        temp_exp << second_opr << " " + *it << " " + first_v << ")";
+                        temp_exp << second_opr << " " + op << " " + first_v << ")";
                     }
                 }else{
                     if(is_const_definition(first_opr)){
@@ -239,15 +243,15 @@ std::string LTLTranslator::analysePropositionExpression(const std::string& _exp)
 
                         if(is_global_variable(second_opr_name)){
                             std::string v = get_global_variable_placetype(second_opr_name);
-                            temp_exp << "exists (t2 in S | (t2->1)." << split(v,".")[1] << " " + *it << " " + first_opr << "))";
+                            temp_exp << "exists (t2 in S | (t2->1)." << split(v,".")[1] << " " + op << " " + first_opr << ")";
                         }else if(is_local_variable(second_opr_name)){
                             std::string v = get_local_variable_placetype(second_opr_name);
-                            temp_exp << "exists (t in " + v +" | t->1" << " " + *it << " " + first_opr << "))";
+                            temp_exp << "exists (t in " + v +" | t->1" << " " + op << " " + first_opr << ")";
                         }
                     }else if(is_const_definition(second_opr)){
-                        temp_exp << get_const_definition_value(second_opr) << " " + *it << " " + first_opr << ")";
+                        temp_exp << get_const_definition_value(second_opr) << " " + op << " " + first_opr << ")";
                     }else{
-                        temp_exp << second_opr << " " + *it << " " + first_opr << ")";
+                        temp_exp << second_opr << " " + op << " " + first_opr << ")";
                     }
                 }
                 opr.push_back(temp_exp.str());
@@ -262,7 +266,7 @@ std::string LTLTranslator::analysePropositionExpression(const std::string& _exp)
                 std::string second_opr = opr.back();
                 opr.pop_back();
 
-                opr.push_back(second_opr + " " + *it + " " + first_opr);
+                opr.push_back(second_opr + " " + op + " " + first_opr);
             }else{
                 //error
             }
@@ -271,7 +275,7 @@ std::string LTLTranslator::analysePropositionExpression(const std::string& _exp)
                 std::string first_opr = opr.back();
                 opr.pop_back();
 
-                opr.push_back(*it + " " + first_opr);
+                opr.push_back(op + " " + first_opr);
             }else{
                 //error
             }

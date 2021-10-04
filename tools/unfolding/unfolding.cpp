@@ -4,7 +4,7 @@
 #include <list>
 #include <string>
 #include<vector>
-#include "./src/unfolding.hpp"
+#include "./src/Unfolder.hpp"
 #include "../include/cli11/CLI11.hpp"
 
 using namespace std;
@@ -61,9 +61,9 @@ int main(int argc, char** argv){
      */
     ofstream myfile;
     if(OUT_FILE_NAME.compare("") == 0){
-        myfile.open ("./output/"+SOL_LNA_FILE_NAME.substr(0, SOL_LNA_FILE_NAME.find('.'))+".lna");
+        myfile.open (split(SOL_LNA_FILE_NAME,".lna")[0]+".lna");
     }else{
-        myfile.open ("./output/"+OUT_FILE_NAME+".lna");
+        myfile.open (OUT_FILE_NAME+".lna");
     }
     myfile << model->source_code();
     myfile.close();

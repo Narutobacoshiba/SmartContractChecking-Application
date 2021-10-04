@@ -25,10 +25,10 @@ compile:
     - cd tools/ltl2prop/src
     - g++ -c ./*.cpp
     - cd ../
-    - g++  main.cpp ../include/*.o  ./src/*.o  -o main
+    - g++  ltl2prop.cpp ../include/*.o  ./src/*.o  -o ltl2prop
 
 run:
-    - main --lna "lna_file_path" --json "json_file_path" --ltl "prop_file_path" --out_file "out_file_path"
+    - ltl2prop --lna "lna_file_path" --json "json_file_path" --ltl "prop_file_path" --out_file "out_file_path"
 ```
 ## 4. solidity2cpn: 
 ```
@@ -42,10 +42,10 @@ compile:
     - cd tools/unfolding/src
     - g++ -c ./*.cpp
     - cd ../
-    - g++  main.cpp ../include/*.o  ./src/*.o  -o main
+    - g++  unfolding.cpp ../include/*.o  ./src/*.o  -o unfolding
 
 run:
-    - main --lna "lna_file_path" --context "context_file_path" --param "function1/function2/..." --out_file "out_file_path"
+    - unfolding--lna "lna_file_path" --context "context_file_path" --param "function1/function2/..." --out_file "out_file_path"
 ```
 ## include:
 ```

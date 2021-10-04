@@ -1,4 +1,4 @@
-#include "unfolding.hpp"
+#include "Unfolder.hpp"
 
 /** The main function to process and read the input files (lna)
  */
@@ -211,7 +211,7 @@ void Unfolding::analyseLnaFile(const std::string type){
                 }else if(type == "solidity"){
                     add_solidity_place_to_submodel(current_submodel_name,place);
                 }
-            }else if(keyword == TYPE_TOKEN){
+            }else if(keyword == TYPE_TOKEN || keyword == SUBTYPE_TOKEN){
                 ColorNodePtr color = handleColor(ptr_pointer_line,ptr_pointer_end);
                 model->add_member(color);
             }else if(keyword == FUNCTION_TOKEN){
