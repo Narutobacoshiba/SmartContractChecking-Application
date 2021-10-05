@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div id="roadmap-body">
     <div id="home-section" @click="goHome">
         <img src="../assets/icon.png" id="home_icon">

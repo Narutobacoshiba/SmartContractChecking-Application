@@ -3,7 +3,7 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '123456789',
+    passwd = '22042001',
     database="soliditycpn"
 )
 pass1= hash("1234567")

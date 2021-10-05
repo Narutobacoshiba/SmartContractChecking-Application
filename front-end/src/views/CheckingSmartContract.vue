@@ -1,234 +1,178 @@
 <template>
-  <div class="container">
-        <div class="smart">
-            <h1>Checking smart contract</h1>
-
-            <div class="parent">
-                <div class="greys">
-                    <span>DCR</span>
-                </div>
-                <div class="blues">
-                    <div class="sub">
-                        <div class="grey">
-                            <span>Blind Aution</span>
-                        </div>
-                        <div class="blue">
-                            <div class="atable">
-                                <table class="table table-striped table-hover table-sm ">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th style="width: 10%" scope="col">#</th>
-                                            <th style="width: 45%" scope="col">LTL Property</th>
-                                            <th style="width: 45%" scope="col">Type</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Larry the Bird</td>
-                                            <td>Larry the Bird</td>
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sub">
-                        <div class="grey">
-                            <span>EtherGame</span>
-                        </div>
-                        <div class="blue">
-                            <div class="atable">
-                                <table class="table table-striped table-hover table-sm ">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th style="width: 10%" scope="col">#</th>
-                                            <th style="width: 45%" scope="col">LTL Property</th>
-                                            <th style="width: 45%" scope="col">Type</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Larry the Bird</td>
-                                            <td>Larry the Bird</td>
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="parent">
-                <div class="greys">
-                    <span>Free-context</span>
-                </div>
-                <div class="blues">
-                    <div class="sub">
-                        <div class="grey">
-                            <span>Blind Aution</span>
-                        </div>
-                        <div class="blue">
-                            <div class="atable">
-                                <table class="table table-striped table-hover table-sm ">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th style="width: 10%" scope="col">#</th>
-                                            <th style="width: 45%" scope="col">LTL Property</th>
-                                            <th style="width: 45%" scope="col">Type</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Larry the Bird</td>
-                                            <td>Larry the Bird</td>
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+   <div id ="main">
+   <div id ="header">
+     <h2>Checking Smart Contracts</h2>
+   </div>
+   <div class ="text">
+       <span>DCR</span>
+   </div>
+   <div id="locate-1">
+    <div class="text-1">
+          <span>Blind Auction</span>
+      </div>
+   <div id = "component">
+          <div class="table table-striped table-hover">
+          <table class="table" border="1">
+            <tr>
+              <th>#</th>
+              <th>LTL Property</th>
+              <th>Type</th>
+            </tr>
+            <tr v-for="data in datatable" :key="data.id">
+              <td>{{ data.id }}</td>
+              <td>{{ data.var }}</td>
+              <td><input type="checkbox" /></td>
+            </tr>
+          </table>
         </div>
-        <div class="Button">
-            <div class="row">
-                <div class="col-sm-6 left">
-                    <button type="button" class="btn btn-primary">Generate</button>
-                </div>
-                <div class="col-sm-6 right">
-                    <button type="button" class="btn btn-primary">Add new session</button>
-                </div>
-            </div>
+      </div>
+        <div class="text-1">
+          <span>EitherGame</span>
+      </div>
+   <div id = "component">
+          <div class="table table-striped table-hover">
+          <table class="table" border="1">
+            <tr>
+              <th>#</th>
+              <th>LTL Property</th>
+              <th>Type</th>
+            </tr>
+            <tr v-for="data in datatable" :key="data.id">
+              <td>{{ data.id }}</td>
+              <td>{{ data.var }}</td>
+              <td><input type="checkbox" /></td>
+            </tr>
+          </table>
         </div>
-
-    </div>
+      </div>
+      </div>
+      <div class ="text-2">
+       <span>Free-content</span>
+   </div>
+   <div id="locate-1">
+        <div class="text-1">
+          <span>EitherLotto</span>
+      </div>
+   <div id = "component">
+          <div class="table table-striped table-hover">
+          <table class="table" border="1">
+            <tr>
+              <th>#</th>
+              <th>LTL Property</th>
+              <th>Type</th>
+            </tr>
+            <tr v-for="data in datatable" :key="data.id">
+              <td>{{ data.id }}</td>
+              <td>{{ data.var }}</td>
+              <td><input type="checkbox" /></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      </div>
+      <div id="action">
+        <div id="sc-check" @click="check">Check</div>
+      </div>
+   </div>
+   
 </template>
 
 <script>
 export default {
-  
+  data () {
+    return {
+      datatable: [
+        { id: '1', var: 'GV1' },
+        { id: '2', var: 'GV2' },
+        { id: '3', var: 'GV3' },
+        { id: '4', var: 'GV4' }
+      ]
+    }
+  }
   
 };
 </script>
-
-<style scoped>
- .blue {
-    width: 100%;
-    height: 200px;
-    color: black;
-  }
-  .grey{
-    width: 100px;
-    height: 30px;
-    color: black;
-  }
-  .grey {
-    margin-left: 20px;
-    margin-bottom: 25px;
-    background: white;
-    z-index: 3;
-    position: relative;
-  }
-  .blue {
-    border: 1px solid black;
-    margin-top: -40px;
-    background: none;
-    z-index: 2;
-    position: relative;
-  }
-h1{
-    text-align: center;
-}
-
-.sub{
-  margin-top: 20px;
-  margin-right: 20px;
-  margin-left: 20px;
-  margin-bottom: 25px;
-}
-.atable{
-    margin-left: 40px;
-    margin-top: 20px;
-    margin-right: 40px;
-}
-
-.Button{
-    margin-top: 80px;
-}
-
-.left, .right{
+<style>
+#header {
   text-align: center;
+  margin-top: 4%;
+  margin-bottom: 3%
 }
-
-.blues {
-  width: 100%;
-  color: black;
+#locate-1{
+    border: 1px solid;
+    width: 80%;
+    margin: 0 auto;
+    padding-bottom: 3%;
 }
-.greys{
-  text-align: center;
-  width: 100px;
+.text-1 {
+  position: relative;
+  left: 15%;
+  top:15px;
+  z-index: 1;
   height: 30px;
-  color: black;
-}
-.greys{
-  margin-left: 20px;
-  margin-bottom: 25px;
+  width: 8%;
   background: white;
-  z-index: 3;
-  position: relative;
+  text-align: center;
 }
-.blues{
-  border: 1px solid black;
-  margin-top: -40px;
-  background: none;
-  z-index: 2;
+.text-2{
   position: relative;
+  left: 15%;
+  top:15px;
+  z-index: 1;
+  height: 30px;
+  width: 6.6%;
+  background: white;
+  text-align: center;
+}
+.text{
+   position: relative;
+  left: 15%;
+  top:15px;
+  z-index: 1;
+  height: 30px;
+  width: 3.6%;
+  background: white;
+  text-align: center;
+}
+#component{
+  margin: 0 auto;
+  border: 2px solid #332529;
+  width: 94%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+.table{
+  width:94%;
+  margin: 0 auto
+}
+.table tr:first-child{
+    background-color:#2196f3;
+    color: white;
+}
+#sc-check{
+   cursor: pointer;
+   width: 15%;
+    height: 2%;
+    background-color: white;
+    text-align: center;
+    color: black;
+    font-size: 13px;
+    line-height: 22px;
+    font-weight: 600;
+    padding: 4px 3px;
+    border: 1px solid;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#sc-check:hover {
+    background-color: #2196f3;
+}
+#action{
+  margin : 0 auto;
+  margin-top: 4%;
+   display: flex;
+  justify-content: center;
+  width: 60%;
 }
 
-.parent{
-  margin-top: 20px;
-}
 </style>
