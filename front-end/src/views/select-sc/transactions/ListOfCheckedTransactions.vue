@@ -8,7 +8,7 @@
       <div class="blue">
         <div class="atable">
           <table class="table table-striped table-hover table-sm">
-            <thead class="table-dark">
+            <thead class="header">
               <tr>
                 <th style="width: 10%" scope="col">#</th>
                 <th style="width: 40%" scope="col">Batch Name</th>
@@ -19,19 +19,19 @@
             <tbody>
               <tr>
                 <th scope="row">1</th>
-                <td>Mark</td>
+                <td><router-link :to="'checkreentrancydetail'">Mark</router-link></td>
                 <td>Otto</td>
                 <td>@mdo</td>
               </tr>
               <tr>
                 <th scope="row">2</th>
-                <td>Jacob</td>
+                <td><router-link :to="'checkreentrancydetail'">Mark</router-link></td>
                 <td>Thornton</td>
                 <td>@fat</td>
               </tr>
               <tr>
                 <th scope="row">3</th>
-                <td>Larry the Bird</td>
+                <td><router-link :to="'checkreentrancydetail'">Mark</router-link></td>
                 <td>Larry the Bird</td>
                 <td>@twitter</td>
               </tr>
@@ -129,5 +129,9 @@ h1 {
 
 .Button {
   margin-top: 80px;
+}
+
+.header {
+  background-color: rgb(144, 208, 243);
 }
 </style>

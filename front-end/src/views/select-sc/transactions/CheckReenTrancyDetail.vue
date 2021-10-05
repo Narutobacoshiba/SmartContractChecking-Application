@@ -8,7 +8,7 @@
       <div class="blue">
         <div class="atable">
           <table class="table table-striped table-hover table-sm">
-            <thead class="table-dark">
+            <thead class="header">
               <tr>
                 <th style="width: 10%" scope="col">#</th>
                 <th style="width: 30%" scope="col">Smart Contract Name</th>
@@ -115,5 +115,9 @@ h1 {
 
 .Button {
   margin-top: 80px;
+}
+
+.header {
+  background-color: rgb(144, 208, 243);
 }
 </style>

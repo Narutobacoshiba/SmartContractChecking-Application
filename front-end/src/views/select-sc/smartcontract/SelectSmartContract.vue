@@ -9,7 +9,7 @@
         <div class="blue">
           <div class="atable">
             <table class="table table-striped table-hover table-sm">
-              <thead class="table-dark">
+              <thead class= "header">
                 <tr>
                   <th style="width: 20%" scope="col">#</th>
                   <th style="width: 60%" scope="col">Smart Contract Name</th>
@@ -64,7 +64,7 @@
         <div class="blue">
           <div class="atable">
             <table class="table table-striped table-hover table-sm">
-              <thead class="table-dark">
+              <thead class="header">
                 <tr>
                   <th style="width: 20%" scope="col">#</th>
                   <th style="width: 60%" scope="col">Smart Contract Name</th>
@@ -119,23 +119,34 @@
           <div id="ssc-add" @click="routing('add')">Add</div>
         </div>
         <div id="second-action">
-          <div id="ssc-upload" @click="routing('uploadfile')">Upload File</div>
+          <div id="ssc-upload" v-on:click="load">Upload File</div>
         </div>
         <div id="third-action">
           <div id="ssc-back" @click="routing('back')">Back</div>
         </div>
       </div>
     </div>
+    <popup v-bind:isOpen="isOpen"
+			v-on:clickdahieu="dahieu"/>
   </div>
   <!-- </div> -->
 </template>
 
 <script>
+import Popup from './Popup.vue';
 export default {
   data() {
-    return {};
+    return {
+      isOpen : false,
+    };
   },
   methods: {
+    load(){
+			this.isOpen = true;
+		},
+    dahieu(){
+			this.isOpen = false;
+		},
     routing(param) {
       if (param == "add") {
         this.$router.push({ name: "ContextOfSmartContract" });
@@ -148,6 +159,9 @@ export default {
       }
     },
   },
+  components: { 
+    Popup
+  }
 };
 </script>
 
@@ -415,5 +429,9 @@ h1 {
 }
 #removeAll-holder {
   margin-top: 50px;
+}
+
+.header {
+  background-color: rgb(144, 208, 243);
 }
 </style>
