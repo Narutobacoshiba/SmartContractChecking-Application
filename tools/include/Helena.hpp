@@ -456,6 +456,7 @@ typedef std::shared_ptr<ColorNode> ColorNodePtr;
 
 class SubColorNode : public LnaNode, public ColorNode {
 public:
+    SubColorNode() : LnaNode(LnaNodeTypeSub_Color) {}
     SubColorNode(ColorNodePtr _supColor) : LnaNode(LnaNodeTypeSub_Color), supColor(_supColor) {}
     std::string source_code();
 

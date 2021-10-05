@@ -1,0 +1,46 @@
+import mysql.connector
+
+db = mysql.connector.connect(
+    host = "localhost",
+    user="root",
+    passwd = '123456789',
+    database="soliditycpn"
+)
+mycursor = db.cursor()
+mycursor.execute("""alter table Contact ADD CONSTRAINT fk_idCA1 FOREIGN KEY(aid)
+references Account (aid);""")
+mycursor.execute("""alter table SmartContract ADD CONSTRAINT fk_idSCA2 FOREIGN KEY(aid)
+references Account (aid);""")
+mycursor.execute("""alter table History ADD CONSTRAINT fk_id3HA FOREIGN KEY(aid)
+references Account (aid);""")
+mycursor.execute("""alter table History_Type ADD CONSTRAINT fk_id4HTH FOREIGN KEY(hid)
+references History (hid);""")
+mycursor.execute("""alter table Functions ADD CONSTRAINT fk_id5FSC FOREIGN KEY(sid)
+references SmartContract (sid);""")
+mycursor.execute("""alter table GlobalVariable ADD CONSTRAINT fk_id6GSC FOREIGN KEY(sid)
+references SmartContract (sid);""")
+mycursor.execute("""alter table LocalVariable ADD CONSTRAINT fk_id7LF FOREIGN KEY(fid)
+references Functions (fid);""")
+mycursor.execute("""alter table Argument ADD CONSTRAINT fk_id8AF FOREIGN KEY(fid)
+references Functions (fid);""")
+mycursor.execute("""alter table CheckedBatchSC ADD CONSTRAINT fk_id9CBA FOREIGN KEY(aid)
+references Account (aid);""")
+mycursor.execute("""alter table LTLTemplate ADD CONSTRAINT fk_idLL10 FOREIGN KEY(ltyid)
+references LTLType (ltyid);""")
+mycursor.execute("""alter table CPNContext ADD CONSTRAINT fk_idCC11 FOREIGN KEY(ctid)
+references ContextType (ctid);""")
+mycursor.execute("""alter table InitialMarking ADD CONSTRAINT fk_idII12 FOREIGN KEY(imtid)
+references IMTemplate (imtid);""")
+mycursor.execute("""alter table CheckedSmartContractDetail ADD CONSTRAINT fk_idCSCLF13 FOREIGN KEY(lnid)
+references LNAFile (lnid);""")
+mycursor.execute("""alter table CheckedSmartContractDetail ADD CONSTRAINT fk_idCSCSC14 FOREIGN KEY(sid)
+references SmartContract (sid);""")
+mycursor.execute("""alter table CheckedSmartContractDetail ADD CONSTRAINT fk_idCCDLT15 FOREIGN KEY(lteid)
+references LTLTemplate (lteid);""")
+mycursor.execute("""alter table CheckedSmartContractDetail ADD CONSTRAINT fk_idCSDCC16 FOREIGN KEY(cid)
+references CPNContext (cid);""")
+mycursor.execute("""alter table CheckedSmartContractDetail ADD CONSTRAINT fk_idCSDCB17 FOREIGN KEY(bid)
+references CheckedBatchSC (bid);""")
+mycursor.execute("""alter table CheckedSmartContractDetail ADD CONSTRAINT fk_idCSCIM18 FOREIGN KEY(imid)
+references InitialMarking (imid);""")
+

@@ -1,23 +1,13 @@
 test(N := 2) {
-
-/**************************
-*** Colours Definitions ***
-**************************/
-
 type boolean : range 0 .. 1;
 type count : range 0 .. N;
 subtype event_id : count range 0 .. (count'last-1);
 type marking_value : list[event_id] of boolean with capacity N;
 type mvalue : struct { event_id id;boolean vl;};
 type vchange : list[event_id] of mvalue with capacity N;
-type cvalue : struct { event_id id;boolean cv2;};
+type cvalue : struct { boolean cv1;boolean cv2;};
 type vcondition : list[event_id] of cvalue with capacity N;
-
-/****************************
-*** Functions Definitions ***
-****************************/
-
-function cvalue () -> marking_value{
+function cvalue (marking_value mv, vchange lc) -> marking_value{
 	marking_value m := empty;
 	for(v in mv){
 		m := m & v;
@@ -27,23 +17,20 @@ function cvalue () -> marking_value{
 	}
 	return m;
 }
-function confirm_condition () -> boolean{
+function confirm_condition (vcondition vc) -> boolean{
 	boolean ret := 1;
 	for(v in vc){
 		if(v.cv1 = 1 and v.cv2 = 0) ret := 0;
 	}
 	return ret;
 }
-function confirm_milestone () -> boolean{
-	boolean ret := 1;	for(v in vc){
+function confirm_milestone (vcondition vc) -> boolean{
+	boolean ret := 1;
+	for(v in vc){
 		if(v.cv1 = 1 and v.cv2 = 1) ret := 0;
 	}
 	return ret;
 }
-
-/*************
-*** PLACES ***
-*************/
 
 /*
  * Function: state
@@ -52,11 +39,6 @@ place marking {
 	dom : marking_value*marking_value*marking_value;
 	init : <(|0,0|,|0,0|,|1,1|)>;
 }
-
-/******************
-*** TRANSITIONS ***
-******************/
-
 
 /*
  * Function: play

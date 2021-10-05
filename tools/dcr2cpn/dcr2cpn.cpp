@@ -3,11 +3,13 @@
 #include <vector>
 #include <set>
 #include "../include/cli11/CLI11.hpp"
-#include "include/translator.hpp"
-#include "include/DCR.hpp"
+#include "../include/Utils.hpp"
+#include "./src/translator.hpp"
+#include "./src/DCR.hpp"
 
 using namespace std;
 using namespace DCR2CPN;
+using namespace HELENA;
 
 int main(int argc, char** argv)
 {   
@@ -26,9 +28,9 @@ int main(int argc, char** argv)
     
     ofstream myfile;
     if(OUT_FILE_NAME.compare("") == 0){
-        myfile.open ("./output/"+DCR_XML_FILE.substr(0, DCR_XML_FILE.find('.'))+".lna");
+        myfile.open (split(DCR_XML_FILE,".lna")[0] + ".lna");
     }else{
-        myfile.open ("./output/"+OUT_FILE_NAME+".lna");
+        myfile.open (OUT_FILE_NAME+".lna");
     }
     
     myfile << net->source_code();

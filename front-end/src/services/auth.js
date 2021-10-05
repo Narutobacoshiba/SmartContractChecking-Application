@@ -45,7 +45,7 @@ export class AuthService {
     try {
       const response = await axios.post(`${API_URL}/auth/register`,
         { username, email, password }, { useCredentails: true })
-
+      console.log(response)
       return new ResponseWrapper(response, response.data)
     } catch (error) {
       throw new ErrorWrapper(error)
@@ -176,6 +176,7 @@ export async function makeLogin(user, pass) {
   })
   return req
 }
+
 export async function getAccessToken(userDetail) {
   try {
     const req = await axios.post('/accesstoken', {

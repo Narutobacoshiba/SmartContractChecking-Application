@@ -1,0 +1,442 @@
+/******************************************************************************
+*
+*  File  : EtherLotto.lna
+*  Author: Ikram GARFATTA
+*  Date  : 20 Feb. 2021
+*
+******************************************************************************/
+
+etherLotto (v1 := 0, v2 := 0, v3 := 0) {  /*  CONTRACT STATE initialization  */
+
+/****************************
+*** Functions definitions ***
+****************************/
+
+
+/**************************
+*** Colours Definitions ***
+**************************/
+	type ADDRESS : range 0 .. 100;
+	//type ETH : range 0 .. 1000;
+	
+	type UINT : range 0 .. (int'last);/**/
+	
+	type GAME_RECORD : struct { ADDRESS winner; UINT amount;};
+	
+	type UINT8 : range 0 .. 10;/**/
+	
+	type LOTTO_LOG : list [UINT8] of GAME_RECORD with capacity 300;
+	
+	type USER : struct { ADDRESS adr; UINT balance;};
+	
+	type STATE : struct { UINT contractBalance; ADDRESS bank; UINT8 gameNum; LOTTO_LOG LottoLog; bool won; UINT pot;};
+	
+	type RESTART_LOTTO_PAR : struct { USER sender; UINT value;};
+	type PLAY_TICKET_PAR : struct { USER sender; UINT value; nat timestamp;};
+	type GET_POT_PAR : struct { USER sender; UINT value;};
+	
+	type RESTART_LOTTO_RETURN : struct { USER sender;};
+	type PLAY_TICKET_RETURN : struct { USER sender;};
+	type GET_POT_RETURN : struct { USER sender;};
+	
+	type RESTART_LOTTO_STATE : struct { STATE state; RESTART_LOTTO_PAR par;};
+	type PLAY_TICKET_STATE : struct { STATE state; PLAY_TICKET_PAR par;};
+	type GET_POT_STATE : struct { STATE state; GET_POT_PAR par;};
+	
+
+/****************************
+*** Constants definitions ***
+****************************/
+	constant nat users := 10;
+	constant UINT TICKET_AMOUNT := 10;
+	constant UINT FEE_AMOUNT := 1;
+	constant UINT8 maxThreshold := 4;
+	constant UINT8 minThreshold := 0;
+	
+/****************************
+*** Functions definitions ***
+****************************/
+
+	
+/*************
+*** PLACES ***
+*************/
+
+/*
+ *  Verification Places
+ */
+   place S {
+   	dom : STATE;
+   	init : <( {UINT(0), ADDRESS(0), UINT8(0), empty, false, UINT(0)} )>;
+   }
+   place P_RestartLotto {
+   	dom : RESTART_LOTTO_PAR;
+   	init : <( {{0,0},0} )>;
+   	//capacity : 5;
+   }
+   place P_PlayTicket {
+   	dom : PLAY_TICKET_PAR;
+   	init : for (i in ADDRESS range 1 .. ADDRESS (users)) <( {{i , UINT(10)}, UINT(10), nat(i)} )>;
+   	//init : for (i in ADDRESS range 1 .. ADDRESS (users)) <( {{i , UINT(i*100)}, UINT(10), nat(i)} )>;
+   }
+   place P_GetPot {
+   	dom : GET_POT_PAR;
+   	init : for (i in ADDRESS range 1 .. ADDRESS (users)) <( {{i , UINT(10)},0} )>;
+   }
+ 
+/*
+ *  Function: RestartLotto
+ */
+   place RESTART_LOTTO_P1 {
+   	dom : RESTART_LOTTO_STATE;
+   }
+   place RESTART_LOTTO_P2 {
+   	dom : RESTART_LOTTO_STATE;
+   }
+   place RESTART_LOTTO_P3 {
+   	dom : RESTART_LOTTO_STATE;
+   }
+   place RESTART_LOTTO_P4 {
+   	dom : RESTART_LOTTO_STATE;
+   }
+   
+/*
+ *  Function: playTicket
+ */
+   place PLAY_TICKET_P1 {
+   	dom : PLAY_TICKET_STATE;
+   }
+   place PLAY_TICKET_P2 {
+   	dom : PLAY_TICKET_STATE;
+   }
+   place PLAY_TICKET_P3 {
+   	dom : PLAY_TICKET_STATE;
+   }
+   place PLAY_TICKET_P4 {
+   	dom : PLAY_TICKET_STATE;
+   }
+   place PLAY_TICKET_random {
+   	dom : UINT;
+   }
+//   place PLAY_TICKET_P11 {
+//   	dom : PLAY_TICKET_STATE;
+//   }
+   place PLAY_TICKET_P12 {
+   	dom : PLAY_TICKET_STATE;
+   }
+   place PLAY_TICKET_P13 {
+   	dom : PLAY_TICKET_STATE;
+   }
+   place PLAY_TICKET_P14 {
+   	dom : PLAY_TICKET_STATE;
+   }  
+   place PLAY_TICKET_P15 {
+   	dom : PLAY_TICKET_STATE;
+   }  
+   place PLAY_TICKET_gr {
+   	dom : GAME_RECORD;
+   }
+   place PLAY_TICKET_PT1 {
+   	dom : PLAY_TICKET_STATE;
+   }
+   place PLAY_TICKET_Payable {
+   	dom : PLAY_TICKET_STATE;
+   }
+   
+/*
+ *  Function: getPot
+ */
+   place GET_POT_P1 {
+   	dom : GET_POT_STATE;
+   }
+   place GET_POT_PT1 {
+   	dom : GET_POT_STATE;
+   }
+   place GET_POT_PF1 {
+   	dom : GET_POT_STATE;
+   }
+   place GET_POT_P11 {
+   	dom : GET_POT_STATE;
+   }
+   
+
+/******************
+*** TRANSITIONS ***
+******************/
+
+/*
+ *  Function: RestartLotto
+ */
+	transition RESTART_LOTTO_revert1 {
+		in {
+			S : <( s )>;
+			P_RestartLotto : <( p )>;
+		}
+		out {
+			S : <( s )>;
+		}
+		guard : not (p.sender.adr = s.bank);
+	}
+	transition RESTART_LOTTO_n_revert1 {
+		in {
+			S : <( s )>;
+			P_RestartLotto : <( p )>;
+		}
+		out {
+			RESTART_LOTTO_P1 : <( {s,p} )>;
+			P_RestartLotto : <( p )>;
+		}
+		guard : p.sender.adr = s.bank;
+	}
+	transition RESTART_LOTTO_revert2 {
+		in {
+			RESTART_LOTTO_P1 : <( sp )>;
+		}
+		out {
+			S : <( sp.state )>;		
+		}
+		guard : not (sp.state.won = true);
+	}
+	transition RESTART_LOTTO_n_revert2 {
+		in {
+			RESTART_LOTTO_P1 : <( sp )>;
+		}
+		out {
+			RESTART_LOTTO_P2 : <( sp )>;	
+		}
+		guard : sp.state.won = true;
+	}
+	transition RESTART_LOTTO_revert3 {
+		in {
+			RESTART_LOTTO_P2 : <( sp )>;
+		}
+		out {
+			S : <( sp.state )>;		
+		}
+		guard : not (sp.state.pot = 0);
+	}
+	transition RESTART_LOTTO_n_revert3 {
+		in {
+			RESTART_LOTTO_P2 : <( sp )>;
+		}
+		out {
+			RESTART_LOTTO_P3 : <( sp )>;	
+		}
+		guard : sp.state.pot = 0;
+	}
+	transition RESTART_LOTTO_t1 {
+		in {
+			RESTART_LOTTO_P3 : <( sp )>;
+		}
+		out {
+			RESTART_LOTTO_P4 : <( {sp.state :: (won := false),sp.par} )>;
+		}
+	}
+	transition RESTART_LOTTO_t2 {
+		in {
+			RESTART_LOTTO_P4 : <( sp )>;
+		}
+		out {
+			S : <( sp.state :: (gameNum := sp.state.gameNum + 1) )>;
+		}
+	}
+	
+/*
+ *  Function: playTicket
+ */
+	transition PLAY_TICKET_revert1 {
+		in {
+			S : <( s )>;
+			P_PlayTicket : <( p )>;
+		}
+		out {
+			S : <( s )>;
+		}
+		guard : not (p.value = TICKET_AMOUNT);
+	}
+	transition PLAY_TICKET_n_revert1 {
+		in {
+			S : <( s )>;
+			P_PlayTicket : <( p )>;
+		}
+		out {
+			PLAY_TICKET_P1 : <( {s,p} )>;
+		}
+		guard : p.value = TICKET_AMOUNT;
+	}
+	transition PLAY_TICKET_revert2 {
+		in {
+			PLAY_TICKET_P1 : <( sp )>;
+		}
+		out {
+			S : <( sp.state )>;		
+		}
+		guard : not (sp.state.won = false);
+	}
+	transition PLAY_TICKET_n_revert2 {
+		in {
+			PLAY_TICKET_P1 : <( sp )>;
+		}
+		out {
+			PLAY_TICKET_P2 : <( sp )>;	
+		}
+		guard : sp.state.won = false;
+	}
+	////////////////////
+	transition PLAY_TICKET_payable {
+		in {
+			PLAY_TICKET_P2 : <( sp )>;
+		}
+		out {
+			PLAY_TICKET_Payable : <( {sp.state :: (contractBalance := sp.state.contractBalance + sp.par.value),sp.par} )>;
+		}
+	}
+	/////////////////////
+	transition PLAY_TICKET_t1 {
+		in {
+			PLAY_TICKET_Payable : <( sp )>;
+		}
+		out {
+			PLAY_TICKET_P3 : <( {sp.state :: (pot := sp.state.pot + sp.par.value),sp.par} )>;
+		}
+	}
+	transition PLAY_TICKET_t2 {
+		in {
+			PLAY_TICKET_P3 : <( sp )>;
+		}
+		out {
+			PLAY_TICKET_random : <( UINT(sp.par.timestamp % 2) )>;
+			PLAY_TICKET_P4 : <( sp )>;
+		}
+	}
+	transition PLAY_TICKET_tT1 {
+		in {
+			PLAY_TICKET_P4 : <( sp )>;
+			PLAY_TICKET_random : <( r )>;
+		}
+		out {
+			//PLAY_TICKET_random : <( r )>;
+			PLAY_TICKET_PT1 : <( sp )>;
+		}
+		guard : r = 0;
+	}
+	transition PLAY_TICKET_tF1 {
+		in {
+			PLAY_TICKET_P4 : <( sp )>;
+			PLAY_TICKET_random : <( r )>;
+		}
+		out {
+			//PLAY_TICKET_random : <( r )>;
+			S : <( sp.state )>;
+		}
+		guard : not(r = 0);
+	}
+	transition PLAY_TICKET_t11 {
+		in {
+			PLAY_TICKET_PT1 : <( sp )>;
+		}
+		out {
+			PLAY_TICKET_P12 : <( {sp.state :: (won := true),sp.par} )>;
+		}
+	}
+	transition PLAY_TICKET_t12 {
+		in {
+			PLAY_TICKET_P12 : <( sp )>;
+		}
+		out {
+			PLAY_TICKET_P13 : <( sp )>;
+			PLAY_TICKET_gr : <( {0,0} )>;
+		}
+	}
+	transition PLAY_TICKET_t13 {
+		in {
+			PLAY_TICKET_P13 : <( sp )>;
+			PLAY_TICKET_gr : <( gr )>;
+		}
+		out {
+			PLAY_TICKET_P14 : <( sp )>;
+			PLAY_TICKET_gr : <( gr :: (winner := sp.par.sender.adr) )>;
+		}
+	}
+	transition PLAY_TICKET_t14 {
+		in {
+			PLAY_TICKET_P14 : <( sp )>;
+			PLAY_TICKET_gr : <( gr )>;
+		}
+		out {
+			PLAY_TICKET_P15 : <( sp )>;
+			PLAY_TICKET_gr : <( gr :: (amount := (sp.state.pot - FEE_AMOUNT)) )>;
+		}
+	}
+	transition PLAY_TICKET_t15 {
+		in {
+			PLAY_TICKET_P15 : <( sp )>;
+			PLAY_TICKET_gr : <( gr )>;
+		}
+		out {
+			S : <( sp.state :: (LottoLog := (sp.state.LottoLog & gr)) )>;
+			//PLAY_TICKET_gr : <( gr )>;
+		}
+	}
+ 
+/*
+ *  Function: getPot
+ */
+	transition GET_POT_revert1 {
+		in {
+			S : <( s )>;
+			P_GetPot : <( p )>;
+		}
+		out {
+			S : <( s )>;
+		}
+		guard : not (s.won = true);
+	}
+	transition GET_POT_n_revert1 {
+		in {
+			S : <( s )>;
+			P_GetPot : <( p )>;
+		}
+		out {
+			GET_POT_P1 : <( {s,p} )>;
+		}
+		guard : s.won = true;
+	}
+	transition GET_POT_tF1 {
+		in {
+			GET_POT_P1 : <( sp )>;
+		}
+		out {
+			S : <( sp.state )>;
+		}
+		guard : not (sp.par.sender.adr = sp.state.LottoLog[UINT8(sp.state.gameNum )].winner);
+	}
+	transition GET_POT_tT1 {
+		in {
+			GET_POT_P1 : <( sp )>;
+		}
+		out {
+			GET_POT_PT1 : <( sp )>;
+		}
+		guard : sp.par.sender.adr = sp.state.LottoLog[UINT8(sp.state.gameNum)].winner;
+	}
+	transition GET_POT_send1 {
+		in {
+			GET_POT_PT1 : <( sp )>;
+		}
+		out {
+			GET_POT_P11 : <( {sp.state :: (contractBalance := sp.state.contractBalance - sp.state.LottoLog[UINT8(sp.state.gameNum)].amount),sp.par} )>;
+		}
+	}
+	transition GET_POT_t1 {
+		in {
+			GET_POT_P11 : <( sp )>;
+		}
+		out {
+			S : <( sp.state :: (pot := 0) )>;
+		}
+	}
+	
+proposition outOfRange : exists (t in S|(t->1).gameNum > maxThreshold or (t->1).gameNum < minThreshold);
+
+}
