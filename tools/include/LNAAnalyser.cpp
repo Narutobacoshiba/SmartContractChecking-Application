@@ -221,6 +221,30 @@ ColorNodePtr handleColor(list<string>::iterator& _iter, list<string>::iterator _
         }
 
         return color;
+    }else if(token == SUBTYPE_TOKEN){
+        SubColorNodePtr sub_color = make_shared<SubColorNode>();
+
+        vector<string> sub_color_def = split_ex(split_ex(*_iter," ",2)[1],":",2);   
+
+        string sub_color_name = removeNoneAlnum(sub_color_def[0]);
+        sub_color->set_name(sub_color_name);
+        string sub_color_typedef = sub_color_def[1];
+        trim_ex(sub_color_typedef);
+
+        ColorNodePtr color = make_shared<ColorNode>();
+        vector<string> color_def = split_ex(sub_color_typedef," ",2);
+        string color_name = color_def[0];
+        string color_typedef = color_def[1];
+        
+        string color_type = get_first_alpha_only_string(color_typedef);
+        if(color_type == RANGE_TOKEN){
+            color->set_name(color_name);
+            color_typedef.erase(remove(color_typedef.begin(), color_typedef.end(), ';'), color_typedef.end());
+            sub_color->set_typeDef(color_typedef);
+        }
+        sub_color->set_supColor(color);
+
+        return std::static_pointer_cast<ColorNode>(sub_color);
     }
     return nullptr;
 }
