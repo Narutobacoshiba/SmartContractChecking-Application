@@ -1,7 +1,7 @@
 #!/bin/bash
 LNA_PATH='./test/EtherGame.lna'
 CONTEXT_PATH='./test/context.lna'
-PARAM='currentBalance/play'
-OUTFILE_PATH='out'
+PARAM='claimReward/play'
+OUTFILE_PATH='./output/out'
 
-./main --lna "$LNA_PATH"  --context "$CONTEXT_PATH" --param "$PARAM" --out_file "$OUTFILE_PATH"
+./unfolding --lna "$LNA_PATH"  --context "$CONTEXT_PATH" --param "$PARAM" --out_file "$OUTFILE_PATH"

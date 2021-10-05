@@ -2,11 +2,11 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '22042001',
+    passwd = '123456',
     database="soliditycpn"
 )
 mycursor = db.cursor()
-sqlFomular = "INSERT INTO GlobalVariable (name,vartype,type,value,scid) VALUES (%s,%s,%s,%s,%s)"
+sqlFomular = "INSERT INTO GlobalVariable (name,vartype,type,value,sid) VALUES (%s,%s,%s,%s,%s)"
 multi = [
     ("payoutMileStone1","uint","public","3 ether",1),
     ("mileStone1Reward","uint","public","2 ether",1),

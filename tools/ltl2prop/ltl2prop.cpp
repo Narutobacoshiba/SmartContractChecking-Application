@@ -4,9 +4,10 @@
 #include <map>
 #include <string>
 #include<vector>
-#include "./src/ltl2prop.hpp"
+#include "./src/translator.hpp"
 #include "../include/cli11/CLI11.hpp"
 #include "../include/nlohmann/json.hpp"
+#include "../include/Utils.hpp"
 
 using namespace std;
 
@@ -58,18 +59,18 @@ int main(int argc, char** argv){
 
     std::string outfile_name;
     if(OUT_FILE_NAME.compare("") == 0){
-        outfile_name = LNA_FILE_NAME.substr(0, LNA_FILE_NAME.find('.'));
+        outfile_name = split(LNA_FILE_NAME,".lna")[0];
     }else{
         outfile_name = OUT_FILE_NAME;
     }
 
     ofstream lna_file;
-    lna_file.open("./output/"+outfile_name+".lna");
+    lna_file.open(outfile_name+".lna");
     lna_file << out["lna"];
     lna_file.close();
 
     ofstream prop_file;
-    prop_file.open("./output/"+outfile_name+".prop.lna");
+    prop_file.open(outfile_name+".prop.lna");
     prop_file << out["prop"];
     prop_file.close();
 

@@ -2,11 +2,11 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '22042001',
+    passwd = '123456',
     database="soliditycpn"
 )
 mycursor = db.cursor()
-sqlFomular = "INSERT INTO Functionss (name,bodycontent,scid) VALUES (%s,%s,%s)"
+sqlFomular = "INSERT INTO Functions (name,bodycontent,sid) VALUES (%s,%s,%s)"
 multi = [
     ("play() public payable","""
     require(msg.value == 0.5 ether); // each play is 0.5 ether
