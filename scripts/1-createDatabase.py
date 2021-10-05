@@ -2,7 +2,7 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = "123456",
+    passwd = "123456789",
     database="soliditycpn"
 )
 mycursor = db.cursor()
@@ -34,7 +34,7 @@ name nvarchar(200),
 type nvarchar(50),
 content text ,
 description text,
-aid int not null references Account(id)
+aid int not null references Account(aid)
 )
 
 """)
@@ -141,7 +141,7 @@ formula text
 """)
 mycursor.execute("""
 CREATE TABLE InitialMarking (
-id int primary key AUTO_INCREMENT,
+imid int primary key AUTO_INCREMENT,
 numberUser int,
 balance int,
 value int,
@@ -162,7 +162,7 @@ mycursor.execute("""
 CREATE TABLE CPNContext (
 cid int primary key AUTO_INCREMENT,
 name nvarchar(200),
-contetnt text,
+content text,
 description text,
 ctid int not null references ContextType(ctid)
 )
