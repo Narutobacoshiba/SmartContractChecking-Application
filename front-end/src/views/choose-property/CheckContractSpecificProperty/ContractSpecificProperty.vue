@@ -73,10 +73,11 @@ export default {
   justify-content: space-between;
 }
 .link-button {
-  background: #0090f2;
+  border: 1px solid #2196f3;
+  color: #2196f3;
   padding: 4px 15px;
   border-radius: 4px;
-  color: #fff;
+  
   font-weight: bold;
   font-size: 14px;
   transition: all 0.3s linear;

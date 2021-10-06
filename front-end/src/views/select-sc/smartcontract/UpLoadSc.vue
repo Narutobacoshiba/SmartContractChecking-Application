@@ -140,7 +140,6 @@ a.router-link-active {
   align-items: center;
 }
 #addsc {
-  background-color: rgb(241, 240, 240);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -152,7 +151,9 @@ a.router-link-active {
   margin-bottom: 5%;
 }
 .title h1 {
-  font-size: 50px;
+  font-size: 35px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
 }
 /* name area */
 .name-area,
@@ -161,7 +162,7 @@ a.router-link-active {
 }
 .label {
   font-style: normal;
-  font-size: 20px;
+  font-size: 13px;
   font-weight: 100;
   position: relative;
   left: 0;
@@ -181,10 +182,12 @@ a.router-link-active {
 }
 /* button style */
 .button-add-cancell button {
-  width: 170px;
-  height: 30px;
-  color: #0d6efd;
-  border: 1px solid;
+  width: 130px;
+  height: 28px;
+  border: 1px solid #2196f3;
+  background-color: white;
+  text-align: center;
+  color: #2196f3;
   border-radius: 4px;
 }
 .button-add-cancell button:hover {
@@ -218,8 +221,5 @@ label:hover {
   border-radius: 15px;
   width: 100px;
 }
-.common-option:hover,
-.private-option:hover {
-  background-color: #bcc6d4;
-}
+
 </style>

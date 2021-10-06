@@ -63,20 +63,7 @@
   </div>
 </template>
 
-<script>
-export default {
-  methods: {
-    routing(param) {
-      if (param == "back") {
-        this.$router.push({ name: "ListOfCheckedTransactions" });
-      }
-      if (param == "addsc") {
-        this.$router.push({ name: "SelectSmartContract" });
-      }
-    }, //Back to List Of Checked Transactions
-  },
-};
-</script>
+
 
 <style scoped>
 .blue {

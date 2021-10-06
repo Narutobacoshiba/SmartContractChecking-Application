@@ -106,10 +106,22 @@ export default {
   color: #fff;
 }
 .choosen_button {
-  background-color: #105a8b;
+  cursor: pointer;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 .choosen_button:hover {
-  background-color: #0b4368;
+  background-color: #1079cf;
+  color: white;
 }
 /*---- showConfirmation */
 #showConfirmation {

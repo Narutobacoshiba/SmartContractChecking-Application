@@ -28,11 +28,11 @@ followed by an occurrence of {function 4}
       <div class="row">
         <div class="col-2"></div>
         <div id="btn-group" class="col-9">
-          <button class="btn btn-primary btn-sm" @click="routing('save')">
+          <button class="btn btn-primary-outline btn-sm" @click="routing('save')">
             Add
           </button>
           <button
-            class="btn btn-outline-secondary btn-sm"
+            class="btn btn-outline btn-sm"
             @click="routing('back')"
           >
             Back
@@ -89,9 +89,18 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 25px;
-  margin-bottom: 15px;
+  margin-top: 1%;
+  margin-bottom: 5%;
 }
+#btn-group button {
+  border: 1px solid #2196f3;
+  color: #2196f3;
+}
+#btn-group button:hover{
+   background-color: #1079cf;
+  color: white;
+}
+
 button {
   margin: auto;
 }

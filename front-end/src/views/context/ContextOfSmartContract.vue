@@ -50,10 +50,17 @@
       <button
         id="btn1"
         type="button"
+<<<<<<< Updated upstream
         class="btn btn-primary btn-sm"
         @click="routing('upfile')"
       >
         Up a Context File
+=======
+        class="btn btn-outline-primary btn-sm"
+        @click="OpenUploadContext"
+      >
+        Upload a context File
+>>>>>>> Stashed changes
       </button>
       <button
         id="btn2"
@@ -64,21 +71,61 @@
         Back
       </button>
     </div>
+<<<<<<< Updated upstream
+=======
+    <div id="showComponents" v-if="getShowComponents">
+      <div id="components-holder">
+        <UploadContext
+          @closeComponents="cComponents"
+          v-if="getSelectComponents == 'uploadctx'"
+        />
+      </div>
+    </div>
+>>>>>>> Stashed changes
   </div>
 </template>
 
 <script>
+<<<<<<< Updated upstream
 export default {
+=======
+import UploadContext from "./UpLoadContext.vue";
+export default {
+  components: { UploadContext },
+>>>>>>> Stashed changes
   data() {
     return {
       contexts: [{ id: 1, context: "Medicine" }],
       selectedContext: [],
       contextSC: [],
       showComponents: false,
+<<<<<<< Updated upstream
     };
+=======
+      selectComponents: "",
+    };
+  },
+  computed: {
+    getShowComponents() {
+      return this.showComponents;
+    },
+    getSelectComponents() {
+      return this.selectComponents;
+    },
+>>>>>>> Stashed changes
   },
   components: {  },
   methods: {
+<<<<<<< Updated upstream
+=======
+    cComponents() {
+      this.showComponents = false;
+    },
+    OpenUploadContext() {
+      this.selectComponents = "uploadctx";
+      this.showComponents = true;
+    },
+>>>>>>> Stashed changes
     loadContext() {
       this.showComponents = true;
     },
@@ -101,6 +148,7 @@ export default {
 #section {
   width: 70%;
   margin: auto;
+  font-family: Arial, Helvetica, sans-serif;
 }
 #header {
   text-align: center;
@@ -130,12 +178,31 @@ export default {
 #btns {
   text-align: center;
   margin-top: 50px;
-  margin-bottom: 50px;
+  padding-bottom: 10%;
 }
 #btns button {
   margin-left: 40px;
   margin-right: 40px;
+  cursor: pointer;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
 }
+<<<<<<< Updated upstream
+=======
+#btns button:hover {
+  background-color: #1079cf;
+  color: white;
+}
+>>>>>>> Stashed changes
 
 /* ---- showComponents ---- */
 #showComponents {
