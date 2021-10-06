@@ -51,9 +51,9 @@
     <div class="Button">
       <div class="row">
         <div class="col-sm-10">
-          <button type="button" class="btn btn-primary" @click="routing('addsc')">
+          <!-- <button type="button" class="btn btn-primary" @click="routing('addsc')">
             Add Smart Contracts
-          </button>
+          </button> -->
         </div>
         <div class="col-sm-2">
           <button type="button" class="btn btn-primary" @click="routing('back')">Back</button>
