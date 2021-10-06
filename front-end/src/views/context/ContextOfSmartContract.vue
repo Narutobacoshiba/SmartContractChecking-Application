@@ -75,7 +75,6 @@
 
 <script>
 import UploadContext from "./UpLoadContext.vue"
-
 export default {
   components: {UploadContext},
   data() {
@@ -95,7 +94,6 @@ export default {
         return this.selectComponents
       }
   },
-
   methods: {
     cComponents(){
       this.showComponents = false
@@ -137,7 +135,6 @@ export default {
   margin-top: 60px;
   text-align: center;
 }
-
 #select p {
   text-align: left;
   font-size: 18px;
@@ -161,7 +158,6 @@ export default {
   margin-left: 40px;
   margin-right: 40px;
 }
-
 /* ---- showComponents ---- */
 #showComponents {
   position: fixed;
@@ -175,7 +171,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 @media screen and (max-width: 800px) {
   #section {
     width: 100%;
