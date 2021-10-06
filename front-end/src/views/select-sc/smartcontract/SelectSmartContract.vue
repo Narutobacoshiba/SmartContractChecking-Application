@@ -2,47 +2,151 @@
   <div id="ssc-body">
     <div id="ssc-header">Select Smart Contracts</div>
     <div id="ssc-selected">
-      <div id="sscs-body">
-        <div id="sscs-header">
-          <div id="sscsh-name">Selected Smart Contracts</div>
+      <div class="smart">
+        <div class="grey">
+          <span>Common Smart Contracts</span>
         </div>
-        <div id="sscs-table">
-          <div class="noneHandler">
-            <p>
-              Please click on the
-              <a id="link-text"
-                >Add Smart Contracts</a
-              >
-              to select your Smart Contracts for checking!
-            </p>
+        <div class="blue">
+          <div class="atable">
+            <table class="table table-striped table-hover table-sm">
+              <thead class= "header">
+                <tr>
+                  <th style="width: 20%" scope="col">#</th>
+                  <th style="width: 60%" scope="col">Smart Contract Name</th>
+                  <th style="width: 20%" scope="col">Select</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>EtherGame</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id="one"
+                      value="One"
+                      v-model="picked"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>EtherLotto</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id="two"
+                      value="Two"
+                      v-model="picked"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>blindAuction</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id="the"
+                      value="Three"
+                      v-model="picked"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <div id="ssc-action">
-          <div id="first-action">
-            <div id="ssc-add" @click="routing('add')">Add</div>
-          </div>
-          <div id="second-action">
-            <div id="ssc-upload" @click="routing('uploadfile')">
-              Upload File
-            </div>
-          </div>
-          <div id="third-action">
-            <div id="ssc-back" @click="routing('back')">Back</div>
+
+        <div class="grey">
+          <span>Private Smart Contracts</span>
+        </div>
+        <div class="blue">
+          <div class="atable">
+            <table class="table table-striped table-hover table-sm">
+              <thead class="header">
+                <tr>
+                  <th style="width: 20%" scope="col">#</th>
+                  <th style="width: 60%" scope="col">Smart Contract Name</th>
+                  <th style="width: 20%" scope="col">Select</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>PSC1</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id="one"
+                      value="One"
+                      v-model="picked"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>PSC2</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id="two"
+                      value="Two"
+                      v-model="picked"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>PSC3</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id="the"
+                      value="Thee"
+                      v-model="picked"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
+
+      <div id="ssc-action">
+        <div id="first-action">
+          <div id="ssc-add" @click="routing('add')">Add</div>
+        </div>
+        <div id="second-action">
+          <div id="ssc-upload" v-on:click="load">Upload File</div>
+        </div>
+        <div id="third-action">
+          <div id="ssc-back" @click="routing('back')">Back</div>
+        </div>
+      </div>
     </div>
+    <popup v-bind:isOpen="isOpen"
+			v-on:clickdahieu="dahieu"/>
   </div>
+  <!-- </div> -->
 </template>
 
 <script>
+import Popup from './Popup.vue';
 export default {
   data() {
     return {
-      
+      isOpen : false,
     };
   },
   methods: {
+    load(){
+			this.isOpen = true;
+		},
+    dahieu(){
+			this.isOpen = false;
+		},
     routing(param) {
       if (param == "add") {
         this.$router.push({ name: "ContextOfSmartContract" });
@@ -55,10 +159,48 @@ export default {
       }
     },
   },
+  components: { 
+    Popup
+  }
 };
 </script>
 
 <style scoped>
+.blue {
+  width: 100%;
+  height: 200px;
+  color: black;
+}
+.grey {
+  width: 200px;
+  height: 30px;
+  color: black;
+}
+.grey {
+  margin-left: 20px;
+  margin-bottom: 25px;
+  background: white;
+  z-index: 3;
+  position: relative;
+}
+.blue {
+  border-radius: 10px;
+  border: 1px solid black;
+  margin-top: -40px;
+  background: none;
+  z-index: 2;
+  position: relative;
+}
+h1 {
+  text-align: center;
+}
+
+.atable {
+  margin-left: 25px;
+  margin-top: 20px;
+  margin-right: 25px;
+}
+
 #ssc-body {
   width: 100%;
   height: 530px;
@@ -288,5 +430,9 @@ export default {
 }
 #removeAll-holder {
   margin-top: 50px;
+}
+
+.header {
+  background-color: rgb(144, 208, 243);
 }
 </style>
