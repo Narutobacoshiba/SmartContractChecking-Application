@@ -1,13 +1,13 @@
-test {
+etherGame(N := 2, cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10, v6 := 5) {
 type boolean : range 0 .. 1;
 type count : range 0 .. N;
+subtype  : count range 0 .. (count'last-1);
 type marking_value : list[event_id] of boolean with capacity N;
 type mvalue : struct { event_id id;boolean vl;};
 type vchange : list[event_id] of mvalue with capacity N;
-type cvalue : struct { event_id id;boolean cv2;};
+type cvalue : struct { boolean cv1;boolean cv2;};
 type vcondition : list[event_id] of cvalue with capacity N;
-function cvalue () -> marking_value{
-
+function cvalue (marking_value mv, vchange lc) -> marking_value{
 	marking_value m := empty;
 	for(v in mv){
 		m := m & v;
@@ -17,17 +17,16 @@ function cvalue () -> marking_value{
 	}
 	return m;
 }
-function confirm_condition () -> boolean{
-
+function confirm_condition (vcondition vc) -> boolean{
 	boolean ret := 1;
 	for(v in vc){
 		if(v.cv1 = 1 and v.cv2 = 0) ret := 0;
 	}
 	return ret;
 }
-function confirm_milestone () -> boolean{
-
-	boolean ret := 1;	for(v in vc){
+function confirm_milestone (vcondition vc) -> boolean{
+	boolean ret := 1;
+	for(v in vc){
 		if(v.cv1 = 1 and v.cv2 = 1) ret := 0;
 	}
 	return ret;
@@ -45,14 +44,12 @@ type CLAIM_REWARD_RETURN : struct { USER sender;};
 type PLAY_STATE : struct { STATE state;PLAY_PAR playPar;};
 type CLAIM_REWARD_STATE : struct { STATE state;CLAIM_REWARD_PAR claimRewardPar;};
 function initRedeemableEther (nat n) -> LIST_REDEEMABLE_ETHER{
-
 		LIST_REDEEMABLE_ETHER l := empty;
       		for (i in ADDRESS range 1 .. ADDRESS (n)) l := {i,UINT(0)} & l;
       		return l;
    
 }
 function getElement (LIST_REDEEMABLE_ETHER lre, ADDRESS adr) -> STRUCT_REDEEMABLE_ETHER{
-
 	   	int i := 0;
 	   	while (i<lre'size and lre[i].adr!=adr) i := i+1;
 	   	if(i<lre'size)
@@ -62,7 +59,6 @@ function getElement (LIST_REDEEMABLE_ETHER lre, ADDRESS adr) -> STRUCT_REDEEMABL
 
 }
 function getIndex (LIST_REDEEMABLE_ETHER lre, ADDRESS adr) -> int{
-
 	   	int i := 0;
 	   	while (i<lre'size and lre[i].adr!=adr) i := i+1;
 	   	if(i<lre'size)
@@ -268,8 +264,7 @@ transition PLAY_t2 {
 		PLAY_P4 : <( {sp.state :: (redeemableEther := nlre),sp.playPar} )>;
 	}
 	let {
-		
-			STRUCT_REDEEMABLE_ETHER re := getElement(sp.state.redeemableEther,sp.playPar.sender.adr);
+					STRUCT_REDEEMABLE_ETHER re := getElement(sp.state.redeemableEther,sp.playPar.sender.adr);
 			STRUCT_REDEEMABLE_ETHER nre := re :: (uint := re.uint + sp.state.mileStone1Reward);
 			LIST_REDEEMABLE_ETHER nlre := sp.state.redeemableEther :: ([getIndex(sp.state.redeemableEther,sp.playPar.sender.adr)] := nre);
 	
@@ -283,8 +278,7 @@ transition PLAY_t3 {
 		PLAY_P4 : <( {sp.state :: (redeemableEther := nlre),sp.playPar} )>;
 	}
 	let {
-		
-			STRUCT_REDEEMABLE_ETHER re := getElement(sp.state.redeemableEther,sp.playPar.sender.adr);
+					STRUCT_REDEEMABLE_ETHER re := getElement(sp.state.redeemableEther,sp.playPar.sender.adr);
 			STRUCT_REDEEMABLE_ETHER nre := re :: (uint := re.uint + sp.state.mileStone2Reward);
 			LIST_REDEEMABLE_ETHER nlre := sp.state.redeemableEther :: ([getIndex(sp.state.redeemableEther,sp.playPar.sender.adr)] := nre);
 	
@@ -298,8 +292,7 @@ transition PLAY_t4 {
 		PLAY_P4 : <( {sp.state :: (redeemableEther := nlre),sp.playPar} )>;
 	}
 	let {
-		
-			STRUCT_REDEEMABLE_ETHER re := getElement(sp.state.redeemableEther,sp.playPar.sender.adr);
+					STRUCT_REDEEMABLE_ETHER re := getElement(sp.state.redeemableEther,sp.playPar.sender.adr);
 			STRUCT_REDEEMABLE_ETHER nre := re :: (uint := re.uint + sp.state.finalReward);
 			LIST_REDEEMABLE_ETHER nlre := sp.state.redeemableEther :: ([getIndex(sp.state.redeemableEther,sp.playPar.sender.adr)] := nre);
 	

@@ -1,10 +1,32 @@
-#include "../include/translator.hpp"
-#include "../include/Utils.hpp"
-#include "../include/rapidxml/rapidxml.hpp"
+#include "./translator.hpp"
+#include "../../include/Utils.hpp"
+#include "../../include/rapidxml/rapidxml.hpp"
 #include <iostream>
 #include <fstream>
 
+using namespace HELENA;
 namespace DCR2CPN {
+
+bool isSubOf2(const std::string& ParentNameInput, const std::string& EventNameInput, std::vector<DCR2CPN::Event> listEvent){
+    std::string ParentName = ParentNameInput;
+    std::string EventName = EventNameInput;
+    if(ParentNameInput=="") return false;
+    else{
+    for(auto itrEvent = listEvent.begin() ; itrEvent != listEvent.end(); itrEvent++){
+                    DCR2CPN::Event e = *itrEvent;
+                    if(e.getID() == EventName){
+                           if(e.getParent() == ParentNameInput){
+                               return true;
+                           }else{
+                             return (isSubOf2(ParentNameInput,e.getParent(),listEvent));
+                           } 
+
+                    }
+
+            }
+    }
+    return false;
+}
 
 /**
  * The class to read a DCR xml input file to an object of DCR
@@ -173,7 +195,7 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
             if(source.getType()=="nesting" && target.getType()=="nesting"){
                 for(auto itrERE = listERE.begin(); itrERE!=listERE.end(); itrERE++){
                     ERE ere =*itrERE;
-                    if(Utils::isSubOf2(sourceName,ere.getSource().getID(),listEvent) && Utils::isSubOf2(targetName,ere.getTarget().getID(),listEvent) ){ 
+                    if(isSubOf2(sourceName,ere.getSource().getID(),listEvent) && isSubOf2(targetName,ere.getTarget().getID(),listEvent) ){ 
                         std::vector<std::string> a = itrERE->getLisRelation();
                         a.push_back(itrRelation->getType());
                         itrERE->setListRelation(a); 
@@ -187,7 +209,7 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
             else if(source.getType()=="nesting"){
                for(auto itrERE = listERE.begin(); itrERE!=listERE.end(); itrERE++){
                     ERE ere =*itrERE;
-                    if(Utils::isSubOf2(sourceName,ere.getSource().getID(),listEvent) && ere.getTarget().getID() == targetName){
+                    if(isSubOf2(sourceName,ere.getSource().getID(),listEvent) && ere.getTarget().getID() == targetName){
                          std::vector<std::string> a = itrERE->getLisRelation();
                         a.push_back(itrRelation->getType());
                         itrERE->setListRelation(a); 
@@ -197,7 +219,7 @@ DCRClass readDCRFromXML(const std::string& DCR_XML_FILE){
             }else if(target.getType()=="nesting"){
                   for(auto itrERE = listERE.begin(); itrERE!=listERE.end(); itrERE++){
                     ERE ere =*itrERE;
-                    if(ere.getSource().getID()==sourceName && Utils::isSubOf2(targetName,ere.getTarget().getID(),listEvent)){
+                    if(ere.getSource().getID()==sourceName && isSubOf2(targetName,ere.getTarget().getID(),listEvent)){
                         std::vector<std::string> a = itrERE->getLisRelation();
                         a.push_back(itrRelation->getType());
                         itrERE->setListRelation(a); 
@@ -343,7 +365,7 @@ TransitionNodePtr SubNet::createTransition(){
         guard_string << cMilestone[cMilestone.size()-1];
         guard_string << "|) = 1)";
     }
-    
+    guard_string << ";";
     trans->set_guard(guard_string.str());
 
     return trans;
@@ -384,8 +406,8 @@ NetNodePtr Translator::translate(){
     net->set_name("test");
 
     generateInitColours();
-    generateInitPlaces();
     generateInitFunctions();
+    generateInitPlaces();
 
     
     std::map<std::string, bool> events_self_response;
@@ -395,7 +417,7 @@ NetNodePtr Translator::translate(){
     /** Create a subnet corresponding to an event in the dcr events
      */
     for(int i = 0; i< dcr_events.size(); i++){
-        std::string subnet_name = Utils::removeNoneAlnum(dcr_events[i].getID());
+        std::string subnet_name = removeNoneAlnum(dcr_events[i].getID());
         events_self_response[subnet_name] = false;
         
         SubNetPtr subnet = std::make_shared<SubNet>(subnet_name,std::to_string(i));
@@ -407,8 +429,8 @@ NetNodePtr Translator::translate(){
      */
     std::vector<ERE> dcr_ere = dcrClass.getERE();
     for(auto it = dcr_ere.begin(); it != dcr_ere.end(); it++) {
-        SubNetPtr eventSource = get_subnet_by_name(Utils::removeNoneAlnum(it->getSource().getID()));
-        SubNetPtr eventDest = get_subnet_by_name(Utils::removeNoneAlnum(it->getTarget().getID()));
+        SubNetPtr eventSource = get_subnet_by_name(removeNoneAlnum(it->getSource().getID()));
+        SubNetPtr eventDest = get_subnet_by_name(removeNoneAlnum(it->getTarget().getID()));
         if(eventSource != nullptr && eventDest != nullptr){
             std::vector<std::string> listRelation = it->getLisRelation();
             for(auto rel = listRelation.begin(); rel != listRelation.end(); rel++){
@@ -419,9 +441,8 @@ NetNodePtr Translator::translate(){
                 }else if((*rel).compare("response") == 0){
                     if(eventSource->get_name().compare(eventDest->get_name()) == 0){
                         events_self_response[eventSource->get_name()] = true;
-                    }else{
-                        eventSource->add_responsecvparams("{"+eventDest->get_id()+",1}");
                     }
+                    eventSource->add_responsecvparams("{"+eventDest->get_id()+",1}");
                 }else if((*rel).compare("condition") == 0){
                     eventDest->add_ccondition("{include["+eventSource->get_id()+"],execute["+eventSource->get_id()+"]}");
                 }else if((*rel).compare("milestone") == 0){
@@ -444,7 +465,8 @@ NetNodePtr Translator::translate(){
      */
     for(auto it = vsubnets.begin(); it != vsubnets.end(); ++it){
         TransitionNodePtr trans = (*it)->createTransition();
-        net->add_transition(trans);
+        net->add_member(std::make_shared<CommentNode>("\n/*\n * Function: "+trans->get_name()+"\n */\n"));
+        net->add_member(trans);
     }
     
     return net;
@@ -460,24 +482,24 @@ void Translator::generateInitColours(){
     ColorNodePtr boolean = std::make_shared<ColorNode>();
     boolean->set_name("boolean");
     boolean->set_typeDef("range 0 .. 1");
-    net->add_color(boolean);
+    net->add_member(boolean);
 
     ColorNodePtr count = std::make_shared<ColorNode>();
     count->set_name("count");
     count->set_typeDef("range 0 .. N");
-    net->add_color(count);
+    net->add_member(count);
 
     SubColorNodePtr event_id = std::make_shared<SubColorNode>(count);
     event_id->set_name("event_id");
     event_id->set_typeDef("range 0 .. (count'last-1)");
-    net->add_color(event_id);
+    net->add_member(std::static_pointer_cast<ColorNode>(event_id));
 
     ListColorNodePtr marking_value = std::make_shared<ListColorNode>();
     marking_value->set_name("marking_value");
     marking_value->set_index_type("event_id");
     marking_value->set_element_type("boolean");
     marking_value->set_capacity("N");
-    net->add_color(marking_value);
+    net->add_member(std::static_pointer_cast<ColorNode>(marking_value));
 
     StructColorNodePtr mvalue = std::make_shared<StructColorNode>();
     mvalue->set_name("mvalue");
@@ -491,14 +513,14 @@ void Translator::generateInitColours(){
     vl->set_name("vl");
     vl->set_type("boolean");
     mvalue->add_component(vl);
-    net->add_color(mvalue);
+    net->add_member(std::static_pointer_cast<ColorNode>(mvalue));
 
     ListColorNodePtr vchange = std::make_shared<ListColorNode>();
     vchange->set_name("vchange");
     vchange->set_index_type("event_id");
     vchange->set_element_type("mvalue");
     vchange->set_capacity("N");
-    net->add_color(vchange);
+    net->add_member(std::static_pointer_cast<ColorNode>(vchange));
 
     StructColorNodePtr cvalue = std::make_shared<StructColorNode>();
     cvalue->set_name("cvalue");
@@ -506,20 +528,20 @@ void Translator::generateInitColours(){
     ComponentNodePtr cv1 = std::make_shared<ComponentNode>();
     cv1->set_name("cv1");
     cv1->set_type("boolean");
-    cvalue->add_component(id);
+    cvalue->add_component(cv1);
 
     ComponentNodePtr cv2 = std::make_shared<ComponentNode>();
     cv2->set_name("cv2");
     cv2->set_type("boolean");
     cvalue->add_component(cv2);
-    net->add_color(cvalue);
+    net->add_member(std::static_pointer_cast<ColorNode>(cvalue));
 
     ListColorNodePtr vcondition = std::make_shared<ListColorNode>();
     vcondition->set_name("vcondition");
     vcondition->set_index_type("event_id");
     vcondition->set_element_type("cvalue");
     vcondition->set_capacity("N");
-    net->add_color(vcondition);
+    net->add_member(std::static_pointer_cast<ColorNode>(vcondition));
 }
 
 /** Generate the initial places for the net
@@ -540,7 +562,8 @@ void Translator::generateInitPlaces(){
     inc += "1";
 
     marking->set_init("<(|"+exer+"|,|"+exer+"|,|"+inc+"|)>");
-    net->add_place(marking);
+    net->add_member(std::make_shared<CommentNode>("\n/*\n * Function: state\n */\n"));
+    net->add_member(marking);
 }
 /** Generate the initial functions for the net
  */
@@ -548,20 +571,36 @@ void Translator::generateInitFunctions(){
     FunctionNodePtr cvalue = std::make_shared<FunctionNode>();
     cvalue->set_name("cvalue");
     cvalue->set_returnType("marking_value");
+    ParamNodePtr mv = std::make_shared<ParamNode>();
+    mv->set_name("mv");
+    mv->set_type("marking_value");
+    cvalue->add_parameter(mv);
+    ParamNodePtr lc = std::make_shared<ParamNode>();
+    lc->set_name("lc");
+    lc->set_type("vchange");
+    cvalue->add_parameter(lc);
     cvalue->set_body("\tmarking_value m := empty;\n\tfor(v in mv){\n\t\tm := m & v;\n\t}\n\tfor(v in lc){\n\t\tm[v.id] := v.vl;\n\t}\n\treturn m;");
-    net->add_function(cvalue);
+    net->add_member(cvalue);
 
     FunctionNodePtr confirm_condition = std::make_shared<FunctionNode>();
     confirm_condition->set_name("confirm_condition");
     confirm_condition->set_returnType("boolean");
+    ParamNodePtr vc_c = std::make_shared<ParamNode>();
+    vc_c->set_name("vc");
+    vc_c->set_type("vcondition");
+    confirm_condition->add_parameter(vc_c);
     confirm_condition->set_body("\tboolean ret := 1;\n\tfor(v in vc){\n\t\tif(v.cv1 = 1 and v.cv2 = 0) ret := 0;\n\t}\n\treturn ret;");
-    net->add_function(confirm_condition);
+    net->add_member(confirm_condition);
 
     FunctionNodePtr confirm_milestone = std::make_shared<FunctionNode>();
     confirm_milestone->set_name("confirm_milestone");
     confirm_milestone->set_returnType("boolean");
-    confirm_milestone->set_body("\tboolean ret := 1;\b\tfor(v in vc){\n\t\tif(v.cv1 = 1 and v.cv2 = 1) ret := 0;\n\t}\n\treturn ret;");
-    net->add_function(confirm_milestone);
+    ParamNodePtr vc_m = std::make_shared<ParamNode>();
+    vc_m->set_name("vc");
+    vc_m->set_type("vcondition");
+    confirm_milestone->add_parameter(vc_m);
+    confirm_milestone->set_body("\tboolean ret := 1;\n\tfor(v in vc){\n\t\tif(v.cv1 = 1 and v.cv2 = 1) ret := 0;\n\t}\n\treturn ret;");
+    net->add_member(confirm_milestone);
 }
 
 }

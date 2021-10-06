@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {GetVulnerabilities} from "../../services/data"
+import {GetLtl, DeleteLtl} from "../../services/data"
 export default {
     data(){
         return {
@@ -29,23 +29,33 @@ export default {
         }
     },
     mounted(){
-        this.list_vuls = GetVulnerabilities()
+      this.initData()
     },
     methods:{
+        async initData(){
+             this.list_vuls = await GetLtl() 
+        },
         goAdd(){
             this.$router.push({name: "AddVul" ,params: {parent_path: "/list-vul"}})
         },
         editVul(id){
             this.$router.push({name: "EditVul" ,params: {vul_id: id, parent_path: "/list-vul"}})
         },
-        deleteVul(id){
+        async deleteVul(id){
+             if(!confirm(`Do you want to delete LTL `)){
+        return
+      }
+      const response = await DeleteLtl(id);
+      if(response.status === 200){
+          await this.initData()
+      }
             for (var i=0; i<this.list_vuls.length; i++) {
                 if (this.list_vuls[i].id == id) {
                     this.list_vuls.splice(i, 1);
                     break
                 }
             }
-        }
+        },
     },
     created(){
         //this.list_vuls = {function to get vulnerabilities from DB}

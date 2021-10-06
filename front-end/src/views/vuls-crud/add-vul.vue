@@ -26,6 +26,7 @@
 
 <script>
 import LTLEditor from "../../components/LTLEditor.vue"
+import {CreateLtl} from "../../services/data"
 export default {
   data() {
     return {
@@ -43,13 +44,13 @@ export default {
       updateCode(code){
           this.code = code
       },
-    Save(){
-        //   Save LTL vulnerability into database
-    },
-
-    clickHandler(action){
+     async clickHandler(action){
         if(action == "save"){
-            this.Save()
+          if (this.name === undefined||this.code === undefined||this.description === undefined){
+          return
+        }
+        const response=  await CreateLtl(this.name, this.description, this.code)
+        console.log(response)
             this.$router.push(this.$route.params.parent_path);
         } 
         else if(action == "cancel"){
