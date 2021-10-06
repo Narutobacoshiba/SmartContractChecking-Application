@@ -8,8 +8,8 @@ db = mysql.connector.connect(
 mycursor = db.cursor()
 sqlFomular = "INSERT INTO ContextType (name,description) VALUES (%s,%s)"
 multi = [
-    ("Context type 1","this is Context type 1"),
-    ("Context type 2","this is Context type 2"),
+    ("DCR","This is the declarative context"),
+    ("Free-context","This is free-context, it mean the system generate a default context"),
     ("Context type 3","this is Context type 3"),
     ]
 mycursor.executemany(sqlFomular,multi)
