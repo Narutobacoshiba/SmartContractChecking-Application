@@ -19,19 +19,19 @@
             <tbody>
               <tr>
                 <th scope="row">1</th>
-                <td><router-link :to="'checkreentrancydetail'">Mark</router-link></td>
+                <td><router-link :to="'checkreentrancydetail'" tag="a" class="lk">Mark</router-link></td>
                 <td>Otto</td>
                 <td>@mdo</td>
               </tr>
               <tr>
                 <th scope="row">2</th>
-                <td><router-link :to="'checkreentrancydetail'">Mark</router-link></td>
+                <td><router-link :to="'checkreentrancydetail'" tag="a" class="lk">Mark</router-link></td>
                 <td>Thornton</td>
                 <td>@fat</td>
               </tr>
               <tr>
                 <th scope="row">3</th>
-                <td><router-link :to="'checkreentrancydetail'">Mark</router-link></td>
+                <td><router-link :to="'checkreentrancydetail'" tag="a" class="lk">Mark</router-link></td>
                 <td>Larry the Bird</td>
                 <td>@twitter</td>
               </tr>
@@ -134,5 +134,15 @@ h1 {
 
 .header {
   background-color: rgb(144, 208, 243);
+}
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+a:hover{
+  color:red;
+  text-decoration: underline red wavy;
 }
 </style>
