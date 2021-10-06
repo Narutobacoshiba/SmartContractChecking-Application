@@ -15,6 +15,7 @@ export default {
       sngPage: {"Index":true,"ListSc":true, "RoadMap": true, "ListContext": true, "ListVul": true}
     }
   },
+  //something
   computed: {
     showNavigationBar(){
       if(this.$route.name in this.sngPage){
