@@ -8,7 +8,7 @@
     
      
    <div class="grey">
-        <span>Checked information</span>
+        <span>Smart Contract</span>
       </div>
 
     <div class="blue">
