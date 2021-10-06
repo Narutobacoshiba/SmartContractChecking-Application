@@ -286,32 +286,7 @@ export default {
     background-color:#d9edf7;
     color: #4ea8d6;
 }
-#sc-check{
-   cursor: pointer;
-   width: 15%;
-    height: 2%;
-    background-color: white;
-    text-align: center;
-    color: black;
-    font-size: 13px;
-    line-height: 22px;
-    font-weight: 600;
-    padding: 4px 3px;
-    border: 1px solid;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 4%;
-}
-#sc-check:hover {
-    background-color: #2196f3;
-}
-#action{
-  margin : 0 auto;
-  margin-top: 4%;
-   display: flex;
-  justify-content: center;
-  width: 60%;
-}
+
 #processing-btn{
     margin: 40px;
     text-align: center;
@@ -328,11 +303,7 @@ export default {
     border-radius: 3px;
     text-align: center;
     background-color: #f5f5f5;
-}
-#generating .progress, #checking .progress{
-    width: 100%;
-    margin: 10px 0;
-    height: 20px;
+    width: 80%;
 }
 #generating, #checking{
     margin: auto;
