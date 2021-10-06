@@ -1,14 +1,18 @@
 <template>
-  <div class="container">
-    <div class="smart">
-      <h1>List of Checked Transctions</h1>
+  <div id="main">
+
+    <div id="header">
+    <h1>List of Checked Transctions</h1>
+    </div>
+
       <div class="grey">
         <span>Checked information</span>
       </div>
+
       <div class="blue">
         <div class="atable">
           <table class="table table-striped table-hover table-sm">
-            <thead class="header">
+            <thead class="table-inside">
               <tr>
                 <th style="width: 10%" scope="col">#</th>
                 <th style="width: 40%" scope="col">Batch Name</th>
@@ -39,37 +43,10 @@
           </table>
         </div>
       </div>
-    </div>
-    <div class="Button">
-      <div class="row">
-        <div class="col-sm-8">
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="routing('addsc')"
-          >
-            Add Smart Contracts
-          </button>
-        </div>
-        <div class="col-sm-2">
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="routing('back')"
-          >
-            Back
-          </button>
-        </div>
-        <div class="col-sm-2">
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="routing('next')"
-          >
-            Next
-          </button>
-        </div>
-      </div>
+    <div id="action">
+        <div id ="btn-addsc" @click="routing('addsc')">Add Smart Contracts</div>
+        <div id ="btn-backnext" @click="routing('back')">Back</div>
+        <div id ="btn-backnext" @click="routing('next')">Next</div>
     </div>
   </div>
 </template>
@@ -93,9 +70,25 @@ export default {
 </script>
 
 <style scoped>
+.main{
+  font-family: Arial, Helvetica, sans-serif;
+}
+#header {
+  text-align: center;
+  margin-bottom: 3%;
+  margin-top: 3%;
+}
+.table-inside{
+  background-color: #d9edf7;
+  color: #3a7694;
+}
 .blue {
-  width: 100%;
-  height: 450px;
+  border-radius: 10px;
+  width: 80%; 
+  text-align: center;
+  margin-left: 10%;
+  margin-right: 30%;
+  height: 470px;
   color: black;
 }
 .grey {
@@ -104,36 +97,81 @@ export default {
   color: black;
 }
 .grey {
-  margin-left: 20px;
+  margin-left: 11%;
   margin-bottom: 25px;
   background: white;
   z-index: 3;
   position: relative;
 }
 .blue {
-  border: 1px solid black;
+  border: 1px solid #d9edf7;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   margin-top: -40px;
   background: none;
   z-index: 2;
   position: relative;
-  border-radius: 10px;
 }
+
 h1 {
   text-align: center;
+  font-size: 35px;
+  font-weight: bold;
 }
 
 .atable {
-  margin-left: 25px;
-  margin-top: 20px;
-  margin-right: 25px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  margin-left: 50px;
+  margin-top: 50px;
+  margin-right: 50px;
+  padding-bottom: 15%;;
+  border: 1px solid #d9edf7;
+  border-radius: 10px;
 }
-
+#btn-addsc {
+  cursor: pointer;
+  width: 25%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#btn-addsc:hover {
+  background-color: #1079cf;
+  color: white;
+}
+#btn-backnext{
+  cursor: pointer;
+  width: 12%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#btn-backnext:hover {
+  background-color: #1079cf;
+  color: white;
+}
+#action {
+  margin: 0 auto;
+  margin-top: 4%;
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+}
 .Button {
   margin-top: 80px;
-}
-
-.header {
-  background-color: rgb(144, 208, 243);
 }
 
 a{
@@ -144,5 +182,8 @@ a{
 a:hover{
   color:red;
   text-decoration: underline red wavy;
+}
+div#main {
+    padding-bottom: 10%;
 }
 </style>
