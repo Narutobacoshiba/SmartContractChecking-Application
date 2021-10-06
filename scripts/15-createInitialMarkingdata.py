@@ -2,7 +2,7 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '22042001',
+    passwd = '123456',
     database="soliditycpn"
 )
 mycursor = db.cursor()

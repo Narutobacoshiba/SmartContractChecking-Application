@@ -286,7 +286,6 @@ export default {
     background-color:#d9edf7;
     color: #4ea8d6;
 }
-
 #processing-btn{
     margin: 40px;
     text-align: center;

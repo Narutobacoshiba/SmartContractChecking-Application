@@ -3,7 +3,7 @@ import datetime
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '22042001',
+    passwd = '123456',
     database="soliditycpn"
 )
 def InsertIMG(FilePath):
