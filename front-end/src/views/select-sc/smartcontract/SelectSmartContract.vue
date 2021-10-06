@@ -184,6 +184,7 @@ export default {
   position: relative;
 }
 .blue {
+  border-radius: 10px;
   border: 1px solid black;
   margin-top: -40px;
   background: none;

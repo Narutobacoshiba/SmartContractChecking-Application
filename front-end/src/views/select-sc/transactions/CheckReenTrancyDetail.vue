@@ -102,6 +102,7 @@ export default {
   background: none;
   z-index: 2;
   position: relative;
+  border-radius: 10px;
 }
 h1 {
   text-align: center;
