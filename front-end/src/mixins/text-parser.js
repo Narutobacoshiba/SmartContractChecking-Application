@@ -27,8 +27,15 @@ function operatorHighLight(str){
     return "<span style='color:#78953f;' contenteditable=''>"+str+"</span>"
 }
 
-function singleSelectionHighLight(str){
-    return "<a class='select-variable' style='color:#c47635; cursor: pointer;' contenteditable=''>"+str+"</a>"
+function singleSelectionHighLight(str,spec){
+    let type = ""
+    if(spec[0] == "."){
+        type = spec.substring(1,spec.length)
+    }
+    if(!(type == "var" || type == "func" || type == "arg")){
+        type = ""
+    }
+    return "<a class='select-variable' style='color:#c47635; cursor: pointer;' contenteditable='' type='"+type+"'>"+str+"</a>" + "<span style='color:#d2416e;' contenteditable=''>"+spec+"</span>"
 }
 
 function nonamePropositionHighLight(str){
@@ -44,7 +51,18 @@ function handleSingleStatement(opb){
         }else if(isOperatorString(op)){
             result += operatorHighLight(op)
         }else if(op[0] == "'"){
-            result += singleSelectionHighLight(op)
+            let value = ""
+            let spec = ""
+            let p = op.split(op[0])
+            if(p.length == 3 && p[2].length > 0){
+                spec = p[2]
+            }
+            if(p.length == 3){
+                value = "'" + p[1] + "'"
+            }else if(p.length == 2){
+                value = "'" + p[1]
+            }
+            result += singleSelectionHighLight(value,spec)
         }else if(op[0] == "{"){
             result += nonamePropositionHighLight(op)
         }else{
@@ -74,6 +92,7 @@ export function analyseLTLCode(code) {
             if(isEscapeCharacter(line[i]) || line[i] == "(" || line[i] == ")"){
                 if(op.length > 0){
                     opb.push(op)  
+                    op = ""
                 }
 
                 if(line[i] == "'" || line[i] == "\""){
@@ -86,8 +105,14 @@ export function analyseLTLCode(code) {
                     }
                     if(i < line.length){
                         op += line[i]
+                        if(line[i+1] != "."){
+                            opb.push(op)
+                            op = ""       
+                        }
+                    }else{
+                        opb.push(op)
+                        op = ""
                     }
-                    opb.push(op)
                 }else if(line[i] == "{"){
                     op = line[i]
                     i++
@@ -99,10 +124,10 @@ export function analyseLTLCode(code) {
                         op += line[i]
                     }
                     opb.push(op)
+                    op = ""
                 }else{
                     opb.push(line[i])
                 }
-                op = ""
             }else{
                 op += line[i]
             }
