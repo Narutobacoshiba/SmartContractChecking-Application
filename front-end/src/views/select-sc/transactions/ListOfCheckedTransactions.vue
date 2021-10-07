@@ -17,23 +17,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td><router-link :to="'checkreentrancydetail'" tag="a" class="lk">Mark</router-link></td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td><router-link :to="'checkreentrancydetail'" tag="a" class="lk">Mark</router-link></td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td><router-link :to="'checkreentrancydetail'" tag="a" class="lk">Mark</router-link></td>
-                <td>Larry the Bird</td>
-                <td>@twitter</td>
+              <tr v-for="(item, index) in getListTransaction" v-bind:key="index" >
+                <th scope="row">{{ index +1}}</th>
+                <td>
+                  <router-link :to="'checkreentrancydetail'" tag="a" class="lk"
+                    >{{ item.name}}</router-link
+                  >
+                </td>
+                <td>{{item.checkeddate}}</td>
+                <td>{{item.description}}</td>
               </tr>
             </tbody>
           </table>
@@ -75,7 +67,14 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+//import axios from "axios";
 export default {
+  data() {
+    return {
+      info: [],
+    };
+  },
   methods: {
     routing(param) {
       if (param == "next") {
@@ -84,12 +83,20 @@ export default {
       if (param == "addsc") {
         this.$router.push({ name: "SelectSmartContract" });
       }
-      if ((param == "back")) {
+      if (param == "back") {
         this.$router.push({ name: "Index" });
       }
     },
+    ...mapActions(['getListTran']),
   },
-  
+
+  computed :{
+    ...mapGetters(['getListTransaction'])
+  },
+
+  created() {
+    this.getListTran();
+  },
 };
 </script>
 
@@ -137,13 +144,13 @@ h1 {
   background-color: rgb(144, 208, 243);
 }
 
-a{
+a {
   text-decoration: none;
   color: black;
 }
 
-a:hover{
-  color:red;
+a:hover {
+  color: red;
   text-decoration: underline red wavy;
 }
 </style>
