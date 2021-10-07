@@ -19,12 +19,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr  v-for="(item, index) in getlistSmartContract" 
+            <tr  v-for="(item, index) in Common(getlistSmartContract)" 
                   v-bind:key="index"
                   >
-              <th scope="row" v-if="item.type === 'Common'" >{{k}}</th>
-              <td v-if="item.type === 'Common'">{{item.name}}</td>
-              <td v-if="item.type === 'Common'">
+              <th scope="row" >{{index+1}}</th>
+              <td>{{item.name}}</td>
+              <td>
                 <input type="checkbox" id="one" value="One" v-model="picked" />
               </td>
             </tr>
@@ -47,11 +47,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in getlistSmartContract" 
+            <tr v-for="(item, index) in Private(getlistSmartContract)" 
                   v-bind:key="index">
-              <th scope="row" v-if="item.type === 'Private'"> <li></li> </th>
-              <td v-if="item.type === 'Private'">{{item.name}}</td>
-              <td v-if="item.type === 'Private'">
+              <th scope="row"> {{index+1}} </th>
+              <td>{{item.name}}</td>
+              <td>
                 <input type="checkbox" id="one" value="One" v-model="picked" />
               </td>
             </tr>
@@ -101,12 +101,24 @@ export default {
       }
     },
     ...mapActions(["setListSmartContract"]),
+    Private: function (arrays) {
+                return arrays.filter(function (array) {
+                  return array.type === "Private"
+              });
+            },
+    Common: function (arrays) {
+                return arrays.filter(function (array) {
+                  return array.type === "Common"
+              });
+            },       
   },
   created() {
     this.setListSmartContract();
   },
   computed: {
     ...mapGetters(["getlistSmartContract"]),
+    
+            // return k;
   },
   components: {
     Popup,
