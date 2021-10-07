@@ -29,10 +29,10 @@
             </div>   
 
              <div id="i-action">
-                <div id="cancel-button" @click="CancelUl">
+                <div id="cancel-button" @click="routing('cancel')">
                     Cancel
                 </div>
-                <div id="update-button" @click="SaveUl">
+                <div id="update-button" @click="routing('save')">
                     Save
                 </div>
             </div>       
@@ -50,14 +50,6 @@ export default {
         }
     },
   methods:{
-    CancelUl(){
-        this.$emit("closeComponents")
-    },
-    SaveUl(){
-        if(confirm("Are you sure to upload this context?")){
-            this.CancelUl()
-        }
-    },
     routing(param){
       if(param=='save'){
         this.$router.push({name:"ContextOfSmartContract"})
