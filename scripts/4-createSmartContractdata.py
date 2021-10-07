@@ -2,13 +2,13 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '123456789',
+    passwd = '123456',
     database="soliditycpn"
 )
 mycursor = db.cursor()
 sqlFomular = "INSERT INTO SmartContract (name,type,content,description,aid) VALUES (%s,%s,%s,%s,%s)"
 multi = [
-    ("EtherGame","Pending","""
+    ("EtherGame","pending","""
     uint public payoutMileStone1 = 3 ether;
     uint public mileStone1Reward = 2 ether;
     uint public payoutMileStone2 = 5 ether;
@@ -44,7 +44,7 @@ multi = [
         redeemableEther[msg.sender] = 0;
         msg.sender.transfer(redeemableEther[msg.sender]);
     }""","This is discription ",1),
-    ("indAuctionbl","Private","""
+    ("indAuctionbl","private","""
     struct Bid {
     bytes32 blindedBid;
     uint deposit;
@@ -192,7 +192,7 @@ multi = [
         beneficiary.transfer(this.balance);
     }
     ""","This is discription ",2),
-    ("OpenAddressLottery","Common","""
+    ("OpenAddressLottery","common","""
     struct SeedComponents{
         uint component1;
         uint component2;
@@ -271,7 +271,7 @@ multi = [
             participate();
     }
     ""","This is discription ",3),
-    ("EtherLotto","Pending","""
+    ("EtherLotto","pending","""
     
     // Amount of ether needed for participating in the lottery.
     uint constant TICKET_AMOUNT = 10;
@@ -317,7 +317,7 @@ multi = [
         }
     }
     ""","This is discription ",4),
-    ("SimpleDice","Common","""
+    ("SimpleDice","common","""
     
   struct gamblerarray {
       address etherAddress;
@@ -448,7 +448,7 @@ multi = [
       FeeRate = new_feerate;
   }
     ""","This is discription ",5),
-    ("Lotto","Private","""
+    ("Lotto","private","""
     uint constant public blocksPerRound = 6800;
     // there are an infinite number of rounds (just like a real lottery that takes place every week). `blocksPerRound` decides how many blocks each round will last. 6800 is around a day.
 

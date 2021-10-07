@@ -1,48 +1,146 @@
 <template>
-  <div id="ssc-body">
-    <div id="ssc-header">Select Smart Contracts</div>
-    <div id="ssc-selected">
-      <div id="sscs-body">
-        <div id="sscs-header">
-          <div id="sscsh-name">Selected Smart Contracts</div>
-        </div>
-        <div id="sscs-table">
-          <div class="noneHandler">
-            <p>
-              Please click on the
-              <a id="link-text"
-                >Add Smart Contracts</a
-              >
-              to select your Smart Contracts for checking!
-            </p>
-          </div>
-        </div>
-        <div id="ssc-action">
-          <div id="first-action">
-            <div id="ssc-add" @click="routing('add')">Add</div>
-          </div>
-          <div id="second-action">
-            <div id="ssc-upload" @click="routing('uploadfile')">
-              Upload File
-            </div>
-          </div>
-          <div id="third-action">
-            <div id="ssc-back" @click="routing('back')">Back</div>
-          </div>
-        </div>
-      </div>
+  <div id="main">
+    <div id="header">
+      <h1>Select Smart Contracts</h1>
     </div>
+    
+    <div class="grey">
+      <span>Common Smart Contracts</span>
+    </div>
+
+    <div class="blue">
+      <div class="atable">
+        <table class="table table-striped table-hover table-sm">
+          <thead class= "table-inside">
+            <tr>
+              <th style="width: 20%" scope="col">#</th>
+              <th style="width: 60%" scope="col">Smart Contract Name</th>
+              <th style="width: 20%" scope="col">Select</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>EtherGame</td>
+              <td>
+                <input
+                  type="checkbox"
+                  id="one"
+                  value="One"
+                  v-model="picked"
+                />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>EtherLotto</td>
+              <td>
+                <input
+                  type="checkbox"
+                  id="two"
+                  value="Two"
+                  v-model="picked"
+                />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>blindAuction</td>
+              <td>
+                <input
+                  type="checkbox"
+                  id="the"
+                  value="Three"
+                  v-model="picked"
+                />
+              </td>
+            </tr>
+            </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grey">
+          <span>Private Smart Contracts</span>
+        </div>
+        <div class="blue">
+          <div class="atable">
+            <table class="table table-striped table-hover table-sm">
+              <thead class="table-inside">
+                <tr>
+                  <th style="width: 20%" scope="col">#</th>
+                  <th style="width: 60%" scope="col">Smart Contract Name</th>
+                  <th style="width: 20%" scope="col">Select</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>PSC1</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id="one"
+                      value="One"
+                      v-model="picked"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>PSC2</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id="two"
+                      value="Two"
+                      v-model="picked"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>PSC3</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id="the"
+                      value="Thee"
+                      v-model="picked"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <div id="action">
+        <div id ="btn" @click="routing('add')">Add</div>
+        <div id ="btn" v-on:click="load">Upload File</div>
+        <div id ="btn" @click="routing('back')">Back</div>
+      </div>
+    
+    <popup v-bind:isOpen="isOpen"
+			v-on:clickdahieu="dahieu"/>
   </div>
+  <!-- </div> -->
 </template>
 
 <script>
+import Popup from './Popup.vue';
 export default {
   data() {
     return {
-      
+      isOpen : false,
     };
   },
   methods: {
+    load(){
+			this.isOpen = true;
+		},
+    dahieu(){
+			this.isOpen = false;
+		},
     routing(param) {
       if (param == "add") {
         this.$router.push({ name: "ContextOfSmartContract" });
@@ -55,238 +153,97 @@ export default {
       }
     },
   },
+  components: { 
+    Popup
+  }
 };
 </script>
 
 <style scoped>
-#ssc-body {
-  width: 100%;
-  height: 530px;
+.main{
+  font-family: Arial, Helvetica, sans-serif;
 }
-#ssc-header {
-  margin-top: 20px;
+#header {
+  text-align: center;
+  margin-bottom: 3%;
+  margin-top: 3%;
+}
+.table-inside{
+  background-color: #d9edf7;
+  color: #3a7694;
+}
+.blue {
+  border-radius: 10px;
+  width: 80%; 
+  text-align: center;
+  margin-left: 10%;
+  margin-right: 30%;
+  height: 270px;
+  color: black;
+}
+.grey {
+  width: 190px;
+  height: 30px;
+  color: black;
+}
+.grey {
+  margin-left: 11%;
+  margin-bottom: 25px;
+  background: white;
+  z-index: 3;
+  position: relative;
+}
+.blue {
+  border: 1px solid #d9edf7;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  margin-top: -40px;
+  background: none;
+  z-index: 2;
+  position: relative;
+}
+
+h1 {
   text-align: center;
   font-size: 35px;
   font-weight: bold;
-  margin-bottom: 20px;
-}
-#ssc-selected {
-  width: 60%;
-  margin: 0 auto;
 }
 
-#sscs-body {
-  height: 350px;
-  width: 100%;
+.atable {
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  margin-left: 50px;
+  margin-top: 30px;
+  margin-right: 50px;
+  padding-bottom: 5%;;
   border: 1px solid #d9edf7;
-  border-radius: 6px;
+  border-radius: 10px;
 }
-#sscs-header {
-  width: 100%;
-  height: 40px;
-  background-color: #d9edf7;
-  padding: 9px;
-}
-#sscs-header #sscsh-name {
-  display: inline-block;
-  margin-left: 4%;
-  font-size: 13;
-  font-weight: bold;
-  color: #3a7694;
-}
-#sscs-header #rma-button {
-  width: 100px;
-  height: 24px;
-  float: right;
-  border: 1px solid #4b97bd;
-  border-radius: 2px;
-  color: #4b97bd;
-  padding: 0px 8px;
+#btn {
+  cursor: pointer;
+  width: 12%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
   cursor: pointer;
 }
-#sscs-header #rma-button:hover {
-  background-color: #3c7c9c;
+#btn:hover {
+  background-color: #1079cf;
   color: white;
 }
-#sscs-table {
-  width: 100%;
-  height: 310px;
-  overflow-y: auto;
-}
 
-#link-text {
-  color: #5ca5d3;
-  font-weight: bold;
-  cursor: pointer;
-}
-#link-text:hover {
-  color: #77c0ec;
-}
-.noneHandler {
-  font-size: 13px;
-  margin-top: 10px;
-  margin-left: 10px;
-  color: rgb(43, 41, 41);
-}
-
-/* --- table --- */
-.table-row {
-  width: 100%;
-  height: 40px;
-
-  display: flex;
-  color: #585858;
-  border-bottom: 0.5px solid #d8d7d7;
-}
-.index-cell {
-  flex-basis: 10%;
-  justify-content: center;
-}
-.name-cell {
-  flex-basis: 70%;
-  padding-left: 6%;
-  justify-content: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.action-cell {
-  flex-basis: 20%;
-  justify-content: center;
-}
-.action-cell i {
-  padding: 8px;
-  color: #858383;
-  cursor: pointer;
-}
-.table-cell {
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-.table-row:hover {
-  background-color: #fafafa;
-}
-.action-cell i:hover {
-  color: #5e5d5d;
-}
-
-/* --- action --- */
-#ssc-action {
-  width: 100%;
+#action {
+  margin: 0 auto;
+  margin-top: 4%;
   display: flex;
   justify-content: space-between;
-  margin: 0 auto;
-  margin-top: 30px;
+  width: 60%;
 }
-#first-action {
-  flex-basis: 20%;
-}
-#second-action {
-  flex-basis: 60%;
-}
-#third-action {
-  flex-basis: 15%;
-}
-#fourth-action {
-  flex-basis: 5%;
-}
-#ssc-add {
-  width: 160px;
-  height: 30px;
-  background-color: #2196f3;
-  text-align: center;
-  color: white;
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  padding: 4px 3px;
-  border-radius: 4px;
-  cursor: pointer;
-  border-width: 0px;
-}
-#ssc-add:hover {
-  background-color: #1079cf;
-}
-#ssc-upload {
-  width: 160px;
-  height: 30px;
-  background-color: #2196f3;
-  text-align: center;
-  color: white;
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  padding: 4px 3px;
-  border-radius: 4px;
-  cursor: pointer;
-  border-width: 0px;
-}
-#ssc-upload:hover {
-  background-color: #1079cf;
-}
-#ssc-back {
-  width: 60px;
-  height: 30px;
-  border: 1px solid rgb(221, 227, 240);
-  border-radius: 4px;
-  text-align: center;
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  padding: 4px 3px;
-  cursor: pointer;
-}
-#ssc-back:hover {
-  border-color: #1079cf;
-  color: #1079cf;
-}
-#ssc-next {
-  width: 60px;
-  height: 30px;
-  background-color: #2196f3;
-  text-align: center;
-  color: white;
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 600;
-  padding: 4px 3px;
-  border-radius: 4px;
-  cursor: pointer;
-  border-width: 0px;
-}
-#ssc-next:hover {
-  background-color: #1079cf;
-}
-
-/* ---- showComponents ---- */
-#showComponents {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-/*---- showConfirmation */
-#showConfirmation {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  align-items: center;
-  justify-content: center;
-}
-#removeSC-holder {
-  margin-top: 200px;
-}
-#removeAll-holder {
-  margin-top: 50px;
+div#main {
+    padding-bottom: 3%;
 }
 </style>
