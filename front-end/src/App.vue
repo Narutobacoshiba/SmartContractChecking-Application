@@ -47,12 +47,12 @@ export default {
 </script>
 
 <style>
-* {
+/* * {
   -webkit-user-select: none;
   -khtml-user-select: none;
   -o-user-select: none;
   user-select: none;
-}
+} */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

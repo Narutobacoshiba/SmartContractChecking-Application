@@ -19,7 +19,7 @@
   	  "placeType" : "STATE.finalReward"
   	},
   	{ "name" : "depositedWei",
-  	  "placeType" : "STATE.depositedWei"
+  	  "placeType" : "STATE.contractBalance"
   	},
   	{ "name" : "redeemableEther",
   	  "placeType" : "STATE.redeemableEther"

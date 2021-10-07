@@ -1,7 +1,7 @@
 etherGame(N := 2, cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10, v6 := 5) {
 type boolean : range 0 .. 1;
 type count : range 0 .. N;
-subtype  : count range 0 .. (count'last-1);
+subtype event_id : count range 0 .. (count'last-1);
 type marking_value : list[event_id] of boolean with capacity N;
 type mvalue : struct { event_id id;boolean vl;};
 type vchange : list[event_id] of mvalue with capacity N;

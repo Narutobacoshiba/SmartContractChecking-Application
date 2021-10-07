@@ -1,6 +1,6 @@
 <template>
   <div id="editor">
-    <div id="symbols-group">
+    <!-- <div id="symbols-group">
       <button @click="insertSymbol('%u2260')">&ne;</button>
       <button @click="insertSymbol('%B7')">&middot;</button>
       <button @click="insertSymbol('%u2227')">&and;</button>
@@ -20,7 +20,7 @@
       <button @click="insertSymbol('%u2204')">&NotExists;</button>
       <button @click="insertSymbol('%u2234')">&there4;</button>
       <button @click="insertSymbol('%u2235')">&because;</button>
-    </div>
+    </div> -->
 
     <div
       name="inputCode"
