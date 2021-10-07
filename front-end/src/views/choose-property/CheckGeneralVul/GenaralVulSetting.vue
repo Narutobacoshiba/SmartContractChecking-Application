@@ -50,9 +50,11 @@ second call completes, the initial one resumes correct execution.
       </button>
     </div>
     <div id="selection-table" v-if="isSelectVariable">
-      <ArgumentSelection v-if="getVariableType == 'arg'" :current_value="getSelectVariableValue" @updateCurrentSelectVariable="updateSelection"/>
-      <VariableSelection v-if="getVariableType == 'var'" :current_value="getSelectVariableValue" @updateCurrentSelectVariable="updateSelection"/>
-      <FunctionSelection v-if="getVariableType == 'func'" :current_value="getSelectVariableValue" @updateCurrentSelectVariable="updateSelection"/>
+      <div id="selection-table-b2">
+        <ArgumentSelection v-if="getVariableType == 'arg'" :current_value="getSelectVariableValue" @updateCurrentSelectVariable="updateSelection"/>
+        <VariableSelection v-if="getVariableType == 'var'" :current_value="getSelectVariableValue" @updateCurrentSelectVariable="updateSelection"/>
+        <FunctionSelection v-if="getVariableType == 'func'" :current_value="getSelectVariableValue" @updateCurrentSelectVariable="updateSelection"/>
+      </div>
     </div>
   </div>
 </template>
@@ -218,6 +220,10 @@ second call completes, the initial one resumes correct execution.
 </script>
 
 <style scoped>
+#container{
+  height: 100%;
+  width: 100%;
+}
 #con-setting {
   width: 70%;
 }
@@ -266,12 +272,21 @@ button {
 
 #selection-table{
   position: absolute;
-  height: 500px;
-  width: 1000px;
-
+  width: 100%;
+  height: 100%;
   top: 0;
-  left: calc(50% - 500px);
+  left: 0;
   z-index: 1000;
+  background: rgba(0, 0, 0, .5);
+  transition: opacity .3s;
+}
+#selection-table-b2{
+  position: absolute;
+  height: 550px;
+  width: 1000px;
+  border-radius: 10px;
+  top: 60px;
+  left: calc(50% - 500px);
   background-color: white;
 }
 </style>
