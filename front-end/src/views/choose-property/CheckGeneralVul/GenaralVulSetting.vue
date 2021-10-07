@@ -4,33 +4,37 @@
     <div class="row">
       <div class="col-2">Vulnerability</div>
       <div class="col-9">
-        <select name="" class="form-select">
-          <option value="">Integer Overflow/Underflow</option>
-          <option value="">Reentracy</option>
-          <option value="">Self-destruction</option>
-          <option value="">Timestamp Dependence</option>
+        <select
+          name="lteid"
+          class="form-select"
+          @change="changeid($event.target.value)"
+        >
+        <option value="#">--- Choose Vulnerability ---</option>
+          <option v-for="c in ltltemplate" :key="c.lteid" :value="c.lteid">
+            {{ c.name }}
+          </option>
         </select>
       </div>
     </div>
     <div class="row">
       <div class="col-2">Formular</div>
       <div class="col-9">
-        <LTLEditor @update="getLTLCode" :code="ltlcode" />
+        <LTLEditor  :code="ltlcode" />
       </div>
     </div>
     <div class="row">
       <div class="col-2">Description</div>
       <div class="col-9">
-        <textarea name="" id="" cols="30" rows="5" class="form-control">
-            This is by far the most notorious vulnerability since it led to the 
-infamous DAO attack. An attack of this type can take several forms 
-(e.g, we can talk about a single function reentrancy attack or a 
-cross-function reentrancy attack), but the main idea behind it is that 
-a function can be interrupted in the middle of its execution and then
-be safely called again before its initial call completes. Once the 
-second call completes, the initial one resumes correct execution.
-          </textarea
+        <!-- <span v-for="c in ltltemplate" :key="c" :value="c">{{ c.description }}</span> -->
+        <textarea
+          name=""
+          id=""
+          cols="30"
+          rows="5"
+          class="form-control"
+          v-model="description"
         >
+        </textarea>
       </div>
     </div>
     <div id="btn-group">
@@ -50,16 +54,37 @@ second call completes, the initial one resumes correct execution.
 
 <script>
 import LTLEditor from "../../../components/LTLEditor.vue";
+import { GetAllltltemplates } from "../../../services/data";
 export default {
-  data:function(){
-    return{
-      ltlcode:"containsSending({ function1 }) => (sendingTo({ function 2 }) =>O((¬sendingTo({ function 2 })) U end({ function 3 })))"
-    }
+  data: function() {
+    return {
+      ltlcode: "abc",
+      ltltemplate: [],
+      description: "",
+    };
+  },
+  mounted() {
+    this.initData();
+    // this.ltlcode = this.ltltemplate[0].formula;
+    // this.description =  this.ltltemplate[0].description;
   },
   components: {
     LTLEditor,
   },
   methods: {
+    async initData() {
+      this.ltltemplate = await GetAllltltemplates();
+      this.ltlcode = await this.ltltemplate[0].formula;
+      this.description = await this.ltltemplate[0].description;
+    },
+
+    changeid(value) {
+      const data = this.ltltemplate.find((i) => {
+        return i.lteid == value;
+      });
+      this.ltltemplate= data
+      console.log(data);
+    },
     routing(param) {
       if (param == "add") {
         this.$router.push({ name: "Initial" });

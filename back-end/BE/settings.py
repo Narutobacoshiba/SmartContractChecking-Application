@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'LTLpro',
     'acount',
+    'ltltemplate',
+    'cpncontext',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
 ]
@@ -99,7 +101,6 @@ DATABASES = {
         'NAME': 'soliditycpn',
         'USER': 'root',
         'PASSWORD': '22042001',
-
         'HOST': 'localhost',
         'PORT': '3306',
     }

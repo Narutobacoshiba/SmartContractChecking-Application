@@ -7,6 +7,9 @@ class Context(models.Model):
     name = models.CharField(max_length=300)
     context = models.CharField(max_length=1000)
     description= models.CharField(max_length=700)
+    nametype= models.CharField(max_length=200)
+    
+
 
     class Meta:
         db_table = 'context'

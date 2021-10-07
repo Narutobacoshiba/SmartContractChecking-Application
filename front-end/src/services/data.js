@@ -1,6 +1,8 @@
 import { SmartContractsService } from "./smartcontract.service"
 import { ContextService } from "./context.serivce"
 import { LtlService } from "./ltlpro.serivce"
+import { cpncontextService } from "./cpncontext.serivce"
+import { ltltemplateService } from "./ltltemplate.serivce"
 
 /* -------Vulnerabilities------ */
 var listVulnerabilities = [
@@ -267,4 +269,17 @@ export async function DeleteLtl(id_Ltl) {
 /*---------Update Ltl-------- */
 export async function UpdateLtl(id_Ltl, ct_name, ct_description, fomular) {
     return await LtlService.UpdateLtl(id_Ltl, ct_name, ct_description, fomular)
+}
+
+export async function GetAllcpncontext() {
+    const response = await cpncontextService.GetAllcpncontext()
+    return response.data
+}
+export async function GetAllltltemplates() {
+    const response = await ltltemplateService.GetAllltltemplates()
+    return response.data
+}
+export async function GetLtltemplteById(id) {
+    const response = await ltltemplateService.GetLtltemplteById(id)
+    return response.data
 }

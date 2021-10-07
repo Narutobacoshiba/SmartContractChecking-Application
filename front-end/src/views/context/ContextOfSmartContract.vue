@@ -10,10 +10,10 @@
         <select
           class="form-select input-sm"
           aria-label="Default select example"
-          v-model="contextSC"
         >
+        <option >--- Select Context ---</option>
           <option v-for="c in contexts" :key="c" :value="c">
-            {{ c.context }}
+            {{ c.name }}
           </option>
         </select>
       </div>
@@ -23,7 +23,15 @@
         <p>Type</p>
       </div>
       <div class="col-6">
-        <input type="text" value="DCR" class="form-select input-sm" />
+       <select
+          class="form-select input-sm"
+          aria-label="Default select example"
+        >
+        <option >--- Select Type ---</option>
+          <option v-for="c in contexts" :key="c" :value="c">
+            {{ c.name1 }}
+          </option>
+        </select>
       </div>
     </div>
 
@@ -34,7 +42,7 @@
       <div class="col-9">
         <span>There are several options:</span>
         <ul>
-          <li v-for="c in contexts" :key="c">{{ c.des }}</li>
+          <li v-for="c in contexts" :key="c">{{ c.description }}</li>
         </ul>
       </div>
     </div>
@@ -75,6 +83,7 @@
 
 <script>
 import UploadContext from "./UpLoadContext.vue"
+import {GetAllcpncontext} from "../../services/data"
 export default {
   components: {UploadContext},
   data() {
@@ -86,6 +95,9 @@ export default {
       selectComponents: '',
     }
   },
+  mounted() {
+    this.initData()
+  },
   computed:{
       getShowComponents(){
         return this.showComponents
@@ -95,9 +107,13 @@ export default {
       }
   },
   methods: {
+    async initData() {
+    this.contexts = await GetAllcpncontext();
+    },
     cComponents(){
       this.showComponents = false
     },
+     
     OpenUploadContext(){
       this.selectComponents = 'uploadctx'
       this.showComponents = true

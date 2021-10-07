@@ -14,7 +14,7 @@ class ContextAPIView(APIView):
     def get(self, request):
         try:
             if request.method == "GET":
-                contextDB = Context.objects.all()
+                contextDB = Context.objects.all()   
                 serializeContext = ContextSerializer(contextDB, many=True)
                 return Response(serializeContext.data, status=status.HTTP_202_ACCEPTED)
         except Exception as e:
