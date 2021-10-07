@@ -12,7 +12,7 @@
           aria-label="Default select example"
           v-model="contextSC"
         >
-          <option v-for="c in contexts" :key="c" :value="c">
+          <option v-for="c in contexts" :key="c" :value="c.cid">
             {{ c.context }}
           </option>
         </select>
@@ -53,7 +53,6 @@
         class="btn btn-primary btn-sm"
         @click="OpenUploadContext"
       >
-     
         Up a Context File
       </button>
       <button
@@ -66,48 +65,71 @@
       </button>
     </div>
     <div id="showComponents" v-if="getShowComponents">
-        <div id="components-holder">
-            <UploadContext @closeComponents="cComponents" v-if="getSelectComponents=='uploadctx'"/>
-        </div>
+      <div id="components-holder">
+        <UploadContext
+          @closeComponents="cComponents"
+          v-if="getSelectComponents == 'uploadctx'"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import UploadContext from "./UpLoadContext.vue"
+import UploadContext from "./UpLoadContext.vue";
+import CheckService from "../../services/check.service.js";
 export default {
-  components: {UploadContext},
+  components: { UploadContext },
   data() {
     return {
-      contexts: [{ id: 1, context: "Medicine" }],
+      contexts: [],
       selectedContext: [],
       contextSC: [],
       showComponents: false,
-      selectComponents: '',
-    }
+      selectComponents: "",
+    };
   },
-  computed:{
-      getShowComponents(){
-        return this.showComponents
-      },
-      getSelectComponents(){
-        return this.selectComponents
-      }
+  computed: {
+    getShowComponents() {
+      return this.showComponents;
+    },
+    getSelectComponents() {
+      return this.selectComponents;
+    },
   },
   methods: {
-    cComponents(){
-      this.showComponents = false
+    async checkContext() {
+      const context = {
+        cid: 1,
+        name: "Medicine",
+        content: "",
+        description: "",
+        ctid: 1,
+      };
+      // console.log(context);
+      const res = await CheckService.callToolsCheckContext(
+        context.cid,
+        context.name,
+        context.content,
+        context.description,
+        context.ctid
+      );
+      console.log(res);
     },
-    OpenUploadContext(){
-      this.selectComponents = 'uploadctx'
-      this.showComponents = true
+    cComponents() {
+      this.showComponents = false;
+    },
+    OpenUploadContext() {
+      this.selectComponents = "uploadctx";
+      this.showComponents = true;
     },
     loadContext() {
       this.showComponents = true;
     },
     routing(param) {
       if (param == "add") {
-        this.$router.push({ name: "UnFolding" });
+        this.checkContext();
+        // this.$router.push({ name: "UnFolding" });
       }
       if (param == "upfile") {
         this.$router.push({ name: "UpLoadContext" });
