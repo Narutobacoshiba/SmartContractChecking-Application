@@ -40,7 +40,7 @@ followed by an occurrence of {function 4}
       </div>
     </div>
     <div id="btn-group">
-      <button class="btn btn-primary btn-sm" @click="routing('add')">
+      <button class="btn btn-primary-outline btn-sm" @click="routing('add')">
         Add
       </button>
       <button
@@ -120,11 +120,27 @@ textarea {
 #btn-group {
   width: 100%;
   display: flex;
-  align-items: center;
+  margin-left: 4%;
+}
+button:hover{
+  background-color: #1079cf;
+  color: white;
 }
 button {
   margin: auto;
   margin-top: 40px;
+  cursor: pointer;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 @media only screen and (max-width: 960px) {
   #add-vul {
