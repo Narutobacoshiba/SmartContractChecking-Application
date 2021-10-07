@@ -8,7 +8,7 @@
       <div class="blue">
         <div class="atable">
           <table class="table table-striped table-hover table-sm">
-            <thead class="table-dark">
+            <thead class="header">
               <tr>
                 <th style="width: 10%" scope="col">#</th>
                 <th style="width: 30%" scope="col">Smart Contract Name</th>
@@ -51,9 +51,9 @@
     <div class="Button">
       <div class="row">
         <div class="col-sm-10">
-          <button type="button" class="btn btn-primary" @click="routing('addsc')">
+          <!-- <button type="button" class="btn btn-primary" @click="routing('addsc')">
             Add Smart Contracts
-          </button>
+          </button> -->
         </div>
         <div class="col-sm-2">
           <button type="button" class="btn btn-primary" @click="routing('back')">Back</button>
@@ -102,6 +102,7 @@ export default {
   background: none;
   z-index: 2;
   position: relative;
+  border-radius: 10px;
 }
 h1 {
   text-align: center;
@@ -115,5 +116,9 @@ h1 {
 
 .Button {
   margin-top: 80px;
+}
+
+.header {
+  background-color: rgb(144, 208, 243);
 }
 </style>

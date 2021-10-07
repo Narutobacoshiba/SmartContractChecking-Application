@@ -51,8 +51,9 @@
         id="btn1"
         type="button"
         class="btn btn-primary btn-sm"
-        @click="routing('upfile')"
+        @click="OpenUploadContext"
       >
+     
         Up a Context File
       </button>
       <button
@@ -64,26 +65,51 @@
         Back
       </button>
     </div>
+    <div id="showComponents" v-if="getShowComponents">
+        <div id="components-holder">
+            <UploadContext @closeComponents="cComponents" v-if="getSelectComponents=='uploadctx'"/>
+        </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Axios from "axios";
+import UploadContext from "./UpLoadContext.vue"
 export default {
+  components: {UploadContext},
   data() {
     return {
       contexts: [{ id: 1, context: "Medicine" }],
       selectedContext: [],
       contextSC: [],
       showComponents: false,
-    };
+      selectComponents: '',
+    }
   },
-  components: {  },
+  computed:{
+      getShowComponents(){
+        return this.showComponents
+      },
+      getSelectComponents(){
+        return this.selectComponents
+      }
+  },
   methods: {
+    cComponents(){
+      this.showComponents = false
+    },
+    OpenUploadContext(){
+      this.selectComponents = 'uploadctx'
+      this.showComponents = true
+    },
     loadContext() {
       this.showComponents = true;
     },
     routing(param) {
       if (param == "add") {
+        const dcr2cpn = Axios.get("http://127.0.0.1:8000/calltool/dcr2cpn/")
+        console.log(dcr2cpn)
         this.$router.push({ name: "UnFolding" });
       }
       if (param == "upfile") {
@@ -112,7 +138,6 @@ export default {
   margin-top: 60px;
   text-align: center;
 }
-
 #select p {
   text-align: left;
   font-size: 18px;
@@ -136,7 +161,6 @@ export default {
   margin-left: 40px;
   margin-right: 40px;
 }
-
 /* ---- showComponents ---- */
 #showComponents {
   position: fixed;
@@ -150,7 +174,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 @media screen and (max-width: 800px) {
   #section {
     width: 100%;

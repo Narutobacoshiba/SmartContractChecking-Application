@@ -23,5 +23,7 @@ urlpatterns = [
     path('login',views.loginpage),
     path('context/',include('context.urls')),
     path('ltl/',include('LTLpro.urls')),
-    path('auth/', include('acount.urls'))
+    path('auth/', include('acount.urls')),
+    path('calltool/', include('calltool.urls')),
+
 ]

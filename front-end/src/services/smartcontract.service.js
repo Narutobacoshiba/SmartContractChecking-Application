@@ -1,4 +1,5 @@
 import { BaseService, ErrorWrapper, ResponseWrapper } from "./base";
+import Axios from "axios";
 export class SmartContractsService extends BaseService {
     static getUnity() {
         return '/smartconstract'
@@ -130,6 +131,10 @@ export class SmartContractsService extends BaseService {
             const message = error.response.data ? error.response.data.error : error.response.statusText
             throw new ErrorWrapper(error, message)
         }
+    }
+    static async ltlToPro(){
+        const response = Axios.get("http://127.0.0.1:8000/calltool/ltlpro/")
+        return response
     }
 
 }
