@@ -77,10 +77,10 @@
 
       <div class="row">
         <div class="col but1">
-          <button class="confirm" v-on:click="dahieu">cancel</button>
+          <button class="confirm" v-on:click="dahieu">Cancel</button>
         </div>
         <div class="col but2">
-          <button class="confirm" @click="routing('uploadfile')">oke</button>
+          <button class="confirm" @click="routing('uploadfile')">OK</button>
         </div>
       </div>
     </div>
@@ -93,7 +93,6 @@ export default {
   data() {
     return {};
   },
-
   props: {
     isOpen: { type: Boolean, default: false },
   },
@@ -130,12 +129,10 @@ export default {
   visibility: hidden;
   transition: all 0.3s ease;
 }
-
 .wrapper-popup.open {
   opacity: 1;
   visibility: visible;
 }
-
 .rule {
   width: 650px;
   padding: 20px;
@@ -147,15 +144,12 @@ export default {
   position: absolute;
   transition: all 0.3s ease;
 }
-
 .open .rule {
   transform: translate(-50%, -50%) scale(1);
 }
-
 .rule h3 {
   margin-bottom: 10px;
 }
-
 .confirm {
   border: 2px solid #333;
   background-color: #ffff;
@@ -165,21 +159,21 @@ export default {
   transition: all 0.3s ease;
   width: 80px;
 }
-
 .confirm:hover {
   background-color: aqua;
   color: red;
 }
-
+.row{ 
+  padding-bottom: 2%;
+  padding-right: 10%;
+}
 .ck {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-
 .but1 {
   text-align: right;
 }
-
 .but2 {
   text-align: center;
 }

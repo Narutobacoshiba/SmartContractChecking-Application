@@ -1,4 +1,3 @@
-
 <template>
   <div id="main">
     <!-- nav -->
@@ -9,7 +8,7 @@
     
      
    <div class="grey">
-        <span>Checked information</span>
+        <span>Smart Contract</span>
       </div>
 
     <div class="blue">
@@ -80,9 +79,6 @@ export default {
   text-align: center;
   margin-bottom: 11px;
 }
-.trapezoid a {
-  color: black;
-}
 #header {
   text-align: center;
   margin-bottom: 3%;
@@ -98,8 +94,9 @@ export default {
   text-align: center;
   margin-left: 10%;
   margin-right: 30%;
-  height: 470px;
+  height: 100%;
   color: black;
+  padding-bottom: 6%;
 }
 .grey {
   width: 150px;
@@ -131,7 +128,7 @@ h1 {
   margin-left: 50px;
   margin-top: 50px;
   margin-right: 50px;
-  padding-bottom: 15%;;
+  padding-bottom: 10%;
   border: 1px solid #d9edf7;
   border-radius: 10px;
 }
@@ -139,58 +136,63 @@ h1 {
   cursor: pointer;
   width: 15%;
   height: 2%;
-  background-color: #2196f3;
+  border: 1px solid #2196f3;
   text-align: center;
-  color: white;
+  color: #2196f3;
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
   padding: 4px 3px;
   border-radius: 4px;
   cursor: pointer;
-  border-width: 0px;
 }
 #sc-cancel {
   cursor: pointer;
   width: 15%;
   height: 2%;
-  background-color: #2196f3;
+  border: 1px solid #2196f3;
   text-align: center;
-  color: white;
+  color: #2196f3;
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
   padding: 4px 3px;
   border-radius: 4px;
   cursor: pointer;
-  border-width: 0px;
 }
 #sc-unfold {
  cursor: pointer;
   width: 15%;
   height: 2%;
-  background-color: #2196f3;
+  border: 1px solid #2196f3;
   text-align: center;
-  color: white;
+  color: #2196f3;
   font-size: 13px;
   line-height: 22px;
   font-weight: 600;
   padding: 4px 3px;
   border-radius: 4px;
   cursor: pointer;
-  border-width: 0px;
+  
 }
 #sc-save:hover {
   background-color: #1079cf;
+  color: white;
+}
+#sc-cancel:hover{ 
+  background-color: #1079cf;
+  color: white;
+}
+#sc-unfold:hover{ 
+  background-color: #1079cf;
+  color: white;
 }
 #action {
-  margin: 0 auto;
+  margin: 0 auto; 
   margin-top: 4%;
   display: flex;
   justify-content: space-between;
   width: 60%;
-}
-div#main {
-    padding-bottom: 50px;
+  padding-bottom: 6%;
 }
 </style>
