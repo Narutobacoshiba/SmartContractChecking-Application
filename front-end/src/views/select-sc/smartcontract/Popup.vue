@@ -117,6 +117,17 @@ export default {
 </script>
 
 <style>
+.dropdown button{
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  background-color: white;
+}
+.dropdown button:hover{
+  background-color: #1079cf;
+  color: white;
+}
+
 .wrapper-popup {
   z-index: 100;
   position: fixed;
@@ -151,17 +162,20 @@ export default {
   margin-bottom: 10px;
 }
 .confirm {
-  border: 2px solid #333;
+  border: 1px solid #2196f3;
   background-color: #ffff;
   padding: 8px 15px;
   margin-top: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
+  border-radius: 4px;
   width: 80px;
+  text-align: center;
+  color: #2196f3;
 }
 .confirm:hover {
-  background-color: aqua;
-  color: red;
+  background-color: #1079cf;
+  color: white;;
 }
 .row{ 
   padding-bottom: 2%;

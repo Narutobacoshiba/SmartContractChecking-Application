@@ -179,43 +179,54 @@ export default {
     margin-top: 15px;
     margin-bottom: 15px;
     width: 100%;
-    height: 40px;
+    height: 20%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 #cancel-button{
-    
-    width: 80px;
-    height: 25px;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
-    background-color: #fd647a;
-    color: white;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 17%;
 }
 #cancel-button:hover{
-    background-color: #dc3545;
-    color: white;
+    background-color: #1079cf;
+  color: white;
 }
 #update-button{
-    background-color: green;
-    width: 80px;
-    height: 25px;
-    color: white;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 17%;
 }
 #update-button:hover{
-    background-color: rgb(2, 87, 2);
+    background-color: #1079cf;
+  color: white;
 }
 span{
     color: red;
     font-weight: bold;
+}
+.container{ 
+    font-family: Arial, Helvetica, sans-serif;
 }
 </style>

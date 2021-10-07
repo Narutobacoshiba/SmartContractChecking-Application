@@ -79,8 +79,8 @@ export default {
 }
 #header {
   text-align: center;
-  margin-bottom: 3%;
-  margin-top: 3%;
+  margin-bottom: 2%;
+  margin-top: 2%;
 }
 .table-inside{
   background-color: #d9edf7;
@@ -174,6 +174,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   width: 60%;
+  padding-bottom: 5%;
 }
 div#main {
     padding-bottom: 10%;
