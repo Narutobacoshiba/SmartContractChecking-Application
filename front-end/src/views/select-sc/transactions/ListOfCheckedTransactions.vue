@@ -182,15 +182,7 @@ h1 {
   margin-top: 80px;
 }
 
-<<<<<<< HEAD
-.header {
-  background-color: rgb(144, 208, 243);
-}
-
-a {
-=======
 a{
->>>>>>> dev
   text-decoration: none;
   color: black;
 }
