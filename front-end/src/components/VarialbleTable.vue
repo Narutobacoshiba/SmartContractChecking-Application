@@ -4,14 +4,14 @@
      <h2>Select element of the smart contract</h2>
    </div>
     <div class="text">
-          <span>Function</span>
+          <span>Variable</span>
       </div>
    <div id = "component">
           <div class="table table-striped table-hover">
           <table class="table" border="1">
             <tr>
               <th>#</th>
-              <th>Function</th>
+              <th>Variable</th>
               <th>Select</th>
             </tr>
             <tr v-for="data in datatable" :key="data.id">
@@ -36,10 +36,10 @@ export default {
     return {
       selected_variable: [],
       datatable: [
-        { id: '1', var: 'Func1' },
-        { id: '2', var: 'Func12' },
-        { id: '3', var: 'Func13' },
-        { id: '4', var: 'Func14' }
+        { id: '1', var: 'Var1' },
+        { id: '2', var: 'Var2' },
+        { id: '3', var: 'Var3' },
+        { id: '4', var: 'Var4' }
       ]
     }
   },

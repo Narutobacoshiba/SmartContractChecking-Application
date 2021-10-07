@@ -17,7 +17,7 @@
             <tr v-for="data in datatable" :key="data.id">
               <td>{{ data.id }}</td>
               <td>{{ data.var }}</td>
-              <td><input type="checkbox" /></td>
+              <td><input type="checkbox" :value="data.var" v-model="selected_variable" @click= "check_one"/></td>
             </tr>
           </table>
         </div>
@@ -31,14 +31,30 @@
 
 <script>
 export default {
+  props: ["current_value"],
   data () {
     return {
+      selected_variable: [],
       datatable: [
-        { id: '1', var: 'GV1' },
-        { id: '2', var: 'GV2' },
-        { id: '3', var: 'GV3' },
-        { id: '4', var: 'GV4' }
+        { id: '1', var: 'Arg1' },
+        { id: '2', var: 'Arg2' },
+        { id: '3', var: 'Arg3' },
+        { id: '4', var: 'Arg4' }
       ]
+    }
+  },
+  mounted(){
+    this.selected_variable.push(this.current_value)
+  },
+  methods: {
+    check_one(){
+      this.selected_variable = []
+    },
+    save(){
+      this.$emit('updateCurrentSelectVariable',"'"+this.selected_variable[0]+"'")
+    },
+    cancel(){
+      this.$emit('updateCurrentSelectVariable',"")
     }
   }
 }
