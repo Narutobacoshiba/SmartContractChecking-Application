@@ -2,7 +2,7 @@
   <div id="main">
 
     <div id="header">
-    <h1>List of Checked Transctions</h1>
+    <h1>List of Checked Transactions</h1>
     </div>
 
       <div class="grey">
@@ -43,6 +43,7 @@
           </table>
         </div>
       </div>
+
     <div id="action">
         <div id ="btn-addsc" @click="routing('addsc')">Add Smart Contracts</div>
         <div id ="btn-backnext" @click="routing('back')">Back</div>
@@ -66,6 +67,7 @@ export default {
       }
     },
   },
+  
 };
 </script>
 
@@ -75,8 +77,8 @@ export default {
 }
 #header {
   text-align: center;
-  margin-bottom: 3%;
-  margin-top: 3%;
+  margin-bottom: 2%;
+  margin-top: 2%;
 }
 .table-inside{
   background-color: #d9edf7;
@@ -169,6 +171,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   width: 60%;
+  padding-bottom: 5%;
 }
 .Button {
   margin-top: 80px;

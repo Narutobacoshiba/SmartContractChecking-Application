@@ -4,7 +4,7 @@
 
     <div class="row">
       <div class="col-2 left">Number of users</div>
-      <div class="col-9 right">
+      <div class="col-10 right">
         <input
           type="text"
           class="form-control"
@@ -16,7 +16,7 @@
 
     <div class="row">
       <div class="col-2">Users balance</div>
-      <div class="col-9">
+      <div class="col-10">
         <input
           type="text"
           class="form-control"
@@ -28,7 +28,7 @@
 
     <div class="row">
       <div class="col-2">Sender value</div>
-      <div class="col-9">
+      <div class="col-10">
         <input
           type="text"
           class="form-control"
@@ -38,9 +38,9 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" id="textbox">
       <div class="col-2">Other parameters</div>
-      <div class="col-9">
+      <div class="col-10 ">
         <textarea class="form-control" aria-label="With textarea"></textarea>
       </div>
     </div>
@@ -78,9 +78,12 @@ export default {
 };
 </script>
 <style scoped>
+textarea{
+  padding-bottom: 15%;
+}
 h1 {
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding-top: 35px;
+  padding-bottom: 25px;
   text-align: center;
 }
 .container {
@@ -96,6 +99,7 @@ h1 {
   margin-top: 30px;
   margin-bottom: 30px;
 }
+
 .text {
   height: 200px;
 }
@@ -103,6 +107,7 @@ h1 {
   width: 100%;
   display: flex;
   margin-left: 4%;
+  padding-bottom: 7%;
 }
 button {
   margin: auto;

@@ -132,94 +132,106 @@ export default {
   margin-bottom: 0;
 }
 /* ---- items-section ---- */
-#items-section {
-  width: 90%;
-  margin: auto;
+#items-section{
+    width: 90%;
+    margin: auto;
 }
-#items-table {
-  width: 100%;
-  height: 162px;
-  margin: 0 auto;
-  overflow-y: auto;
+#items-table{
+    width: 100%;
+    height: 162px;
+    margin: 0 auto;
+    overflow-y: auto;
 }
-.itable-row {
-  width: 96%;
-  height: 30px;
-  margin: 0 auto;
-  margin-bottom: 2px;
-  display: flex;
-  align-items: center;
-  box-shadow: 1px 1px #d4d3d3;
+.itable-row{
+    width: 96%;
+    height: 30px;
+    margin: 0 auto;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    box-shadow: 1px 1px #d4d3d3;
 }
-.itable-row:hover {
-  background-color: #efefef;
+.itable-row:hover{
+    background-color: #EFEFEF;
 }
-.iname-cell {
-  flex-basis: 90%;
-  font-size: 14px;
-  color: #444343;
-  padding-left: 10px;
+.iname-cell{
+    flex-basis: 90%;
+    font-size: 14px;
+    color: #444343;
+    padding-left: 10px;
 }
-.iaction-cell {
-  flex-basis: 10%;
-  justify-content: center;
-  color: #212529;
-  background: rgb(212, 211, 211);
+.iaction-cell{
+    flex-basis: 10%;
+    justify-content: center;
+    color: #212529;
+    background: rgb(212, 211, 211);
+    cursor: pointer;
+}
+.btn{
+    width: 100%;
+    margin: 0;
+}
+.iaction-cell:hover{
+    background-color: rgb(194, 192, 192);
+}
+.itable-cell{
+    display: flex;
+    align-items: center;
+    height: 30px;
+    border: none;
+}
+#i-action{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#cancel-button{
+    cursor: pointer;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
   cursor: pointer;
+  margin-left: 17%;
 }
-.btn {
-  width: 100%;
-  margin: 0;
-}
-.iaction-cell:hover {
-  background-color: rgb(194, 192, 192);
-}
-.itable-cell {
-  display: flex;
-  align-items: center;
-  height: 30px;
-  border: none;
-}
-#i-action {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  width: 100%;
-  height: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-#cancel-button {
-  width: 80px;
-  height: 25px;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background-color: #fd647a;
+#cancel-button:hover{
+    background-color: #1079cf;
   color: white;
 }
-#cancel-button:hover {
-  background-color: #dc3545;
-  color: white;
-}
-#update-button {
-  background-color: green;
-  width: 80px;
-  height: 25px;
-  color: white;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+#update-button{
+    cursor: pointer;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
   cursor: pointer;
+  margin-right: 17%;
 }
-#update-button:hover {
-  background-color: rgb(2, 87, 2);
+#update-button:hover{
+    background-color: #1079cf;
+  color: white;
 }
-span {
-  color: red;
-  font-weight: bold;
+span{
+    color: red;
+    font-weight: bold;
+}
+.container{ 
+    font-family: Arial, Helvetica, sans-serif;
 }
 </style>
