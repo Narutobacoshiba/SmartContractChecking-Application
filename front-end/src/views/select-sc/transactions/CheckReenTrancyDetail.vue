@@ -22,29 +22,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Mark</td>
-                <td>Otto</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry the Bird</td>
-                <td>Larry the Bird</td>
-                <td>@twitter</td>
-                <td>Larry the Bird</td>
-                <td>@twitter</td>
+              <tr v-for="(item, index) in getListCheck" v-bind:key="index">
+                <th scope="row">{{index+1}}</th>
+                <td>{{item[0]}}</td>
+                <td>{{item[1]}}</td>
+                <td>{{item[2]}}</td>
+                <td>{{item[3]}}</td>
+                <td>{{item[4]}}</td>
               </tr>
             </tbody>
           </table>
@@ -59,7 +43,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
+  data () {
+    return {
+      info: null
+    }
+  },
   methods: {
     routing(param) {
       if (param == "back") {
@@ -68,7 +58,15 @@ export default {
       if (param == "addsc") {
         this.$router.push({ name: "SelectSmartContract" });
       }
-    }, //Back to List Of Checked Transactions
+    }, 
+    ...mapActions(["setlistcheck"]),//Back to List Of Checked Transactions
+  },
+  computed: {
+    ...mapGetters(["getListCheck"]),
+  },
+
+  created() {
+    this.setlistcheck(this.$route.query.id);
   },
 };
 </script>
