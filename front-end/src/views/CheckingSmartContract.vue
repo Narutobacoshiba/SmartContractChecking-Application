@@ -153,7 +153,7 @@ export default {
                 this.move('progress-bar-check');
                 await this.delay(2000)
                 if(this.error) confirm(
-                    "We have discover some counter-examples with the smart contract code. Do you want tolook at them?"
+                    "We have discover some counter-examples with the smart contract code. Do you want to look at them?"
                 );
                 this.step = 'checked';
                 await this.delay(2000);
