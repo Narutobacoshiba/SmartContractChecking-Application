@@ -78,7 +78,6 @@ export default {
     padding: 0 0 20px 0;
     border-radius: 5px;
 }
-
 /* ---- upload-section ---- */
 #upload-section{
     width: 90%;
@@ -107,7 +106,6 @@ export default {
 #input-name input{
     width: 100%;
 }
-
 #upload-file{
     width: 100%;
     margin-top: 10px;
@@ -122,12 +120,10 @@ export default {
     display: flex;
     align-items: center;
 }
-
 #ubtt-holder input{
     font-size: 12px;
     margin-left: 5px;
 }
-
 #upload{
     text-align: center;
     margin-top: 15px;
@@ -187,7 +183,6 @@ export default {
     height: 30px;
     border: none;
 }
-
 #i-action{
     margin-top: 15px;
     margin-bottom: 15px;
