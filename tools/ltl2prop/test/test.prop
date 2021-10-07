@@ -1,0 +1,6 @@
+const minThreshold = 0
+const maxThreshold = 10
+
+proposition outOfRange: (minThreshold < 'currentBalance') | ('depositedWei' > maxThreshold);
+
+property prop: F (!outOfRange & {'currentBalance' < 10});
