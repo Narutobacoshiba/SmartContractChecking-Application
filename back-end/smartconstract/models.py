@@ -10,6 +10,7 @@ from django.db import models
 
 
 class Account(models.Model):
+    aid = models.AutoField(primary_key=True)
     username = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
     password = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
     role = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
@@ -19,6 +20,7 @@ class Account(models.Model):
         db_table = 'account'
 
 class Smartcontract(models.Model):
+    sid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
     type = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True)
     content = models.TextField(blank=True, null=True)

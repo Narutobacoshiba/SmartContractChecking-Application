@@ -2,11 +2,22 @@ from django.db import models
 
 # Create your models here.
 
-class Context(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=300)
-    context = models.CharField(max_length=1000)
-    description= models.CharField(max_length=700)
+class Contexttype(models.Model):
+    ctid = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     class Meta:
-        db_table = 'context'
+        managed = False
+        db_table = 'contexttype'
+
+class Context(models.Model):
+    cid = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
+    content = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    ctid = models.ForeignKey(Contexttype, models.DO_NOTHING, db_column='ctid')
+
+    class Meta:
+        managed = False
+        db_table = 'cpncontext'
