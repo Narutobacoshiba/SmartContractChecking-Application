@@ -17,7 +17,7 @@
           <thead class="table-inside">
             <tr>
               <th style="width: 10%" scope="col">#</th>
-              <th style="width: 40%" scope="col">Global variables</th>
+              <th style="width: 40%" scope="col">Functions</th>
               <th style="width: 25%" scope="col">Selected All</th>
             </tr>
           </thead>

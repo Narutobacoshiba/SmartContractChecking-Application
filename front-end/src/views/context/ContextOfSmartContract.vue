@@ -129,7 +129,7 @@ export default {
     routing(param) {
       if (param == "add") {
         this.checkContext();
-        // this.$router.push({ name: "UnFolding" });
+        this.$router.push({ name: "UnFolding" });
       }
       if (param == "upfile") {
         this.$router.push({ name: "UpLoadContext" });
