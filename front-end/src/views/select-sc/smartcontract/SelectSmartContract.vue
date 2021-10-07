@@ -3,7 +3,7 @@
     <div id="header">
       <h1>Select Smart Contracts</h1>
     </div>
-    
+
     <div class="grey">
       <span>Common Smart Contracts</span>
     </div>
@@ -11,7 +11,7 @@
     <div class="blue">
       <div class="atable">
         <table class="table table-striped table-hover table-sm">
-          <thead class= "table-inside">
+          <thead class="table-inside">
             <tr>
               <th style="width: 20%" scope="col">#</th>
               <th style="width: 60%" scope="col">Smart Contract Name</th>
@@ -19,128 +19,76 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>EtherGame</td>
-              <td>
-                <input
-                  type="checkbox"
-                  id="one"
-                  value="One"
-                  v-model="picked"
-                />
+            <tr  v-for="(item, index) in getlistSmartContract" 
+                  v-bind:key="index"
+                  >
+              <th scope="row" v-if="item.type === 'Common'" >{{k}}</th>
+              <td v-if="item.type === 'Common'">{{item.name}}</td>
+              <td v-if="item.type === 'Common'">
+                <input type="checkbox" id="one" value="One" v-model="picked" />
               </td>
             </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>EtherLotto</td>
-              <td>
-                <input
-                  type="checkbox"
-                  id="two"
-                  value="Two"
-                  v-model="picked"
-                />
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>blindAuction</td>
-              <td>
-                <input
-                  type="checkbox"
-                  id="the"
-                  value="Three"
-                  v-model="picked"
-                />
-              </td>
-            </tr>
-            </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="grey">
-          <span>Private Smart Contracts</span>
-        </div>
-        <div class="blue">
-          <div class="atable">
-            <table class="table table-striped table-hover table-sm">
-              <thead class="table-inside">
-                <tr>
-                  <th style="width: 20%" scope="col">#</th>
-                  <th style="width: 60%" scope="col">Smart Contract Name</th>
-                  <th style="width: 20%" scope="col">Select</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>PSC1</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      id="one"
-                      value="One"
-                      v-model="picked"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>PSC2</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      id="two"
-                      value="Two"
-                      v-model="picked"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>PSC3</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      id="the"
-                      value="Thee"
-                      v-model="picked"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      <div id="action">
-        <div id ="btn" @click="routing('add')">Add</div>
-        <div id ="btn" v-on:click="load">Upload File</div>
-        <div id ="btn" @click="routing('back')">Back</div>
+          </tbody>
+        </table>
       </div>
-    
-    <popup v-bind:isOpen="isOpen"
-			v-on:clickdahieu="dahieu"/>
+    </div>
+
+    <div class="grey">
+      <span>Private Smart Contracts</span>
+    </div>
+    <div class="blue">
+      <div class="atable">
+        <table class="table table-striped table-hover table-sm">
+          <thead class="table-inside">
+            <tr>
+              <th style="width: 20%" scope="col">#</th>
+              <th style="width: 60%" scope="col">Smart Contract Name</th>
+              <th style="width: 20%" scope="col">Select</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in getlistSmartContract" 
+                  v-bind:key="index">
+              <th scope="row" v-if="item.type === 'Private'"> <li></li> </th>
+              <td v-if="item.type === 'Private'">{{item.name}}</td>
+              <td v-if="item.type === 'Private'">
+                <input type="checkbox" id="one" value="One" v-model="picked" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="action">
+      <div id="btn" @click="routing('add')">Add</div>
+      <div id="btn" v-on:click="load">Upload File</div>
+      <div id="btn" @click="routing('back')">Back</div>
+    </div>
+
+    <popup v-bind:isOpen="isOpen" v-on:clickdahieu="dahieu" />
   </div>
   <!-- </div> -->
 </template>
 
 <script>
-import Popup from './Popup.vue';
+import Popup from "./Popup.vue";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      isOpen : false,
+      isOpen: false,
+      info: null,
+      k: 1,
+      h: 1,
     };
   },
   methods: {
-    load(){
-			this.isOpen = true;
-		},
-    dahieu(){
-			this.isOpen = false;
-		},
+    load() {
+      this.isOpen = true;
+    },
+    dahieu() {
+      this.isOpen = false;
+    },
     routing(param) {
       if (param == "add") {
         this.$router.push({ name: "ContextOfSmartContract" });
@@ -152,15 +100,22 @@ export default {
         this.$router.push({ name: "UpLoadSc" });
       }
     },
+    ...mapActions(["setListSmartContract"]),
   },
-  components: { 
-    Popup
-  }
+  created() {
+    this.setListSmartContract();
+  },
+  computed: {
+    ...mapGetters(["getlistSmartContract"]),
+  },
+  components: {
+    Popup,
+  },
 };
 </script>
 
 <style scoped>
-.main{
+.main {
   font-family: Arial, Helvetica, sans-serif;
 }
 #header {
@@ -168,13 +123,13 @@ export default {
   margin-bottom: 3%;
   margin-top: 3%;
 }
-.table-inside{
+.table-inside {
   background-color: #d9edf7;
   color: #3a7694;
 }
 .blue {
   border-radius: 10px;
-  width: 80%; 
+  width: 80%;
   text-align: center;
   margin-left: 10%;
   margin-right: 30%;
@@ -195,7 +150,8 @@ export default {
 }
 .blue {
   border: 1px solid #d9edf7;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   margin-top: -40px;
   background: none;
   z-index: 2;
@@ -209,11 +165,12 @@ h1 {
 }
 
 .atable {
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   margin-left: 50px;
   margin-top: 30px;
   margin-right: 50px;
-  padding-bottom: 5%;;
+  padding-bottom: 5%;
   border: 1px solid #d9edf7;
   border-radius: 10px;
 }
@@ -244,6 +201,7 @@ h1 {
   width: 60%;
 }
 div#main {
-    padding-bottom: 3%;
+  padding-bottom: 3%;
 }
+
 </style>

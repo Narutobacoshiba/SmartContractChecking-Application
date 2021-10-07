@@ -11,5 +11,8 @@ export default {
     },
     SET_LIST_CHECK(state, data){
         state.listCheck = data;
+    },
+    SET_LIST_SMART_CONTRACT(state,data){
+        state.listSmartContract = data;
     }
 }

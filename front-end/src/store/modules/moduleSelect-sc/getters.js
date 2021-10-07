@@ -7,5 +7,8 @@ export default {
     },
     getListCheck: state => {
         return state.listCheck;
+    },
+    getlistSmartContract: state => {
+        return state.listSmartContract;
     }
 }
