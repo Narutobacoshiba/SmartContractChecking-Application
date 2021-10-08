@@ -23,7 +23,10 @@ urlpatterns = [
     path('login',views.loginpage),
     path('context/',include('context.urls')),
     path('ltl/',include('LTLpro.urls')),
+
     path('ltltemplate/',include('ltltemplate.urls')),
     path('cpncontext/',include('cpncontext.urls')),
-    path('auth/', include('acount.urls'))
+
+    path('auth/', include('acount.urls')),
+    path('select-sc/', include('Transactions.urls'))
 ]
