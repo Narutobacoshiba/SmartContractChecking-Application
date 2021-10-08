@@ -1,24 +1,23 @@
 <template>
  <div id ="main">
-   <a>Return to home</a>
    <div id ="header">
-     <h2>Choose a function for the {Function 1} </h2>
+     <h2>Select element of the smart contract</h2>
    </div>
-   <div id = "screen">
-      <div class="trapezoid "><p>SC</p></div>
-   </div>
+    <div class="text">
+          <span>Function</span>
+      </div>
    <div id = "component">
           <div class="table table-striped table-hover">
           <table class="table" border="1">
             <tr>
               <th>#</th>
-              <th>Funtions</th>
+              <th>Function</th>
               <th>Select</th>
             </tr>
             <tr v-for="data in datatable" :key="data.id">
               <td>{{ data.id }}</td>
               <td>{{ data.var }}</td>
-              <td><input type="checkbox" /></td>
+              <td><input type="checkbox" :value="data.var" v-model="selected_variable" @click= "check_one"/></td>
             </tr>
           </table>
         </div>
@@ -32,26 +31,50 @@
 
 <script>
 export default {
+  props: ["current_value"],
   data () {
     return {
+      selected_variable: [],
       datatable: [
-        { id: '1', var: 'GV1' },
-        { id: '2', var: 'GV2' },
-        { id: '3', var: 'GV3' },
-        { id: '4', var: 'GV4' }
+        { id: '1', var: 'Func1' },
+        { id: '2', var: 'Func12' },
+        { id: '3', var: 'Func13' },
+        { id: '4', var: 'Func14' }
       ]
+    }
+  },
+  mounted(){
+    this.selected_variable.push(this.current_value)
+  },
+  methods: {
+    check_one(){
+      this.selected_variable = []
+    },
+    save(){
+      this.$emit('updateCurrentSelectVariable',"'"+this.selected_variable[0]+"'")
+    },
+    cancel(){
+      this.$emit('updateCurrentSelectVariable',"")
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 #header {
   text-align: center;
   margin-top: 8%;
   margin-bottom: 3%
 }
-#main {
+
+.text {
+  position: relative;
+  left: 15%;
+  top:15px;
+  z-index: 1;
+  height: 30px;
+  width: 6%;
+  background: white;
   text-align: center;
 }
 #component{
@@ -68,17 +91,6 @@ export default {
 .table tr:first-child{
     background-color:#483125;
     color: white;
-}
-.trapezoid {
-  border-bottom: 40px solid #483125;
-  border-right: 20px solid transparent;
-  height: 0;
-  width: 50px;
-  text-align: center;
-  position: relative;
-  left:15%;
-  text-align: center;
-  color: white;
 }
 #sc-save{
    cursor: pointer;
@@ -120,7 +132,6 @@ export default {
    display: flex;
   justify-content: space-between;
   width: 60%;
-  
 }
 
 </style>

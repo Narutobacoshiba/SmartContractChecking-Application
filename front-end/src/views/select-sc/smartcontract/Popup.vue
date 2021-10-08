@@ -77,10 +77,10 @@
 
       <div class="row">
         <div class="col but1">
-          <button class="confirm" v-on:click="dahieu">cancel</button>
+          <button class="confirm" v-on:click="dahieu">Cancel</button>
         </div>
         <div class="col but2">
-          <button class="confirm" @click="routing('uploadfile')">oke</button>
+          <button class="confirm" @click="routing('uploadfile')">OK</button>
         </div>
       </div>
     </div>
@@ -93,7 +93,6 @@ export default {
   data() {
     return {};
   },
-
   props: {
     isOpen: { type: Boolean, default: false },
   },
@@ -118,6 +117,17 @@ export default {
 </script>
 
 <style>
+.dropdown button{
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  background-color: white;
+}
+.dropdown button:hover{
+  background-color: #1079cf;
+  color: white;
+}
+
 .wrapper-popup {
   z-index: 100;
   position: fixed;
@@ -130,12 +140,10 @@ export default {
   visibility: hidden;
   transition: all 0.3s ease;
 }
-
 .wrapper-popup.open {
   opacity: 1;
   visibility: visible;
 }
-
 .rule {
   width: 650px;
   padding: 20px;
@@ -147,39 +155,39 @@ export default {
   position: absolute;
   transition: all 0.3s ease;
 }
-
 .open .rule {
   transform: translate(-50%, -50%) scale(1);
 }
-
 .rule h3 {
   margin-bottom: 10px;
 }
-
 .confirm {
-  border: 2px solid #333;
+  border: 1px solid #2196f3;
   background-color: #ffff;
   padding: 8px 15px;
   margin-top: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
+  border-radius: 4px;
   width: 80px;
+  text-align: center;
+  color: #2196f3;
 }
-
 .confirm:hover {
-  background-color: aqua;
-  color: red;
+  background-color: #1079cf;
+  color: white;;
 }
-
+.row{ 
+  padding-bottom: 2%;
+  padding-right: 10%;
+}
 .ck {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-
 .but1 {
   text-align: right;
 }
-
 .but2 {
   text-align: center;
 }

@@ -3,13 +3,13 @@
     <div id="header">Contract-Specific Property Template - Setting</div>
     <div class="row">
       <div class="col-2">Name</div>
-      <div class="col-9">
+      <div class="col-10">
         <input class="form-control" type="text" value="Property 1" />
       </div>
     </div>
     <div class="row">
       <div class="col-2">Template</div>
-      <div class="col-9">
+      <div class="col-10">
         <select name="" class="form-select">
           <option value="">Template 1</option>
           <option value="">Template 1</option>
@@ -20,7 +20,7 @@
     </div>
     <div class="row">
       <div class="col-2">Formular</div>
-      <div class="col-9">
+      <div class="col-10">
         <textarea name="" id="" cols="30" rows="5" class="form-control">
             (GF{ variable 1 } ^ GF{ variable 2 }) => G({ function 3 }=> F{ function 4 })
 
@@ -30,7 +30,7 @@
     </div>
     <div class="row">
       <div class="col-2">Description</div>
-      <div class="col-9">
+      <div class="col-10">
         <textarea name="" id="" cols="30" rows="5" class="form-control">
             If {variable 1} occurs infnitely often and {variable 2} occurs 
 inifnitely often, then each occurrence of {function 3} is 
@@ -40,7 +40,7 @@ followed by an occurrence of {function 4}
       </div>
     </div>
     <div id="btn-group">
-      <button class="btn btn-primary btn-sm" @click="routing('add')">
+      <button class="btn btn-primary-outline btn-sm" @click="routing('add')">
         Add
       </button>
       <button
@@ -120,11 +120,27 @@ textarea {
 #btn-group {
   width: 100%;
   display: flex;
-  align-items: center;
+  margin-left: 4%;
+}
+button:hover{
+  background-color: #1079cf;
+  color: white;
 }
 button {
   margin: auto;
   margin-top: 40px;
+  cursor: pointer;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 @media only screen and (max-width: 960px) {
   #add-vul {

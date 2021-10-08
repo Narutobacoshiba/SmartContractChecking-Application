@@ -18,9 +18,9 @@ export default {
         ListOfCheckedTransactions: true,
         CheckRentrancy: true,
         SelectSmartContract: true,
+        Initial:true,
         UpLoadSc: true,
         ContextOfSmartContract: true,
-        InitialMarkingSetting:true,
         LoadContext: true,
         UnFolding: true,
         UpLoadContext: true,
@@ -47,12 +47,12 @@ export default {
 </script>
 
 <style>
-* {
+/* * {
   -webkit-user-select: none;
   -khtml-user-select: none;
   -o-user-select: none;
   user-select: none;
-}
+} */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -1,7 +1,7 @@
 <template>
    <div id ="main">
    <div id ="header">
-     <h2>Checking Smart Contracts</h2>
+     <h1>Checking Smart Contracts</h1>
    </div>
    <div class ="text">
        <span>DCR</span>
@@ -71,11 +71,10 @@
       </div>
       </div>
          <div id="processing-btn">
-                
-                <button v-if="step == 'initial' || step == 'generating'" class="btn btn-primary" @click="generate">Generate</button>
-                <button v-else class="btn btn-primary" @click="check">Check</button>
-            
-            </div>       
+                <button v-if="step == 'initial' || step == 'generating'" class="btn btn-primary-outline" @click="generate">Generate</button>
+                <button v-else class="btn btn-primary-outline" @click="check">Check</button>
+            </div>  
+            <div class="contain-process">     
        <div id="processing-section">
                 <div id="download"><a v-if="showDownload" class="btn btn-primary btn-sm" href="" download="Solidity">Download</a></div>
                 <div id="initial" v-if="step == 'initial'"></div>
@@ -97,13 +96,12 @@
                     <div><h3>Results:</h3></div>
                     <div v-for="r in this.results" :key="r">{{r}}</div>
                 </div>
-            </div>
+            </div> </div>
    </div>
    
 </template>
 
 <script>
-import Axios from "axios";
 export default {
   data () {
     return {
@@ -145,23 +143,18 @@ export default {
                 return await new Promise(resolve => setTimeout(resolve, ms));
             },
             async generate(){
-                const tlt = Axios.get("http://127.0.0.1:8000/calltool/ltlpro/")
-                console.log(tlt)
                 this.step = 'generating';
                 this.move('progress-bar-gen');
                 await this.delay(2000)
                 this.step = 'generated';
                 this.$store.commit("data/SetProcessView","check-sc")
             },
-
             async check(){
-                const helena = Axios.get("http://127.0.0.1:8000/calltool/helena/")
-                console.log(helena)
                 this.step = 'checking';
                 this.move('progress-bar-check');
                 await this.delay(2000)
                 if(this.error) confirm(
-                    "We have discover some counter-examples with the smart contract code. Do you want tolook at them?"
+                    "We have discover some counter-examples with the smart contract code. Do you want to look at them?"
                 );
                 this.step = 'checked';
                 await this.delay(2000);
@@ -240,14 +233,44 @@ export default {
 <style>
 #header {
   text-align: center;
-  margin-top: 4%;
-  margin-bottom: 3%
+  margin-top: 2%;
+  margin-bottom: 2%;
+  font-weight: bold;
+}
+.contain-process{
+  padding-bottom: 5%;
 }
 #locate-1{
     border: 1px solid;
     width: 80%;
     margin: 0 auto;
     padding-bottom: 3%;
+}
+
+#processing-btn button{
+  cursor: pointer;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#locate-1{
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border: 1px solid #d9edf7;
+  border-radius: 10px;
+}
+
+#processing-btn button:hover{
+  background-color: #1079cf;
+  color: white;
 }
 .text-1 {
   position: relative;
@@ -281,10 +304,13 @@ export default {
 }
 #component{
   margin: 0 auto;
-  border: 2px solid #332529;
   width: 94%;
   padding-top: 2%;
   padding-bottom: 2%;
+ box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border: 1px solid #d9edf7;
+  border-radius: 10px;
+
 }
 .table{
   width:94%;
@@ -303,6 +329,8 @@ export default {
     padding: 20px;
     height: 60px;
 }
+
+
 #processing-section{
     height: 300px;
     margin: auto;
@@ -311,6 +339,7 @@ export default {
     text-align: center;
     background-color: #f5f5f5;
     width: 80%;
+    
 }
 #generating, #checking{
     margin: auto;

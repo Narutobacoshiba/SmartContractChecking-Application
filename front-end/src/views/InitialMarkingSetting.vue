@@ -1,94 +1,126 @@
 <template>
   <div class="container">
-        <h1>Initial Marking Setting</h1>
-        <div class="pa">
-            <div class="row">
-                <div class="col-sm-3 left">Number of users</div>
-                <div class="col-sm-9 right"><input type="text" class="form-control" id="basic-url"
-                        aria-describedby="basic-addon3"></div>
-            </div>
-        </div>
+    <h1>Initial Marking Setting</h1>
 
-        <div class="pa">
-            <div class="row">
-                <div class="col-sm-3 left">Users balance </div>
-                <div class="col-sm-9 right"><input type="text" class="form-control" id="basic-url"
-                        aria-describedby="basic-addon3"></div>
-            </div>
-        </div>
-
-        <div class="pa">
-            <div class="row">
-                <div class="col-sm-3 left">Sender value </div>
-                <div class="col-sm-9 right"><input type="text" class="form-control" id="basic-url"
-                        aria-describedby="basic-addon3"></div>
-            </div>
-        </div>
-
-        <div class="pa">
-            <div class="row">
-                <div class="col-sm-3 left">Other parameters</div>
-                <div class="col-sm-9 right"><textarea class="form-control text" aria-label="With textarea"></textarea>
-                </div>
-            </div>
-        </div>
-
-        <div class="pabutton">
-            <div class="row">
-                <div class="col-sm-6 buttonsleft"><button type="button" class="btn btn-primary" @click="routing('save')">Add</button></div>
-                <div class="col-sm-6 buttonsright"><button type="button" class="btn btn-primary" @click="routing('back')">Back</button></div>
-            </div>
-        </div>
+    <div class="row">
+      <div class="col-2 left">Number of users</div>
+      <div class="col-10 right">
+        <input
+          type="text"
+          class="form-control"
+          id="basic-url"
+          aria-describedby="basic-addon3"
+        />
+      </div>
     </div>
+
+    <div class="row">
+      <div class="col-2">Users balance</div>
+      <div class="col-10">
+        <input
+          type="text"
+          class="form-control"
+          id="basic-url"
+          aria-describedby="basic-addon3"
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-2">Sender value</div>
+      <div class="col-10">
+        <input
+          type="text"
+          class="form-control"
+          id="basic-url"
+          aria-describedby="basic-addon3"
+        />
+      </div>
+    </div>
+
+    <div class="row" id="textbox">
+      <div class="col-2">Other parameters</div>
+      <div class="col-10 ">
+        <textarea class="form-control" aria-label="With textarea"></textarea>
+      </div>
+    </div>
+
+    <div id="btn-group">
+      <button class="btn btn-outline-primary btn-sm" @click="routing('save')">
+        Save
+      </button>
+      <button
+        class="btn btn btn-outline-primary btn-sm"
+        type="button"
+        @click="routing('back')"
+      >
+        Back
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-  data () {
-    return {
-     
-    }
+  data() {
+    return {};
   },
   methods: {
     routing(param) {
       if (param == "save") {
         this.$router.push({ name: "CheckSmartContract" });
       }
-      if(param=='back'){
-        this.$router.push({name:"CSPSettingType"})
+      if (param == "back") {
+        this.$router.push({ name: "CSPSettingType" });
       }
     },
   },
 };
 </script>
 <style scoped>
- h1{
+textarea{
+  padding-bottom: 15%;
+}
+h1 {
+  padding-top: 35px;
+  padding-bottom: 25px;
   text-align: center;
 }
-
-
-.left{
-  text-align: right;
+.container {
+  width: 60%;
 }
-
-.pa{
+.left {
+  font-size: 20px;
+}
+.col-2 {
+  font-size: 20px;
+}
+.row {
   margin-top: 30px;
   margin-bottom: 30px;
 }
 
-.text{
+.text {
   height: 200px;
 }
-
-.buttonsright{
-  text-align: center;
+#btn-group {
+  width: 100%;
+  display: flex;
+  margin-left: 4%;
+  padding-bottom: 7%;
 }
-
-.buttonsleft{
-  text-align: right;
-}
-
-.pabutton{
-  margin-top: 100px;
+button {
+  margin: auto;
+  margin-top: 40px;
+  cursor: pointer;
+  width: 15%;
+  height: 2%;
+  border: 1px solid #2196f3;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>
