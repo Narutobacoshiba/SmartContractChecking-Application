@@ -4,6 +4,6 @@ from .views import SmartConstractAPIView
 from smartconstract import views
 
 urlpatterns = [
-    path('api/',SmartConstractAPIView.as_view()),
+    path('select-smart-contract/',SmartConstractAPIView.as_view()),
     path('scbyid',views.getScById)
 ]

@@ -154,7 +154,7 @@ const state = {
   }
   
   export default {
-      namespaced: true,
+      namespaced: false,
       state: state,
       getters: getters,
       mutations: mutations,
