@@ -44,28 +44,28 @@ type CLAIM_REWARD_RETURN : struct { USER sender;};
 type PLAY_STATE : struct { STATE state;PLAY_PAR playPar;};
 type CLAIM_REWARD_STATE : struct { STATE state;CLAIM_REWARD_PAR claimRewardPar;};
 function initRedeemableEther (nat n) -> LIST_REDEEMABLE_ETHER{
-			LIST_REDEEMABLE_ETHER l := empty;
-				for (i in ADDRESS range 1 .. ADDRESS (n)) l := {i,UINT(0)} & l;
-				return l;
-	
+		LIST_REDEEMABLE_ETHER l := empty;
+      		for (i in ADDRESS range 1 .. ADDRESS (n)) l := {i,UINT(0)} & l;
+      		return l;
+   
 }
 function getElement (LIST_REDEEMABLE_ETHER lre, ADDRESS adr) -> STRUCT_REDEEMABLE_ETHER{
-			int i := 0;
-			while (i<lre'size and lre[i].adr!=adr) i := i+1;
-			if(i<lre'size)
-				return lre[i];
-			else
-				return {0,0};
-	
+	   	int i := 0;
+	   	while (i<lre'size and lre[i].adr!=adr) i := i+1;
+	   	if(i<lre'size)
+	   		return lre[i];
+	   	else
+	   		return {0,0};
+
 }
 function getIndex (LIST_REDEEMABLE_ETHER lre, ADDRESS adr) -> int{
-			int i := 0;
-			while (i<lre'size and lre[i].adr!=adr) i := i+1;
-			if(i<lre'size)
-				return i;
-			else
-				return -1;
-	
+	   	int i := 0;
+	   	while (i<lre'size and lre[i].adr!=adr) i := i+1;
+	   	if(i<lre'size)
+	   		return i;
+	   	else
+	   		return -1;
+
 }
 
 /*
