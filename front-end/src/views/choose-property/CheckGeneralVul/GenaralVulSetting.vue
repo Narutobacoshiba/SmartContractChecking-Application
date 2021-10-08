@@ -104,6 +104,10 @@ export default {
         this.updateContent(1, "");
       }
     },
+    ltlcode: function (newVal){
+      this.updateContent(1,newVal);
+    } 
+   
   },
   computed: {
     isSelectVariable() {
@@ -189,13 +193,12 @@ export default {
         })(i);
       }
     },
-   async updateContent(pos, value) {
+    updateContent(pos, value) {
       let result_element = document.getElementById("highlighting-content");
       this.removeSelectVarEventListener();
       result_element.innerHTML = analyseLTLCode(value);
       this.setCursor(pos);
       this.addSelectVarEventListener();
-      console.log(value);
     },
     getNodeValue() {
       let result_element = document.getElementById("highlighting-content");
