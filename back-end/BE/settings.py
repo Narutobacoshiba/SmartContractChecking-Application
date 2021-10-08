@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'acount',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'Transactions',
 ]
 
 MIDDLEWARE = [
@@ -98,7 +99,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'soliditycpn',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': '123456789',
         'HOST': 'localhost',
         'PORT': '3306',
     }
