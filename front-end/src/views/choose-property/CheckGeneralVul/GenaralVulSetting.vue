@@ -4,13 +4,14 @@
     <div class="row">
       <div class="col-2">Vulnerability</div>
       <div class="col-9">
-        <select name="" class="form-select" v-model="selected_template">
-          <option value="interger_overflow_underflow">
-            Integer Overflow/Underflow
+        <select
+          name="lteid"
+          class="form-select"
+          @change="changeid($event.target.value)"
+        >
+          <option v-for="c in ltltemplate" :key="c.lteid" :value="c.lteid">
+            {{ c.name }}
           </option>
-          <option value="reetrancy">Reentrancy</option>
-          <option value="self_destruction">Self-destruction</option>
-          <option value="timestamp_dependence">Timestamp Dependence</option>
         </select>
       </div>
     </div>
@@ -31,14 +32,8 @@
     <div class="row">
       <div class="col-2">Description</div>
       <div class="col-10">
-        <textarea name="" id="" cols="30" rows="5" class="form-control">
-            This is by far the most notorious vulnerability since it led to the 
-infamous DAO attack. An attack of this type can take several forms 
-(e.g, we can talk about a single function reentrancy attack or a 
-cross-function reentrancy attack), but the main idea behind it is that 
-a function can be interrupted in the middle of its execution and then
-be safely called again before its initial call completes. Once the 
-second call completes, the initial one resumes correct execution.
+        <textarea name="" id="" cols="30" rows="5" class="form-control" v-model="description">
+           
           </textarea
         >
       </div>
@@ -82,7 +77,7 @@ import { analyseLTLCode } from "../../../mixins/text-parser.js";
 import ArgumentSelection from "../../../components/ArgumentTable.vue";
 import VariableSelection from "../../../components/VarialbleTable.vue";
 import FunctionSelection from "../../../components/FunctionTable.vue";
-
+import { GetAllltltemplates } from "../../../services/data";
 export default {
   data: function () {
     return {
@@ -91,13 +86,15 @@ export default {
       select_variable_id: "",
       select_variable_type: "",
       selected_template: "",
-      ltlcode:
-        "const minThreshold = 0;\nconst maxThreshold = 10;\nproposition out: ('variable' < minThreshold) | ('variable' > maxThreshold);\nproperty outOfRange: ! out;",
+      ltlcode:"abc",
+      ltltemplate: [],
+      description: "",
     };
   },
   components: { ArgumentSelection, VariableSelection, FunctionSelection },
   mounted() {
-    this.updateContent(1, " ");
+    this.initData();
+    this.updateContent(1, this.ltlcode);
   },
   watch: {
     selected_template: function (val) {
@@ -107,6 +104,10 @@ export default {
         this.updateContent(1, "");
       }
     },
+    ltlcode: function (newVal){
+      this.updateContent(1,newVal);
+    } 
+   
   },
   computed: {
     isSelectVariable() {
@@ -120,6 +121,18 @@ export default {
     },
   },
   methods: {
+    async initData() {
+      this.ltltemplate = await GetAllltltemplates();
+      this.ltlcode =  this.ltltemplate[0].formula;
+      this.description =  this.ltltemplate[0].description;
+    },
+    changeid(value) {
+      const data = this.ltltemplate.find((i) => {
+        return i.lteid == value;
+      });
+      this.ltlcode= data.formula;
+      this.description = data.description;
+    },
     routing(param) {
       /* let ltl_content = this.getNodeValue() ltl content se duoc gui ve phia backend*/
       if (param == "add") {
@@ -147,7 +160,6 @@ export default {
       } else {
         this.select_variable_type = "var";
       }
-
       this.selectVariable = true;
     },
     removeSelectVarEventListener() {
@@ -299,7 +311,6 @@ button {
   border-radius: 4px;
   cursor: pointer;
 }
-
 #highlighting-content {
   margin: 10px;
   padding: 10px;
@@ -307,15 +318,12 @@ button {
   width: calc(100% - 32px);
   height: 150px;
   background-color: #f6f6f6;
-
   font-size: 15pt;
   font-family: normal normal 1em/1.2em monospace;
   line-height: 20pt;
-
   overflow: auto;
   white-space: pre;
 }
-
 #selection-table {
   position: absolute;
   width: 100%;

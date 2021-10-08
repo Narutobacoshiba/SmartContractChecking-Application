@@ -10,10 +10,10 @@
         <select
           class="form-select input-sm"
           aria-label="Default select example"
-          v-model="contextSC"
         >
-          <option v-for="c in contexts" :key="c" :value="c.cid">
-            {{ c.context }}
+          <option>--- Select Context ---</option>
+          <option v-for="c in contexts" :key="c" :value="c">
+            {{ c.name }}
           </option>
         </select>
       </div>
@@ -23,7 +23,15 @@
         <p>Type</p>
       </div>
       <div class="col-10">
-        <input type="text" value="DCR" class="form-select input-sm" />
+        <select
+          class="form-select input-sm"
+          aria-label="Default select example"
+        >
+          <option>--- Select Type ---</option>
+          <option v-for="c in contexts" :key="c" :value="c">
+            {{ c.name1 }}
+          </option>
+        </select>
       </div>
     </div>
 
@@ -34,7 +42,7 @@
       <div class="col-10">
         <span>There are several options:</span>
         <ul>
-          <li v-for="c in contexts" :key="c">{{ c.des }}</li>
+          <li v-for="c in contexts" :key="c">{{ c.description }}</li>
         </ul>
       </div>
     </div>
@@ -78,6 +86,7 @@
 <script>
 import UploadContext from "./UpLoadContext.vue";
 import CheckService from "../../services/check.service.js";
+import {GetAllcpncontext} from "../../services/data"
 export default {
   components: { UploadContext },
   data() {
@@ -97,7 +106,13 @@ export default {
       return this.selectComponents;
     },
   },
+  mounted() {
+    this.initData()
+  },
   methods: {
+    async initData() {
+      this.contexts = await GetAllcpncontext();
+    },
     async checkContext() {
       const context = {
         cid: 1,
@@ -176,7 +191,6 @@ export default {
   margin-top: 50px;
   margin-bottom: 50px;
   padding-bottom: 5%;
-  
 }
 #btns button {
   margin-left: 40px;

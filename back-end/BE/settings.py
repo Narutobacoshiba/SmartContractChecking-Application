@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'demo_middleware',
     'corsheaders',
     'LTLpro',
+    'cpncontext',
+    'ltltemplate',
     'acount',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
