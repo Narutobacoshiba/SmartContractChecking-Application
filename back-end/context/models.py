@@ -9,4 +9,4 @@ class Context(models.Model):
     description= models.CharField(max_length=700)
 
     class Meta:
-        db_table = 'context'
+        db_table = 'Context'

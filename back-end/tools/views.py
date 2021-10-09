@@ -29,11 +29,11 @@ def calltools(request):
             elif (toolname == 'dcr2cpn'):
                 xml = ""
                 dcr2cpn(xml)
-            elif (toolname == 'helena'):
-                runHelena()
             elif (toolname == 'ltl'):
                 ltlToPro()
-
-            return Response({"message": "Run Tool Successfully!"}, status=status.HTTP_200_OK)
+            elif (toolname == 'helena'):
+                result = runHelena()
+                return Response({"message": result}, status=status.HTTP_200_OK)
+            return Response({"message": "Run Tool Successfully"}, status=status.HTTP_200_OK)
     except:
-        return Response({"message": "Get Data Fail!!"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Run Tool Fail!!"}, status=status.HTTP_400_BAD_REQUEST)

@@ -10,7 +10,7 @@ class Account(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'account'
+        db_table = 'Account'
         
 class Checkedbatchsc(models.Model):
     bid = models.AutoField(primary_key=True)
@@ -21,4 +21,4 @@ class Checkedbatchsc(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'checkedbatchsc'
+        db_table = 'CheckedBatchSC'

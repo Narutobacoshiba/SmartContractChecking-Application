@@ -149,7 +149,7 @@ export default {
       user: { user_name: "Dinh Thanh Ha" },
       error: true,
       view: "",
-      results: ["Result 1", "Result 2", "Result 3"],
+      results: [],
       showConfirmation: false,
       dialog: {},
       confirmation: "",
@@ -158,14 +158,24 @@ export default {
   },
   methods: {
     async callToolHelena() {
-      const tName ="helena"
-      const res = await CheckService.callHelenaTools(tName)
-      console.log(res)
+      const tName = "helena";
+      const res = await CheckService.callHelenaTools(tName);
+      if (res.status == 200 && res !== null && res != undefined) {
+        const mess = res.data.message;
+        this.results.push(mess);
+      }else{
+        this.results.push("Can't run HELENA tools")
+      }
     },
     async callToolLTL() {
       const tName = "ltl";
       const res = await CheckService.callToolLTL(tName);
-      console.log(res);
+      if (res.status == 200 && res !== null && res != undefined) {
+        const mess = res.data.message;
+        this.results.push(mess);
+      }else{
+        this.results.push("Can't run LTL tools")
+      }
     },
     move(id) {
       //let _this = this;
@@ -190,7 +200,7 @@ export default {
       await this.delay(2000);
       this.step = "generated";
       this.$store.commit("data/SetProcessView", "check-sc");
-      this.callToolLTL()
+      this.callToolLTL();
     },
     async check() {
       this.step = "checking";
@@ -204,7 +214,7 @@ export default {
       await this.delay(2000);
       this.step = "finish";
       this.$store.commit("data/SetProcessView", "finish");
-      this.callToolHelena()
+      this.callToolHelena();
     },
     routing(processview) {
       this.$store.commit("data/SetProcessView", processview);
@@ -405,6 +415,8 @@ export default {
   margin-left: 40px;
   text-align: left;
   margin-top: 0;
+  overflow: scroll;
+  height: 79%;
 }
 #generated,
 #checked {

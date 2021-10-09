@@ -499,15 +499,19 @@ def runHelena():
     # helenaFile1=""
     # helenaFile2 = ""
     # helena - N = CHECK-prop out.lna
-    helena = "helena " + "outFile.lna"
-    helenaPath = r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools/ltl2prop"
-    pro4 = subprocess.run(helena, cwd=helenaPath, shell=True,
+    #helena = "helena " + "outFile.lna"
+    helena = "helena " + "/home/meedee/helena/examples/lna/allocator.lna"
+    #helenaPath = r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools/ltl2prop"
+    # pro4 = subprocess.run(helena, cwd=helenaPath, shell=True,
+    #                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    pro4 = subprocess.run(helena, shell=True,
                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output = str(pro4.stdout.decode("cp932"))
     start = output.find("Helena report")
     report = output[start:]
-    #print(report)
-    return "Helena success"
+    # print(report)
+    return report
+
 
 #runHelena()
 
@@ -520,5 +524,7 @@ def ltlToPro():
     ltlcommand = "./ltl2prop --lna ./test/" + lnaFileLtl + " --json ./test/" + \
         jsonFile + " --ltl ./test/" + ltlFile + " --out_file " + outltlFile
     ltlPath = r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools/ltl2prop"
-    # ltl2propro = subprocess.run(
-    #     ltlcommand, cwd=ltlPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ltl2propro = subprocess.run(
+        ltlcommand, cwd=ltlPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+#ltlToPro()
