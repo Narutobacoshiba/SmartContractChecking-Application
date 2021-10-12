@@ -11,7 +11,7 @@
       <div class="row">
         <div class="col-2">Formular</div>
         <div class="col-9">
-          <LTLEditor @update="getLTLCode" :code="ltlcode" />
+          <!-- <LTLEditor @update="getLTLCode" :code="ltlcode" /> -->
         </div>
       </div>
       <div class="row">
@@ -44,11 +44,11 @@ followed by an occurrence of {function 4}
 </template>
 
 <script>
-import LTLEditor from "../../../components/LTLEditor.vue";
+// import LTLEditor from "../../../components/LTLEditor.vue";
 export default {
-  components: {
-    LTLEditor,
-  },
+  // components: {
+  //   LTLEditor,
+  // },
   methods: {
     getLTLCode(code) {
       this.ltlcode = code;

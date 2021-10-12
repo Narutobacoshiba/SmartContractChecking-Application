@@ -37,7 +37,6 @@ import AddVul from "../views/vuls-crud/add-vul.vue"
 import EditVul from "../views/vuls-crud/edit-vul.vue"
 import ListVul from "../views/vuls-crud/list-vulnerabilities.vue"
 
-import LTLEditor from "../components/LTL"
 
 import { DOMAIN_TITLE } from '../.env'
 
@@ -47,12 +46,6 @@ export const routes = [
     name: "Index",
     component: Index,
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | home` },
-  },
-  {
-    path: "/LTL",
-    name: "LTL",
-    component: LTLEditor,
-    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | home` },
   },
   {
     path: "/login",
