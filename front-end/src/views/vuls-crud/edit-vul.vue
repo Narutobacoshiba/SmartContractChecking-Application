@@ -24,7 +24,7 @@
       </div>
       <div class="editor-area">
         <span class="title">Formular</span>
-        <LTLEditor :code.sync="codeModel" @change="changedLTL($event)" />
+        <!-- <LTLEditor :code.sync="codeModel" @change="changedLTL($event)" /> -->
       </div>
       <div id="group-btn">
         <button id="button-add" type="button" @click="clickHandler('save')">
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import LTLEditor from "../../components/LTLEditor.vue";
+// import LTLEditor from "../../components/LTLEditor.vue";
 import { GetLtlById, UpdateLtl } from "../../services/data";
 export default {
   data() {
@@ -67,7 +67,7 @@ export default {
     //get vulnerability by id from db: name, description
     await this.initData();
   },
-  components: { LTLEditor },
+  // components: { LTLEditor },
   methods: {
     async initData() {
       const data = await GetLtlById(this.id);

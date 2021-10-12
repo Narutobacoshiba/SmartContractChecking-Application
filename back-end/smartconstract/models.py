@@ -16,7 +16,7 @@ class Account(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'account'
+        db_table = 'Account'
 
 class Smartcontract(models.Model):
     sid = models.AutoField(primary_key=True)
@@ -28,5 +28,5 @@ class Smartcontract(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'smartcontract'
+        db_table = 'SmartContract'
 

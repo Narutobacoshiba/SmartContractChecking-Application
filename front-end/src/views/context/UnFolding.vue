@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import CheckService from "../../services/check.service"
 export default {
   data() {
     return {
@@ -52,9 +53,18 @@ export default {
     };
   },
   methods: {
+    async callUnfoldingTools(){
+      const tName = "unfolding"
+      const tLna = ""
+      const tContext = ""
+      const tParam = ""
+      const res = await CheckService.callUnfoldingTools(tName,tLna,tContext,tParam)
+      console.log(res)
+    },
     routing(param) {
       if (param == "unfolding") {
-        this.$router.push({ name: "LTLCheckOption" });
+        this.callUnfoldingTools()
+        // this.$router.push({ name: "LTLCheckOption" });
       }
       if (param == "next") {
         this.$router.push({ name: "LTLCheckOption" });
