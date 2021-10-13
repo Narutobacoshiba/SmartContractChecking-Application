@@ -136,7 +136,7 @@ export default {
     routing(param) {
       /* let ltl_content = this.getNodeValue() ltl content se duoc gui ve phia backend*/
       if (param == "add") {
-        this.$router.push({ name: "Initial" });
+        this.$router.push({ name: "ChooseElementOfSmartContract" });
       }
       if (param == "back") {
         this.$router.push({ name: "CSPSettingType" });
