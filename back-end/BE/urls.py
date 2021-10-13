@@ -26,5 +26,6 @@ urlpatterns = [
     path('ltltemplate/',include('ltltemplate.urls')),
     path('cpncontext/',include('cpncontext.urls')),
     path('auth/', include('acount.urls')),
-    path('select-sc/', include('Transactions.urls'))
+    path('select-sc/', include('Transactions.urls')),
+    path('tools/',include('tools.urls')),
 ]

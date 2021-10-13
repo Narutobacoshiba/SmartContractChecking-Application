@@ -20,7 +20,7 @@
       </div>
       <div class="editor-area">
         <span class="title">Formular</span>
-        <EditorSc :code.sync="code" />
+        <!-- <EditorSc :code.sync="code" /> -->
       </div>
       <div id="group-btn">
         <button id="button-add" type="button" @click="clickHandler('save')">
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import EditorSc from "../../../components/TextEditor.vue";
+// import EditorSc from "../../../components/TextEditor.vue";
 import { GetContextById, UpdateContext } from "../../../services/data";
 export default {
   created() {
@@ -54,7 +54,7 @@ export default {
       context: { name: String, code: String, description: String },
     };
   },
-  components: { EditorSc },
+  // components: { EditorSc },
   methods: {
     async initData() {
       const data = await GetContextById(this.context_id);

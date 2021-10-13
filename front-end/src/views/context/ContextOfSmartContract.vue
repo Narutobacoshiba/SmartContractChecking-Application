@@ -114,21 +114,10 @@ export default {
       this.contexts = await GetAllcpncontext();
     },
     async checkContext() {
-      const context = {
-        cid: 1,
-        name: "Medicine",
-        content: "",
-        description: "",
-        ctid: 1,
-      };
+      const toolName ="dcr2cpn"
+      const xml = ""
       // console.log(context);
-      const res = await CheckService.callToolsCheckContext(
-        context.cid,
-        context.name,
-        context.content,
-        context.description,
-        context.ctid
-      );
+      const res = await CheckService.callDCNTools(toolName,xml);
       console.log(res);
     },
     cComponents() {
@@ -144,7 +133,7 @@ export default {
     routing(param) {
       if (param == "add") {
         this.checkContext();
-        this.$router.push({ name: "UnFolding" });
+        this.$router.push({ name: "LTLCheckOption" });
       }
       if (param == "upfile") {
         this.$router.push({ name: "UpLoadContext" });
