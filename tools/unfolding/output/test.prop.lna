@@ -1,0 +1,2 @@
+ltl property outOfRange:
+	[] ( not out ) ;
