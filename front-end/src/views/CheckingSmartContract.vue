@@ -133,6 +133,7 @@
 
 <script>
 import CheckService from "../services/check.service";
+
 export default {
   data() {
     return {
@@ -157,6 +158,16 @@ export default {
     };
   },
   methods: {
+    async callUnfoldingTool(){
+      const tName = "unfolding"
+      const tLna = ""
+      const tContext = ""
+      const tParam = ""
+      const res = await CheckService.callUnfoldingTools(tName,tLna,tContext,tParam)
+      console.log("here");
+      console.log(res)
+    },
+    
     async callToolHelena() {
       const tName = "helena";
       const res = await CheckService.callHelenaTools(tName);
@@ -176,6 +187,13 @@ export default {
       }else{
         this.results.push("Can't run LTL tools")
       }
+    },
+    async checkContext() {
+      const toolName ="dcr2cpn"
+      const xml = ""
+      // console.log(context);
+      const res = await CheckService.callDCNTools(toolName,xml);
+      console.log(res);
     },
     move(id) {
       //let _this = this;
@@ -200,7 +218,11 @@ export default {
       await this.delay(2000);
       this.step = "generated";
       this.$store.commit("data/SetProcessView", "check-sc");
-      this.callToolLTL();
+      //dcr2cpn
+      await this.checkContext();
+      //unfoding
+      await this.callUnfoldingTool();
+      await this.callToolLTL();
     },
     async check() {
       this.step = "checking";
@@ -275,7 +297,7 @@ export default {
     this.list_selected_sc = this.$store.getters["data/GetSelectedSC"];
     this.context = this.$store.getters["data/GetSelectedContext"];
     this.list_selected_vuls =
-      this.$store.getters["data/GetSelectedVulnerbility"];
+    this.$store.getters["data/GetSelectedVulnerbility"];
     this.view = this.$store.getters["data/GetProcessView"];
   },
   computed: {

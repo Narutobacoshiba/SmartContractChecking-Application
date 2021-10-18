@@ -44,7 +44,7 @@ export default class CheckService extends BaseService {
             context: tContext,
             param: tParam
         };
-        console.log(paraData)
+        // console.log(paraData)
         try {
             const response = await this.request({ auth: true }).post('/tools/', paraData)
             return new ResponseWrapper(response, response.data)
