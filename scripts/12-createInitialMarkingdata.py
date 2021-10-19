@@ -6,11 +6,11 @@ db = mysql.connector.connect(
     database="soliditycpn"
 )
 mycursor = db.cursor()
-sqlFomular = "INSERT INTO IMTemplate (name,formula) VALUES (%s,%s)"
+sqlFomular = "INSERT INTO InitialMarking (num_user,IM_type) VALUES (%s,%s)"
 multi = [
-    ("IM template 1","this is IM  1"),
-    ("IM template 2","this is IM  2"),
-    ("IM template 3","this is IM  3"),
+    (10,"IM_type1"),
+    (20,"IM_type2"),
+    (30,"IM_type3"),
     ]
 mycursor.executemany(sqlFomular,multi)
 db.commit()

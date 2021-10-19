@@ -11,11 +11,11 @@ def InsertIMG(FilePath):
         BinaryData = File.read()
     return BinaryData
 mycursor = db.cursor()
-sqlFomular = "INSERT INTO CheckedBatchSC (aid,name,checkedDate,description) VALUES (%s,%s,%s,%s)"
+sqlFomular = "INSERT INTO CheckedBatchSC (aid,lnid,lteid,cid,imid,noSC,checkedDate,status,LTLformula,result) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 multi = [
-    (1,"checked1",datetime.datetime.now(),"This is checked 1"),
-    (2,"checked2",datetime.datetime.now(),"This is checked 2"),
-    (3,"checked3",datetime.datetime.now(),"This is checked 3"),
+    (1,1,1,1,1,4,datetime.datetime.now(),True,"LTLformula 1","result 1"),
+    (2,2,2,2,2,2,datetime.datetime.now(),False,"LTLformula 2","result 2"),
+    (3,3,3,3,3,7,datetime.datetime.now(),True,"LTLformula 3","result 3"),
 ]
 mycursor.executemany(sqlFomular,multi)
 db.commit()

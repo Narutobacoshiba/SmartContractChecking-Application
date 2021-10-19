@@ -49,7 +49,7 @@ aid int not null references Account(aid)
 mycursor.execute("""
 CREATE TABLE History_Type (
 id int primary key AUTO_INCREMENT,
-history_name nvarchar(200),
+historyName nvarchar(200),
 hid int not null references History(hid)
 )
 
@@ -77,9 +77,11 @@ sid int not null references SmartContract(sid)
 mycursor.execute("""
 CREATE table Argument (
 id int primary key AUTO_INCREMENT,
-fid int not null references Functions(fid),
 name nvarchar(200),
-type nvarchar(200)
+vartype nvarchar(200),
+type nvarchar(50),
+value int,
+fid int not null references Functions(fid)
 
 )
 
@@ -96,16 +98,6 @@ fid int not null references Functions(fid)
 
 """)
 mycursor.execute("""
-CREATE TABLE CheckedBatchSC (
-bid int primary key AUTO_INCREMENT,
-aid int not null references Account(aid),
-name nvarchar(200),
-checkedDate date,
-description text
-)
-
-""")
-mycursor.execute("""
 CREATE TABLE LNAFile (
 lnid int primary key AUTO_INCREMENT,
 hcpnFile LONGBLOB,
@@ -113,48 +105,15 @@ propFile LONGBLOB
 )
 
 """)
-mycursor.execute("""
-CREATE TABLE LTLType (
-ltyid int primary key AUTO_INCREMENT,
-name nvarchar(200),
-description text
-)
 
-""")
 mycursor.execute("""
 CREATE TABLE LTLTemplate (
 lteid int primary key AUTO_INCREMENT,
 name nvarchar(200),
 formula text,
-description text,
-ltyid int not null references LTLType(ltyid)
-)
-
-""")
-mycursor.execute("""
-CREATE TABLE IMTemplate (
-imtid int primary key AUTO_INCREMENT,
-name nvarchar(200),
-formula text
-)
-
-""")
-mycursor.execute("""
-CREATE TABLE InitialMarking (
-imid int primary key AUTO_INCREMENT,
-numberUser int,
-balance int,
-value int,
-orther_parameter nvarchar(200),
-imtid int not null references IMTemplate(imtid)
-)
-
-""")
-mycursor.execute("""
-CREATE TABLE ContextType (
-ctid int primary key AUTO_INCREMENT,
-name nvarchar(200),
+template_type nvarchar(200),
 description text
+
 )
 
 """)
@@ -163,24 +122,66 @@ CREATE TABLE CPNContext (
 cid int primary key AUTO_INCREMENT,
 name nvarchar(200),
 content text,
-description text,
-ctid int not null references ContextType(ctid)
+context_type nvarchar(200),
+description text
 )
 
 """)
 mycursor.execute("""
-CREATE TABLE CheckedSmartContractDetail (
-cscdid int primary key AUTO_INCREMENT,
-status bool,
-isLTLTemplate bool,
-LTLFormula text,
-result text,
-lnid int not null references LNAFile(lnid),
-sid int not null references SmartContract(sid),
-lteid int not null references LTLTemplate(lteid),
-cid int not null references CPNContext(cid),
-bid int not null references CheckedBatchSC(bid),
+Create table InitialMarking (
+imid int primary key AUTO_INCREMENT,
+num_user int,
+IM_type varchar(200)
+)
+""")
+
+mycursor.execute("""
+Create table Balance (
+blid int primary key AUTO_INCREMENT,
+blfrom int,
+blto int,
+blvalue int,
+blrange varchar(200),
 imid int not null references InitialMarking(imid)
 )
-
+""")
+mycursor.execute("""
+Create table IMFunction (
+imfid int primary key AUTO_INCREMENT,
+fun_name varchar(200),
+sender_from int,
+sender_to int,
+imid int not null references InitialMarking(imid)
+)
+""")
+mycursor.execute("""
+Create table IMArgument (
+imaid int primary key AUTO_INCREMENT,
+arg_name varchar(200),
+IMfrom int,
+IMto int,
+imfid int not null references IMFunction(imfid)
+)
+""")
+mycursor.execute("""
+CREATE TABLE CheckedBatchSC (
+bid int primary key AUTO_INCREMENT,
+aid int not null references Account(aid),
+lnid int not null references LNAFile(lnid),
+lteid int not null references LTLTemplate(lteid),
+cid int not null references CPNContext(cid),
+imid int not null references InitialMarking(imid),
+noSC int,
+checkedDate date,
+status bit,
+LTLformula text,
+result varchar(200)
+)
+""")
+mycursor.execute("""
+CREATE TABLE CheckedSmartContractDetail (
+sid int not null references SmartContract(sid),
+bid int not null references CheckedBatchSC(bid),
+PRIMARY KEY(sid,bid)
+)
 """)
