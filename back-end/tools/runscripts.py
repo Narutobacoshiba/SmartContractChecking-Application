@@ -533,6 +533,7 @@ helenaReport = '''Helena report
       8866768 events executed
       94.00 % of average CPU Usage
 --------------------------------------------------------------------------------'''
+path = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools"
 
 def unfolding(lna, context, param):
     lnaFile = "EtherGame.lna"
@@ -540,15 +541,14 @@ def unfolding(lna, context, param):
     param = "function1"
     outFileUnf = "./output/out123"
     commandUnf = "./unfolding --lna ./test/" + lnaFile + "  --context ./test/" + contextFile + " --param " + param + " --out_file "+outFileUnf
-    pathUnf = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools\unfolding"
+    pathUnf = path + r"\unfolding"
     unfolding = subprocess.run(commandUnf, cwd=pathUnf, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
 
 def dcr2cpn(xml):
     xmlFile = "test.xml"
     outFile = "outFile"
     commandDcr = "./dcr2cpn --xml ./test/" + xmlFile + " --out_file " + outFile
-    pathDcr = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools\dcr2cpn"
+    pathDcr = path + r"\dcr2cpn"
     dcr2cpnpro = subprocess.run(commandDcr, cwd=pathDcr, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 def ltlToPro():
@@ -557,24 +557,28 @@ def ltlToPro():
     jsonFile = "etherGame.json"
     outltlFile = "outFile"
     ltlcommand = "./ltl2prop --lna ./test/" + lnaFileLtl + " --json ./test/" + jsonFile + " --ltl ./test/" + ltlFile + " --out_file " + outltlFile
-    ltlPath = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools\ltl2prop"
+    ltlPath = path + r"\ltl2prop"
     ltl2propro = subprocess.run(ltlcommand, cwd=ltlPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-
-def runHelena():
-    property = "outOfRange"
-    helenaPath = r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools/ltl2prop"
-    helena = "helena helena -N=CHECK -p="+ property + helenaPath
-    # pro4 = subprocess.run(helena, cwd=helenaPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    pro4 = subprocess.run(helena, shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = str(pro4.stdout.decode("cp932"))
-    start = output.find("Helena report")
-    report = output[start:]
-    # print(report)
-    return helenaReport
+def runHelena(property):
+	helenaPath = path + r"\ltl2prop"
+	helenaFile = "outltl.lna"
+	propfile = helenaPath + "/" +helenaFile[0:-4]+".prop.lna"
+	f = open(propfile, 'r')
+	propLna = str(f.read())
+	begin = propLna.find("not ")+4
+	end = propLna.find(" and")
+	property = propLna[begin:end]
+	helena = "helena -N=CHECK -p="+ property +" "+ helenaFile
+	pro4 = subprocess.run(helena, cwd=helenaPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	output = str(pro4.stdout.decode("cp932"))
+	start = output.find("Helena report")
+	report = output[start:]
+	print(report)
+	f.close()
+	return report
 
 #runHelena()
-
 
 def solidityToCpn():
 	sodityFile = ""
