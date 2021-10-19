@@ -122,8 +122,8 @@ std::map<std::string, std::string> LTLTranslator::createUnderOverFlowVul(std::ve
     std::string variable = _param[0];
     std::stringstream _vul;
     _vul << "const minThreshold = 0;" << "\n" << "const maxThreshold = 10000" << "\n";
-    _vul << "proposition out: ('" + variable + "' < minThreshold) | ('" + variable + "' > maxThreshold);" << "\n";
-    _vul << "property outOfRange: G ( ! out );";
+    _vul << "proposition oFut: ('" + variable + "' < minThreshold) | ('" + variable + "' > maxThreshold);" << "\n";
+    _vul << "property outOfRange: G ( ! oFut );";
     return createVulFileFromFormula(_vul.str());
 }
 

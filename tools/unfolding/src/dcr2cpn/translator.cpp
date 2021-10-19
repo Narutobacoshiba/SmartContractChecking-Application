@@ -455,10 +455,11 @@ StructuredNetNodePtr Dcr2CpnTranslator::translate(){
     /** Check if the event has a response relation to itself
      */
     for(auto it = events_self_response.begin(); it != events_self_response.end(); it++){
+        SubNetPtr event = get_subnet_by_name(it->first);
         if(!(it->second)){
-            SubNetPtr event = get_subnet_by_name(it->first);
             event->add_responsecvparams("{"+event->get_id()+",0}");
         }
+        event->add_executecvparams("{"+event->get_id()+",1}");
     }
     
     /** Get transitions from subnet and add it to a NetNode

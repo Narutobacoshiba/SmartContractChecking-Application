@@ -1,2 +1,2 @@
 ltl property outOfRange:
-	[] ( not out ) ;
+	[] ( not oFut ) ;

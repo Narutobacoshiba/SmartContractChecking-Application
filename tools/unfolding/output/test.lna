@@ -83,13 +83,6 @@ function getIndex (LIST_REDEEMABLE_ETHER lre, ADDRESS adr) -> int{
 /*
  * Function: state
  */
-place cflow {
-	dom : epsilon;
-}
-
-/*
- * Function: state
- */
 place marking {
 	dom : marking_value*marking_value*marking_value;
 	init : <(|0,0|,|0,0|,|1,1|)>;
@@ -98,6 +91,10 @@ place marking {
 /*
  * Function: state
  */
+place state_cflow {
+	dom : epsilon;
+	init : epsilon;
+}
 place S {
 	dom : STATE;
 	init : <( {UINT(cb), UINT(v1), UINT(v2), UINT(v3), UINT(v4), UINT(v5), UINT(v6), initRedeemableEther(users)} )>;
@@ -117,9 +114,6 @@ place P_Play {
 /*
  * Function: play
  */
-place play_cflow {
-	dom : epsilon;
-}
 place PLAY_P1 {
 	dom : PLAY_STATE;
 }
@@ -161,11 +155,11 @@ place PLAY_currentBalance {
 transition play {
 	in {
 		marking : <(execute,response,include)>;
-		cflow : epsilon;
+		state_cflow : epsilon;
 	}
 	out {
-		marking : <(execute,cvalue(response,|{0,0}|),include)>;
-		play_flow : epsilon;
+		marking : <(cvalue(execute,|{0,1}|),cvalue(response,|{0,0}|),include)>;
+		play_cflow : epsilon;
 	}
 	guard : (include[0] = 1);
 }
@@ -176,11 +170,11 @@ transition play {
 transition claimReward {
 	in {
 		marking : <(execute,response,include)>;
-		cflow : epsilon;
+		state_cflow : epsilon;
 	}
 	out {
-		marking : <(execute,cvalue(response,|{1,0}|),cvalue(include,|{0,1}|))>;
-		cflow : epsilon;
+		marking : <(cvalue(execute,|{1,1}|),cvalue(response,|{1,0}|),cvalue(include,|{0,1}|))>;
+		state_cflow : epsilon;
 	}
 	guard : (include[1] = 1) and (confirm_condition(|{include[0],execute[0]}|) = 1);
 }
@@ -196,7 +190,7 @@ transition PLAY_revert1 {
 	}
 	out {
 		S : <( s )>;
-		cflow : epsilon;
+		state_cflow : epsilon;
 	}
 	guard : not (p.value = 1);
 }
@@ -228,7 +222,7 @@ transition PLAY_revert2 {
 	out {
 		PLAY_currentBalance : <( currentBalance )>;
 		S : <( sp.state )>;
-		cflow : epsilon;
+		state_cflow : epsilon;
 	}
 	guard : not (currentBalance <= sp.state.finalMileStone);
 }
@@ -357,10 +351,10 @@ transition PLAY_return {
 	}
 	out {
 		S : <( sp.state )>;
-		cflow : epsilon;
+		state_cflow : epsilon;
 	}
 }
-proposition out:
+proposition oFut:
 	exists (t in PLAY_currentBalance | t->1 < 0) or exists (t in PLAY_currentBalance | t->1 > 10000);
 
 

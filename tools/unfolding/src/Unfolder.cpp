@@ -163,12 +163,6 @@ StructuredNetNodePtr Unfolder::unfoldModelWithDCRContext(){
     if(unfolded_func.size() > 0){
         std::string current_submodel_name;
 
-        PlaceNodePtr cflow = std::make_shared<PlaceNode>();
-        cflow->set_name("cflow");
-        cflow->set_domain("epsilon");
-        unfold_model->add_place(std::make_shared<CommentNode>("\n/*\n * Function: state\n */\n"));
-        unfold_model->add_place(cflow);
-
         for(size_t i = 0; i < cpn_context->num_parameters(); i++){
             unfold_model->add_parameter(cpn_context->get_parameter(i));
         }
@@ -201,24 +195,24 @@ StructuredNetNodePtr Unfolder::unfoldModelWithDCRContext(){
                 TransitionNodePtr transition = std::static_pointer_cast<TransitionNode>(node);
                 if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
                     ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
-                    cflow_arc_in->set_placeName("cflow");
+                    cflow_arc_in->set_placeName("state_cflow");
                     cflow_arc_in->set_label("epsilon");
                     transition->add_inArc(cflow_arc_in);
 
                     ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
-                    cflow_arc_out->set_placeName(current_submodel_name+"_flow");
+                    cflow_arc_out->set_placeName(current_submodel_name+"_cflow");
                     cflow_arc_out->set_label("epsilon");
                     transition->add_outArc(cflow_arc_out);
 
                     unfold_model->add_transition(transition);
                 }else{
                     ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
-                    cflow_arc_in->set_placeName("cflow");
+                    cflow_arc_in->set_placeName("state_cflow");
                     cflow_arc_in->set_label("epsilon");
                     transition->add_inArc(cflow_arc_in);
 
                     ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
-                    cflow_arc_out->set_placeName("cflow");
+                    cflow_arc_out->set_placeName("state_cflow");
                     cflow_arc_out->set_label("epsilon");
                     transition->add_outArc(cflow_arc_out);
 
@@ -237,18 +231,23 @@ StructuredNetNodePtr Unfolder::unfoldModelWithDCRContext(){
         for(size_t i = 0; i < cpn_model->num_functions(); i++){
             unfold_model->add_function(cpn_model->get_function(i));
         }
-       
+
+        std::vector<std::string> list_func;
         for(size_t i = 0; i < cpn_model->num_places(); i++){
             LnaNodePtr node = cpn_model->get_place(i);
             if(node->get_node_type() == LnaNodeTypeComment){
                 current_submodel_name = get_model_name_from_comment(std::static_pointer_cast<CommentNode>(node));
                 if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
                     unfold_model->add_place(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
-                    if(current_submodel_name != "state"){
+                    if(std::find(list_func.begin(), list_func.end(), current_submodel_name) == list_func.end()){
                         PlaceNodePtr cflow = std::make_shared<PlaceNode>();
                         cflow->set_name(current_submodel_name+"_cflow");
                         cflow->set_domain("epsilon");
+                        if(current_submodel_name == "state"){
+                            cflow->set_init("epsilon");
+                        }
                         unfold_model->add_place(cflow);
+                        list_func.push_back(current_submodel_name);
                     }
                 }
             }else if(node->get_node_type() == LnaNodeTypePlace){
@@ -277,7 +276,7 @@ StructuredNetNodePtr Unfolder::unfoldModelWithDCRContext(){
 
                     if(transition->get_out_arc_by_name("S") != nullptr){
                         ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
-                        cflow_arc_out->set_placeName("cflow");
+                        cflow_arc_out->set_placeName("state_cflow");
                         cflow_arc_out->set_label("epsilon");
                         transition->add_outArc(cflow_arc_out);
                     }
