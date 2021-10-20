@@ -470,61 +470,119 @@ transition claimReward {
 
 }'''
 
-param = 'play'
+# param = 'play'
+helenaReport = '''Helena report
+--------------------------------------------------------------------------------
 
+  General informations
+  ------------------------------------------------------------------------------
+    Model analyzed
+      test
+    Model parameters
+      N = 20
+    Model language
+      Helena
+    Analysis date
+      September, 29, 2021 at 15:46:10
+    Command used
+      /home/thien/helena/bin/helena test.lna
+    File path
+      /home/thien/Downloads/SmartContractChecking-Application-
+         hadt/tools/dcr2cpn/test.lna
+
+  Search report
+  ------------------------------------------------------------------------------
+    Action performed
+      state space exploration
+    Host machine
+      thien-VirtualBox (pid = 11865)
+    Termination state
+      SEARCH_TERMINATED
+    Options
+      Search algorithm = DFS
+      Partial order reduction = off
+      Hash compaction = off
+      State compression = off
+      Random successor selection = off
+      Hash table size = 4194304 states
+      Worker threads = 1
+
+  Statistics report
+  ------------------------------------------------------------------------------
+
+    Model statistics
+    ----------------------------------------------------------------------------
+      1 places
+      20 transitions
+      40 arcs
+
+    Time statistics
+    ----------------------------------------------------------------------------
+      2.02 s. for source compilation
+      19.03 s. for exploration
+
+    Exploration statistics
+    ----------------------------------------------------------------------------
+      1576128 states stored
+      1576128 states processed
+      0 deadlock states
+      8866768 transitions
+
+    Other statistics
+    ----------------------------------------------------------------------------
+      8866768 events executed
+      94.00 % of average CPU Usage
+--------------------------------------------------------------------------------'''
+path = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools"
 
 def unfolding(lna, context, param):
     lnaFile = "EtherGame.lna"
     contextFile = "context.lna"
     param = "function1"
     outFileUnf = "./output/out123"
-    commandUnf = "./unfolding --lna ./test/" + lnaFile + "  --context ./test/" + \
-        contextFile + " --param " + param + " --out_file "+outFileUnf
-    pathUnf = r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools/unfolding"
-
-    unfolding = subprocess.run(
-        commandUnf, cwd=pathUnf, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+    commandUnf = "./unfolding --lna ./test/" + lnaFile + "  --context ./test/" + contextFile + " --param " + param + " --out_file "+outFileUnf
+    pathUnf = path + r"\unfolding"
+    unfolding = subprocess.run(commandUnf, cwd=pathUnf, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 def dcr2cpn(xml):
     xmlFile = "test.xml"
     outFile = "outFile"
     commandDcr = "./dcr2cpn --xml ./test/" + xmlFile + " --out_file " + outFile
-    pathDcr = r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools/dcr2cpn"
-    dcr2cpnpro = subprocess.run(
-        commandDcr, cwd=pathDcr, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-
-def runHelena():
-    # helenaFile1=""
-    # helenaFile2 = ""
-    # helena - N = CHECK-prop out.lna
-    #helena = "helena " + "outFile.lna"
-    helena = "helena " + "/home/meedee/helena/examples/lna/allocator.lna"
-    #helenaPath = r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools/ltl2prop"
-    # pro4 = subprocess.run(helena, cwd=helenaPath, shell=True,
-    #                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    pro4 = subprocess.run(helena, shell=True,
-                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = str(pro4.stdout.decode("cp932"))
-    start = output.find("Helena report")
-    report = output[start:]
-    # print(report)
-    return report
-
-
-#runHelena()
-
+    pathDcr = path + r"\dcr2cpn"
+    dcr2cpnpro = subprocess.run(commandDcr, cwd=pathDcr, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 def ltlToPro():
     lnaFileLtl = "out.lna"
     ltlFile = "test.prop"
     jsonFile = "etherGame.json"
     outltlFile = "outFile"
-    ltlcommand = "./ltl2prop --lna ./test/" + lnaFileLtl + " --json ./test/" + \
-        jsonFile + " --ltl ./test/" + ltlFile + " --out_file " + outltlFile
-    ltlPath = r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools/ltl2prop"
-    ltl2propro = subprocess.run(
-        ltlcommand, cwd=ltlPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ltlcommand = "./ltl2prop --lna ./test/" + lnaFileLtl + " --json ./test/" + jsonFile + " --ltl ./test/" + ltlFile + " --out_file " + outltlFile
+    ltlPath = path + r"\ltl2prop"
+    ltl2propro = subprocess.run(ltlcommand, cwd=ltlPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-#ltlToPro()
+def runHelena(property):
+	helenaPath = path + r"\ltl2prop"
+	helenaFile = "outltl.lna"
+	propfile = helenaPath + "/" +helenaFile[0:-4]+".prop.lna"
+	f = open(propfile, 'r')
+	propLna = str(f.read())
+	begin = propLna.find("not ")+4
+	end = propLna.find(" and")
+	property = propLna[begin:end]
+	helena = "helena -N=CHECK -p="+ property +" "+ helenaFile
+	pro4 = subprocess.run(helena, cwd=helenaPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	output = str(pro4.stdout.decode("cp932"))
+	start = output.find("Helena report")
+	report = output[start:]
+	print(report)
+	f.close()
+	return report
+
+#runHelena()
+
+def solidityToCpn():
+	sodityFile = ""
+	outsodility = ""
+	soditycommand = ""
+	soldityPath = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools\ltl2prop"
+	solidity2cpnpro = subprocess.run(soditycommand, cwd= soldityPath,shell=True, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
