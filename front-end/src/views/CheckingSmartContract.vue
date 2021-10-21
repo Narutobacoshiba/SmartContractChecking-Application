@@ -219,10 +219,10 @@ export default {
       this.step = "generated";
       this.$store.commit("data/SetProcessView", "check-sc");
       //dcr2cpn
-      await this.checkContext();
+      // await this.checkContext();
       //unfoding
       await this.callUnfoldingTool();
-      await this.callToolLTL();
+      // await this.callToolLTL();
     },
     async check() {
       this.step = "checking";
