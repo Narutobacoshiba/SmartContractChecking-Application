@@ -14,7 +14,6 @@ import UpLoadSc from "../views/select-sc/smartcontract/UpLoadSc.vue"
 
 import ContextOfSmartContract from "../views/context/ContextOfSmartContract.vue"
 import LoadContext from "../views/context/LoadContext.vue"
-import UnFolding from "../views/context/UnFolding.vue"
 import UpLoadContext from "../views/context/UpLoadContext.vue"
 
 import LTLCheckingOption from "../views/choose-property/LTLCheckingOption.vue"
@@ -23,7 +22,9 @@ import CSPTemplateSetting from "../views/choose-property/CheckContractSpecificPr
 import CheckingSmartContract from "../views/CheckingSmartContract.vue"
 import ContractSpecificPropertyNonTemplate from "../views/choose-property/CheckContractSpecificProperty/ContractSpecificPropertyNonTemplate.vue"
 
+import ChooseEleOfSC from "../views/choose-property/CheckGeneralVul/ChooseElementOfTheSmartContract.vue"
 import GenaralVulSetting from "../views/choose-property/CheckGeneralVul/GenaralVulSetting.vue"
+import VulnerabilitySummary from "../views/choose-property/CheckGeneralVul/VulnerabilitySummary.vue"
 
 import ListContext from "../views/context/context-crud/list-context.vue"
 import AddContext from "../views/context/context-crud/add-context.vue"
@@ -37,7 +38,6 @@ import AddVul from "../views/vuls-crud/add-vul.vue"
 import EditVul from "../views/vuls-crud/edit-vul.vue"
 import ListVul from "../views/vuls-crud/list-vulnerabilities.vue"
 
-import LTLEditor from "../components/LTL"
 
 import { DOMAIN_TITLE } from '../.env'
 
@@ -47,12 +47,6 @@ export const routes = [
     name: "Index",
     component: Index,
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | home` },
-  },
-  {
-    path: "/LTL",
-    name: "LTL",
-    component: LTLEditor,
-    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | home` },
   },
   {
     path: "/login",
@@ -111,11 +105,6 @@ export const routes = [
         component: LoadContext
       },
       {
-        path: 'unfolding',
-        name: 'UnFolding',
-        component: UnFolding
-      },
-      {
         path: 'uploadcontext',
         name: 'UpLoadContext',
         component: UpLoadContext
@@ -153,6 +142,17 @@ export const routes = [
         name: "GenaralVulSetting",
         component: GenaralVulSetting
       },
+      {
+        path:"choose-ele-contract",
+        name:"ChooseElementOfSmartContract",
+        component:ChooseEleOfSC
+      },
+      {
+        path:"vul-summary",
+        name:"VulSummary",
+        component:VulnerabilitySummary
+      },
+
       
     ],
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | choose property` },

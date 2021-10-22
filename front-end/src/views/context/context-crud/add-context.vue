@@ -20,7 +20,7 @@
       </div>
       <div class="editor-area">
         <span class="title">Formular</span>
-        <EditorSc v-model="code" />
+        <!-- <EditorSc v-model="code" /> -->
       </div>
       <div id="group-btn">
         <button id="button-add" type="button" @click="clickHandler('save')">
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import EditorSc from "../../../components/TextEditor.vue";
+// import EditorSc from "../../../components/TextEditor.vue";
 import { CreateContext } from "../../../services/data";
 export default {
   data() {
@@ -49,7 +49,7 @@ export default {
       description: "",
     };
   },
-  components: { EditorSc },
+  // components: { EditorSc },
   methods: {
     checkValidateContext() {
       if (this.code !== "" && this.name !== "" && this.description !== "") {

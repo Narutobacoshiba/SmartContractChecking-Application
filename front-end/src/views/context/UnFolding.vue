@@ -17,7 +17,7 @@
           <thead class="table-inside">
             <tr>
               <th style="width: 10%" scope="col">#</th>
-              <th style="width: 40%" scope="col">Global variables</th>
+              <th style="width: 40%" scope="col">Functions</th>
               <th style="width: 25%" scope="col">Selected All</th>
             </tr>
           </thead>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import CheckService from "../../services/check.service"
 export default {
   data() {
     return {
@@ -54,7 +55,7 @@ export default {
   methods: {
     routing(param) {
       if (param == "unfolding") {
-        this.$router.push({ name: "LTLCheckOption" });
+        // this.$router.push({ name: "LTLCheckOption" });
       }
       if (param == "next") {
         this.$router.push({ name: "LTLCheckOption" });

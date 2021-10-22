@@ -11,7 +11,7 @@
       <div class="row">
         <div class="col-2">Formular</div>
         <div class="col-9">
-          <LTLEditor @update="getLTLCode" :code="ltlcode" />
+          <!-- <LTLEditor @update="getLTLCode" :code="ltlcode" /> -->
         </div>
       </div>
       <div class="row">
@@ -44,11 +44,11 @@ followed by an occurrence of {function 4}
 </template>
 
 <script>
-import LTLEditor from "../../../components/LTLEditor.vue";
+// import LTLEditor from "../../../components/LTLEditor.vue";
 export default {
-  components: {
-    LTLEditor,
-  },
+  // components: {
+  //   LTLEditor,
+  // },
   methods: {
     getLTLCode(code) {
       this.ltlcode = code;
@@ -91,10 +91,21 @@ textarea {
   align-items: center;
   margin-top: 1%;
   margin-bottom: 5%;
+  height: 5%;
 }
 #btn-group button {
+  cursor: pointer;
+  width: 15%;
+  height: 2%;
   border: 1px solid #2196f3;
+  text-align: center;
   color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding: 4px 3px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 #btn-group button:hover{
    background-color: #1079cf;

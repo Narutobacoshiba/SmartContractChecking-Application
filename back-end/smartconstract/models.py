@@ -16,9 +16,10 @@ class Account(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'account'
+        db_table = 'Account'
 
 class Smartcontract(models.Model):
+    sid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
     type = models.CharField(max_length=50, db_collation='utf8_general_ci', blank=True, null=True)
     content = models.TextField(blank=True, null=True)
@@ -27,5 +28,5 @@ class Smartcontract(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'smartcontract'
+        db_table = 'SmartContract'
 

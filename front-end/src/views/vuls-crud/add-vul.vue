@@ -14,7 +14,7 @@
       </div>
       <div class="editor-area">
           <span class="title">Formular</span>
-        <LTLEditor :code="code" @update="updateCode"/>
+        <!-- <LTLEditor :code="code" @update="updateCode"/> -->
       </div>
       <div id="group-btn">
           <button id="button-add" type="button" @click="clickHandler('save')">Save</button>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import LTLEditor from "../../components/LTLEditor.vue"
+// import LTLEditor from "../../components/LTLEditor.vue"
 import {CreateLtl} from "../../services/data"
 export default {
   data() {
@@ -39,7 +39,7 @@ export default {
       let el = document.getElementById("textarea-input");
       el.style.height = 180 + 'px';
   },
-  components: { LTLEditor },
+  // components: { LTLEditor },
   methods: {
       updateCode(code){
           this.code = code

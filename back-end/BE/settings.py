@@ -43,9 +43,13 @@ INSTALLED_APPS = [
     'demo_middleware',
     'corsheaders',
     'LTLpro',
-    'acount',
+    'cpncontext',
+    'ltltemplate',
+    'account',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'Transactions',
+    'tools',
 ]
 
 MIDDLEWARE = [
@@ -149,7 +153,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'acount.Account'
+AUTH_USER_MODEL = 'account.Account'
 
 CORS_ALLOW_CREDENTIALS = True
 
