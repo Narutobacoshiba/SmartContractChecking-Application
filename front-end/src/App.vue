@@ -31,7 +31,7 @@ export default {
         ContractSpecificProperty:true,
         ContractSpecificPropertyNonTemplate:true,
         GenaralVulSetting:true,
-        CheckSmartContract:true
+        CheckSmartContract:true,
       },
     };
   },
