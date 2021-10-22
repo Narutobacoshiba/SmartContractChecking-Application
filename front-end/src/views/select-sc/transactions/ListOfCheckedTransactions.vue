@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <div id="header">
-    <h1>List of Checked Transactions</h1>
+    <h1>Checked Smart Contract List</h1>
     </div>
 
     <div class="grey">
@@ -58,7 +58,7 @@ export default {
     
     routing(param) {
       if (param == "next") {
-        this.$router.push({ name: "CheckRentrancy" });
+        this.$router.push({ name: "CheckingResult" });
       }
       if (param == "addsc") {
         this.$router.push({ name: "SelectSmartContract" });
