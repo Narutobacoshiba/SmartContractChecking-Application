@@ -38,7 +38,7 @@
             <th scope="row">{{ index + 1 }}</th>
             <td>{{ item.name }}</td>
             <td>
-              <input type="checkbox" id="one" value="One" v-model="picked" />
+              <input type="checkbox" id="one" value="One" />
             </td>
           </tr>
           <tr>
@@ -46,7 +46,7 @@
             <td>blindAuction</td>
             <td>Common</td>
             <td>
-              <input type="checkbox" id="one" v-model="picked" name="ch" />
+              <input type="checkbox" id="one" name="ch" value="one" />
             </td>
           </tr>
         </tbody>
@@ -77,16 +77,6 @@ export default {
     };
   },
   methods: {
-    funtionNext() {
-      var checkbox = document.getElementsByName("ch");
-      if 
-    },
-    load() {
-      this.isOpen = true;
-    },
-    dahieu() {
-      this.isOpen = false;
-    },
     routing(param) {
       if (param == "add") {
         this.$router.push({ name: "ContextOfSmartContract" });
@@ -97,6 +87,28 @@ export default {
       if (param == "uploadfile") {
         this.$router.push({ name: "UpLoadSc" });
       }
+    },
+    funtionNext() {
+      var checkbox = document.getElementsByName("ch");
+      var kt = false;
+      for (var i = 0; i < checkbox.length; i++) {
+        if (checkbox[i].checked === true) {
+          kt = true;
+          break;
+        }
+      }
+
+      if (!kt) {
+        alert("Please selet a smart contrac at least to go to the next step!");
+      } else {
+        this.routing("add");
+      }
+    },
+    load() {
+      this.isOpen = true;
+    },
+    dahieu() {
+      this.isOpen = false;
     },
     ...mapActions(["setListSmartContract"]),
     Private: function (arrays) {
