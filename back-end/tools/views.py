@@ -15,16 +15,14 @@ def calltools(request):
         if request.method == 'POST':
             data = request.data
             # ------test data------
-            print(data.keys())
             toolname = data["toolname"]
             print("toolname: ", toolname)
 
             # -----unfolding--------
             if (toolname == 'unfolding'):
-                lna = ""
-                context = ""
-                param = ""
-                unfolding(lna, context, param)
+                xml = ""
+                ltlJson = ""
+                unfolding(xml, ltlJson)
             # -----dcr2cpn----------
             elif (toolname == 'dcr2cpn'):
                 xml = ""
