@@ -3,84 +3,50 @@
     <div id="header">
       <h1>Checking Smart Contracts</h1>
     </div>
-    <div class="text">
-      <span>DCR</span>
-    </div>
-    <div id="locate-1">
-      <div class="text-1">
-        <span>Blind Auction</span>
-      </div>
-      <div id="component">
-        <div class="table table-striped table-hover">
-          <table class="table" border="1">
-            <tr>
-              <th>#</th>
-              <th>LTL Property</th>
-              <th>Type</th>
-            </tr>
-            <tr v-for="data in datatable" :key="data.id">
-              <td>{{ data.id }}</td>
-              <td>{{ data.var }}</td>
-              <td><input type="checkbox" /></td>
-            </tr>
-          </table>
-        </div>
-      </div>
-      <div class="text-1">
-        <span>EitherGame</span>
-      </div>
-      <div id="component">
-        <div class="table table-striped table-hover">
-          <table class="table" border="1">
-            <tr>
-              <th>#</th>
-              <th>LTL Property</th>
-              <th>Type</th>
-            </tr>
-            <tr v-for="data in datatable" :key="data.id">
-              <td>{{ data.id }}</td>
-              <td>{{ data.var }}</td>
-              <td><input type="checkbox" /></td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
     <div class="text-2">
-      <span>Free-content</span>
+      <span>Smart Contracts</span>
     </div>
     <div id="locate-1">
-      <div class="text-1">
-        <span>EitherLotto</span>
-      </div>
       <div id="component">
         <div class="table table-striped table-hover">
           <table class="table" border="1">
             <tr>
               <th>#</th>
-              <th>LTL Property</th>
-              <th>Type</th>
+              <th>Contract Name</th>
             </tr>
             <tr v-for="data in datatable" :key="data.id">
               <td>{{ data.id }}</td>
               <td>{{ data.var }}</td>
-              <td><input type="checkbox" /></td>
             </tr>
           </table>
         </div>
       </div>
     </div>
-    <div id="processing-btn">
-      <button
-        v-if="step == 'initial' || step == 'generating'"
-        class="btn btn-primary-outline"
-        @click="generate"
-      >
-        Generate
-      </button>
-      <button v-else class="btn btn-primary-outline" @click="check">
-        Check
-      </button>
+    <div id="locate-2">
+      <div class="label">Context</div>
+      <div class="input-area">
+        <input
+          type="text"
+          class="form-control"
+          aria-describedby="basic-addon3"
+          value="Gaming"
+        />
+      </div>
+    </div>
+    <div id="locate-3">
+      <div class="label">LTL Property</div>
+      <div class="input-area">
+        <input
+          type="text"
+          class="form-control"
+          aria-describedby="basic-addon3"
+          value="Integer Overflow"
+        />
+      </div>
+    </div>
+    <div id="locate-4">
+      <div class="label">Configuration</div>
+      <div class="link-to"><a href="" @click="navgiate('config')">Link to setting Configuration</a></div>
     </div>
     <div class="contain-process">
       <div id="processing-section">
@@ -128,6 +94,24 @@
         </div>
       </div>
     </div>
+    <div id="processing-btn">
+      <button
+        v-if="step == 'initial' || step == 'generating'"
+        class="btn btn-primary-outline"
+        @click="generate"
+      >
+        Generate
+      </button>
+      <button v-if="step=='check'" class="btn btn-primary-outline" @click="check">
+        Check
+      </button>
+      <button v-if="step=='finish'" class="btn btn-primary-outline">
+        Next
+      </button>
+      <button class="btn btn-primary-outline">
+        Back
+      </button>
+    </div>
   </div>
 </template>
 
@@ -158,24 +142,34 @@ export default {
     };
   },
   methods: {
-    async callUnfoldingTool(){
-      const tName = "unfolding"
-      const tLna = ""
-      const tContext = ""
-      const tParam = ""
-      const res = await CheckService.callUnfoldingTools(tName,tLna,tContext,tParam)
-      console.log("here");
-      console.log(res)
+    navgiate(param){
+      if(param=='config'){
+        this.$router.push({path:""})
+      }
     },
-    
+    async callUnfoldingTool() {
+      const tName = "unfolding";
+      const tLna = "";
+      const tContext = "";
+      const tParam = "";
+      const res = await CheckService.callUnfoldingTools(
+        tName,
+        tLna,
+        tContext,
+        tParam
+      );
+      console.log("here");
+      console.log(res);
+    },
+
     async callToolHelena() {
       const tName = "helena";
       const res = await CheckService.callHelenaTools(tName);
       if (res.status == 200 && res !== null && res != undefined) {
         const mess = res.data.message;
         this.results.push(mess);
-      }else{
-        this.results.push("Can't run HELENA tools")
+      } else {
+        this.results.push("Can't run HELENA tools");
       }
     },
     async callToolLTL() {
@@ -184,15 +178,15 @@ export default {
       if (res.status == 200 && res !== null && res != undefined) {
         const mess = res.data.message;
         this.results.push(mess);
-      }else{
-        this.results.push("Can't run LTL tools")
+      } else {
+        this.results.push("Can't run LTL tools");
       }
     },
     async checkContext() {
-      const toolName ="dcr2cpn"
-      const xml = ""
+      const toolName = "dcr2cpn";
+      const xml = "";
       // console.log(context);
-      const res = await CheckService.callDCNTools(toolName,xml);
+      const res = await CheckService.callDCNTools(toolName, xml);
       console.log(res);
     },
     move(id) {
@@ -216,7 +210,7 @@ export default {
       this.step = "generating";
       this.move("progress-bar-gen");
       await this.delay(2000);
-      this.step = "generated";
+      this.step = "check";
       this.$store.commit("data/SetProcessView", "check-sc");
       //dcr2cpn
       // await this.checkContext();
@@ -297,7 +291,7 @@ export default {
     this.list_selected_sc = this.$store.getters["data/GetSelectedSC"];
     this.context = this.$store.getters["data/GetSelectedContext"];
     this.list_selected_vuls =
-    this.$store.getters["data/GetSelectedVulnerbility"];
+      this.$store.getters["data/GetSelectedVulnerbility"];
     this.view = this.$store.getters["data/GetProcessView"];
   },
   computed: {
@@ -316,7 +310,8 @@ export default {
   },
 };
 </script>
-<style>
+
+<style scoped>
 #header {
   text-align: center;
   margin-top: 2%;
@@ -328,7 +323,7 @@ export default {
 }
 #locate-1 {
   border: 1px solid;
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
   padding-bottom: 3%;
 }
@@ -347,7 +342,9 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
-
+.btn{
+  margin: 0 3%;
+}
 #locate-1 {
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
     rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
@@ -371,13 +368,14 @@ export default {
 }
 .text-2 {
   position: relative;
-  left: 15%;
+  left: 20%;
   top: 15px;
   z-index: 1;
   height: 30px;
   width: 6.6%;
   background: white;
   text-align: center;
+  width: 140px;
 }
 .text {
   position: relative;
@@ -394,10 +392,6 @@ export default {
   width: 94%;
   padding-top: 2%;
   padding-bottom: 2%;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-  border: 1px solid #d9edf7;
-  border-radius: 10px;
 }
 .table {
   width: 94%;
@@ -461,5 +455,33 @@ export default {
 }
 #removeAll-holder {
   margin-top: 50px;
+}
+</style>
+<style scoped>
+/* -----Context Style------ */
+
+#locate-2,#locate-3,#locate-4 {
+  width: 70%;
+  margin: 0 auto;
+  padding:3% 2%;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border: 1px solid #d9edf7;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin: 1% auto;
+}
+
+.label {
+  font-size: 25px;
+}
+.input-area {
+  width: 80%;
+}
+.link-to{
+  width: 80%;
+  display: flex;
+  align-items: center;
 }
 </style>

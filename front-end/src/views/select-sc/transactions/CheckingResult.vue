@@ -9,12 +9,12 @@
       <div class="container">
         <div class="row up">
           <div class="col-5">
-            <button type="button" class="btn btn-outline-primary">
+            <button type="button" class="btn btn-outline-primary" @click="routing('start')">
               Start a new checking session
             </button>
           </div>
           <div class="col-5 right">
-            <button type="button" class="btn btn-outline-primary">Back</button>
+            <button type="button" class="btn btn-outline-primary" @click="routing('back')">Back</button>
           </div>
         </div>
       </div>
@@ -23,7 +23,18 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods:{
+    routing(param){
+      if(param=='back'){
+        this.$router.push({name:"ListOfCheckedTransactions"})
+      }
+      if(param=='start'){
+        this.$router.push({ name: "SelectSmartContract" });
+      }
+    }
+  }
+};
 </script>
 
 <style>
