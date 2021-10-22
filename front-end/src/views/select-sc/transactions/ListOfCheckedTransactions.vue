@@ -1,10 +1,9 @@
 <template>
-  <div id="main">
+  <div id="main" class="container">
     <div id="header">
       <h1>Checked Smart Contract List</h1>
     </div>
 
-    <div class="blue">
       <div class="atable">
         <table class="table table-striped table-hover table-sm">
           <thead class="table-inside">
@@ -36,7 +35,6 @@
             </tr>
           </tbody>
         </table>
-      </div>
     </div>
     <div id="action">
       <div id="btn-addsc" @click="routing('addsc')">Smart a new checking session</div>
@@ -97,22 +95,6 @@ export default {
   color: #3a7694;
 }
 
-.blue {
-  border-radius: 10px;
-  width: 80%;
-  text-align: center;
-  margin-left: 10%;
-  margin-right: 30%;
-  height: 470px;
-  color: black;
-  border: 1px solid #d9edf7;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-  margin-top: 40px;
-  background: none;
-  z-index: 2;
-  position: relative;
-}
 
 h1 {
   text-align: center;
@@ -123,9 +105,7 @@ h1 {
 .atable {
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
     rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-  margin-left: 50px;
   margin-top: 50px;
-  margin-right: 50px;
   padding-bottom: 15%;
   border: 1px solid #d9edf7;
   border-radius: 10px;
@@ -171,7 +151,7 @@ h1 {
   margin-top: 4%;
   display: flex;
   justify-content: space-between;
-  width: 60%;
+  width: 70%;
   padding-bottom: 5%;
 }
 .Button {
