@@ -1,15 +1,74 @@
-#include "Unfolder.hpp"
+#include "./Unfolder.hpp"
 
-/** The main function to process and read the input files (lna)
- */
-Unfolding::Unfolding(const std::string& _context, std::stringstream& _sol_stream, std::stringstream& _context_stream, const std::string& param){
-    context = _context;
+Unfolder::Unfolder(const StructuredNetNodePtr& _context, std::stringstream& _sol_lna_stream, const nlohmann::json& lna_json,const nlohmann::json& ltl_json){
+    sol_information = lna_json;
+    ltl_information = ltl_json;
+
+    unfolded_func = FindUnfoldedFunction();
+  
+    analyseLnaFile(_sol_lna_stream);
+
+    cpn_context = _context;
+}
+
+std::vector<std::string> Unfolder::FindUnfoldedFunction(){
+    std::vector<std::string> unfolded_func;
+    unfolded_func.push_back("state");
+    std::vector<std::string> list_required_variables;
+    
+    std::string ltl_type = ltl_information.at("type");
+    auto ltl_param = ltl_information.at("params");
+    if(ltl_type == "general"){
+        std::string ltl_name = ltl_param.at("name");
+        if(ltl_name == "under_over_flow"){
+            auto inputs = ltl_param.at("inputs");
+            for(size_t i = 0; i < inputs.size(); i++){
+                list_required_variables.push_back(inputs[i]);
+            }
+        }
+    }
+
+    std::map<std::string, std::string> global_variables;
+    auto gvs = sol_information.at("globalVariables");
+    for(size_t i = 0; i < gvs.size(); i++){
+        auto gv = gvs[i];
+        std::string gv_name = gv.at("name");
+        global_variables[gv_name] = gv.at("placeType");
+    }
+    
+    auto functions = sol_information.at("functions");
+    for(size_t i = 0; i < functions.size(); i++){
+        std::map<std::string, std::string> local_var;
+        auto lvs =  functions[i].at("localVariables");
+        for(size_t i = 0; i < lvs.size(); i++){
+            auto lv = lvs[i];
+            std::string lv_name = lv.at("name"); 
+            local_var[lv_name] = lv.at("place");
+        }
+        for(auto it = list_required_variables.begin(); it != list_required_variables.end(); ++it){
+            if(local_var.find(*it) != local_var.end()){
+                unfolded_func.push_back(functions[i].at("name"));
+                break;
+            }
+        }        
+    }
+
+    for(auto it = list_required_variables.begin(); it != list_required_variables.end(); ++it){
+        if(global_variables.find(*it) != global_variables.end()){
+            unfolded_func.clear();
+            break;
+        }
+    }
+
+    return unfolded_func;
+}
+
+void Unfolder::analyseLnaFile(std::stringstream& _sol_lna_stream){
+    cpn_model = std::make_shared<StructuredNetNode>();
+    std::list<std::string> _sol_lines;
 
     std::string new_line;
-    
-    unfold_func = split(param,"/");
-
-    while (std::getline(_sol_stream, new_line)) {
+    while (std::getline(_sol_lna_stream, new_line)) {
         if (!new_line.empty()) {
             std::string temp = std::string(new_line);
             trim_ex(temp);
@@ -17,158 +76,13 @@ Unfolding::Unfolding(const std::string& _context, std::stringstream& _sol_stream
                 _sol_lines.emplace_back(new_line);
         }
     }
-
-    while (std::getline(_context_stream, new_line)) {
-        if (!new_line.empty()) {
-            std::string temp = std::string(new_line);
-            trim_ex(temp);
-            if(temp.length() > 0)
-                _context_lines.emplace_back(new_line);
-        }
-    }
-}
-
-/** Get name of Submodel
- */
-std::string SubmodelHolder::get_name(){
-    return name;
-}
-/** Add a transition of context file to storage
- */
-void SubmodelHolder::add_context_transition(TransitionNodePtr _transition){
-    context_transitions.push_back(_transition);
-}
-/** Add a transition of solidity file to storage
- */
-void SubmodelHolder::add_solidity_transition(TransitionNodePtr _transition){
-    solidity_transitions.push_back(_transition);
-}
-/** Get the number of transition in context file 
- */
-size_t SubmodelHolder::num_context_transitions(){
-    return context_transitions.size();
-}
-/** Get the number of transition in solidity file 
- */
-size_t SubmodelHolder::num_solidity_transitions(){
-    return solidity_transitions.size();
-}
-/** Get transition of context file by index
- */
-TransitionNodePtr SubmodelHolder::get_context_transition(size_t i){
-    return context_transitions[i];
-}
-/** Get transition of solidity file by index
- */
-TransitionNodePtr SubmodelHolder::get_solidity_transition(size_t i){
-    return solidity_transitions[i];
-}
-/** Add a place of context file to storage
- */
-void SubmodelHolder::add_context_place(PlaceNodePtr _place){
-    context_places.push_back(_place);
-}
-/** Get place of context file by index
- */
-PlaceNodePtr SubmodelHolder::get_context_place(size_t i){
-    return context_places[i];
-}
-/** Get the number of place in context file 
- */
-size_t SubmodelHolder::num_context_places(){
-    return context_places.size();
-}
-/** Add a transition of solidity file to storage
- */
-void SubmodelHolder::add_solidity_place(PlaceNodePtr _place){
-    solidity_places.push_back(_place);
-}
-/** Get place of solidity file by index
- */
-PlaceNodePtr SubmodelHolder::get_solidity_place(size_t i){
-    return solidity_places[i];
-}
-/** Get the number of place in solidity file 
- */
-size_t SubmodelHolder::num_solidity_places(){
-    return solidity_places.size();
-}
-/** Get an object of SubmodelHolder by name
- */
-SubmodelHolderPtr Unfolding::get_submodel_holder_by_name(const std::string& _name){
-    for(auto it = submodelHolders.begin(); it != submodelHolders.end(); ++it){
-        if((*it)->get_name() == _name){
-            return (*it);
-        }
-    }
-    return nullptr;
-}
-/** Add transition of context file to specific submodel indicated by the name
- */
-void Unfolding::add_context_transition_to_submodel(const std::string& _name, TransitionNodePtr _transition){
-    SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
-    if(temp != nullptr){
-        temp->add_context_transition(_transition);
-    }else{
-        SubmodelHolderPtr new_th = std::make_shared<SubmodelHolder>(_name);
-        new_th->add_context_transition(_transition);
-        submodelHolders.push_back(new_th);
-    }
-}
-/** Add transition of solidity file to specific submodel indicated by the name
- */
-void Unfolding::add_solidity_transition_to_submodel(const std::string& _name, TransitionNodePtr _transition){
-    SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
-    if(temp != nullptr){
-        temp->add_solidity_transition(_transition);
-    }else{
-        SubmodelHolderPtr new_th = std::make_shared<SubmodelHolder>(_name);
-        new_th->add_solidity_transition(_transition);
-        submodelHolders.push_back(new_th);
-    }
-}
-/** Add place of solidity file to specific submodel indicated by the name
- */
-void Unfolding::add_solidity_place_to_submodel(const std::string& _name, PlaceNodePtr _place){
-    SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
-    if(temp != nullptr){
-        temp->add_solidity_place(_place);
-    }else{
-        SubmodelHolderPtr new_th = std::make_shared<SubmodelHolder>(_name);
-        new_th->add_solidity_place(_place);
-        submodelHolders.push_back(new_th);
-    }
-}
-/** Add place of context file to specific submodel indicated by the name
- */
-void Unfolding::add_context_place_to_submodel(const std::string& _name, PlaceNodePtr _place){
-    SubmodelHolderPtr temp = get_submodel_holder_by_name(_name);
-    if(temp != nullptr){
-        temp->add_context_place(_place);
-    }else{
-        SubmodelHolderPtr new_th = std::make_shared<SubmodelHolder>(_name);
-        new_th->add_context_place(_place);
-        submodelHolders.push_back(new_th);
-    }
-}
-
-/** Read code in lna file and convert to object
- */
-void Unfolding::analyseLnaFile(const std::string type){
-    if(type == "context"){
-        ptr_pointer_end = _context_lines.end();
-        ptr_pointer_line = _context_lines.begin();
-    }else if(type == "solidity"){
-        ptr_pointer_end = _sol_lines.end();
-        ptr_pointer_line = _sol_lines.begin();
-    }
+    std::list<std::string>::iterator ptr_pointer_end = _sol_lines.end();
+    std::list<std::string>::iterator ptr_pointer_line = _sol_lines.begin();
     
     while(ptr_pointer_line != ptr_pointer_end){
         std::string model_name = get_first_alpha_only_string(*ptr_pointer_line);
         if(model_name.length() > 0){
-            if(type == "solidity"){
-                model->set_name(model_name);
-            }
+            cpn_model->set_name(model_name);
 
             std::string parameter_def = substr_by_edge(*ptr_pointer_line,"(",")");
             std::vector<std::string> parameters = split(parameter_def,",");
@@ -182,7 +96,7 @@ void Unfolding::analyseLnaFile(const std::string type){
                         ParameterNodePtr mpr = std::make_shared<ParameterNode>();
                         mpr->set_name(param[0]);
                         mpr->set_number(param[1]);
-                        model->add_parameter(mpr);
+                        cpn_model->add_parameter(mpr);
                     }
                 }
             }
@@ -191,152 +105,193 @@ void Unfolding::analyseLnaFile(const std::string type){
         ptr_pointer_line++;
     }
 
+    bool wait2set = false;
     std::string current_submodel_name;
     while (ptr_pointer_line != ptr_pointer_end){       
         if(retrieve_string_element(*ptr_pointer_line,1," ") == "Function:"){ 
             current_submodel_name = retrieve_string_element(*ptr_pointer_line,2," ");
+            wait2set = true;
         }else{
             std::string keyword = get_first_alpha_only_string(*ptr_pointer_line);
             if(keyword == TRANSITION_TOKEN){
                 TransitionNodePtr transition = handleTransition(ptr_pointer_line,ptr_pointer_end);
-                if(type == "context"){
-                    add_context_transition_to_submodel(current_submodel_name,transition);
-                }else if(type == "solidity"){
-                    add_solidity_transition_to_submodel(current_submodel_name,transition);
+                if(wait2set){
+                    cpn_model->add_transition(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
+                    wait2set = false;
                 }
+                cpn_model->add_transition(transition);
             }else if(keyword == PLACE_TOKEN){
                 PlaceNodePtr place = handlePlace(ptr_pointer_line,ptr_pointer_end);
-                if(type == "context"){
-                    add_context_place_to_submodel(current_submodel_name,place);
-                }else if(type == "solidity"){
-                    add_solidity_place_to_submodel(current_submodel_name,place);
+                if(wait2set){
+                    cpn_model->add_place(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
+                    wait2set = false;
                 }
+                cpn_model->add_place(place);
             }else if(keyword == TYPE_TOKEN || keyword == SUBTYPE_TOKEN){
                 ColorNodePtr color = handleColor(ptr_pointer_line,ptr_pointer_end);
-                model->add_member(color);
+                cpn_model->add_color(color);
             }else if(keyword == FUNCTION_TOKEN){
                 FunctionNodePtr function = handleFunction(ptr_pointer_line,ptr_pointer_end);
-                model->add_member(function);
+                cpn_model->add_function(function);
             }
         }
 
         ptr_pointer_line++;
     }
 }
-/** Unfolding the solidity file by instructions in the context file  
- */
-NetNodePtr Unfolding::unfolding(){
-    model = std::make_shared<NetNode>();
+ 
+std::map<std::string,std::string> Unfolder::UnfoldModel(){
+    StructuredNetNodePtr unfold_model = unfoldModelWithDCRContext();
 
-    analyseLnaFile("context");
+    LTLTranslator ltl_translator = LTLTranslator(sol_information,ltl_information);
+    std::map<std::string,std::string> ltl_result = ltl_translator.translate();
 
-    analyseLnaFile("solidity");
+    unfold_model->add_transition(std::make_shared<CommentNode>(ltl_result["propositions"]));
+    
+    std::map<std::string,std::string> result;
+    result["lna"] = unfold_model->source_code();
+    result["prop"] = ltl_result["property"];
 
-    if(context == DCRContext){
-        unfolding_dcr_context();
-    }else if(context == FreeContext){
-        unfolding_free_context();
-    }
-
-    CommentNodePtr prop_area = make_shared<CommentNode>("\n/*** proposition ***/\n");
-    model->add_member(prop_area);
-    return model;
+    return result;
 }
 
-void Unfolding::unfolding_free_context(){
+StructuredNetNodePtr Unfolder::unfoldModelWithDCRContext(){
+    StructuredNetNodePtr unfold_model = std::make_shared<StructuredNetNode>();
 
-}
-/** Unfolding the solidity file by instructions in the DCR context file  
- */
-void Unfolding::unfolding_dcr_context(){
-    for(auto it = submodelHolders.begin(); it != submodelHolders.end(); ++it){
-        string submodel_name = (*it)->get_name();
-        model->add_member(make_shared<CommentNode>("\n/*\n * Function: " + submodel_name + "\n */\n"));
-        if(submodel_name == "state"){
-            for(size_t i = 0; i < (*it)->num_context_places(); i++){
-                model->add_member((*it)->get_context_place(i));
-            }
+    unfold_model->set_name(cpn_model->get_name());
 
-            PlaceNodePtr state_cflow = std::make_shared<PlaceNode>();
-            state_cflow->set_name("cflow");
-            state_cflow->set_domain("epsilon");
-            state_cflow->set_init("epsilon");
-            model->add_member(state_cflow);
+    if(unfolded_func.size() > 0){
+        std::string current_submodel_name;
 
-            for(size_t i = 0; i < (*it)->num_solidity_places(); i++){
-                model->add_member((*it)->get_solidity_place(i));
-            }
-            for(size_t i = 0; i < (*it)->num_context_transitions(); i++){
-                model->add_member((*it)->get_context_transition(i));
-            }
-            for(size_t i = 0; i < (*it)->num_solidity_transitions(); i++){
-                model->add_member((*it)->get_solidity_transition(i));
-            }
-        }else if(std::find(unfold_func.begin(), unfold_func.end(), submodel_name) != unfold_func.end()){
-            PlaceNodePtr cflow = std::make_shared<PlaceNode>();
-            cflow->set_name(submodel_name+"_cflow");
-            cflow->set_domain("epsilon");
-            model->add_member(cflow);
-            
-            for(size_t i = 0; i < (*it)->num_context_places(); i++){
-                model->add_member((*it)->get_context_place(i));
-            }
-            for(size_t i = 0; i < (*it)->num_solidity_places(); i++){
-                model->add_member((*it)->get_solidity_place(i));
-            }
-            for(size_t i = 0; i < (*it)->num_context_transitions(); i++){
-                TransitionNodePtr temp = (*it)->get_context_transition(i);
-
-                ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
-                cflow_arc_in->set_placeName("cflow");
-                cflow_arc_in->set_label("epsilon");
-                temp->add_inArc(cflow_arc_in);
-
-                ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
-                cflow_arc_out->set_placeName(cflow->get_name());
-                cflow_arc_out->set_label("epsilon");
-                temp->add_outArc(cflow_arc_out);
-
-                model->add_member(temp);
-            }
-            for(size_t i = 0; i < (*it)->num_solidity_transitions(); i++){
-                TransitionNodePtr temp = (*it)->get_solidity_transition(i);
-                if(temp->get_in_arc_by_name("S") != nullptr){
-                    ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
-                    cflow_arc_in->set_placeName(cflow->get_name());
-                    cflow_arc_in->set_label("epsilon");
-                    temp->add_inArc(cflow_arc_in);
+        for(size_t i = 0; i < cpn_context->num_parameters(); i++){
+            unfold_model->add_parameter(cpn_context->get_parameter(i));
+        }
+        for(size_t i = 0; i < cpn_context->num_colors(); i++){
+            unfold_model->add_color(cpn_context->get_color(i));
+        }
+        for(size_t i = 0; i < cpn_context->num_functions(); i++){
+            unfold_model->add_function(cpn_context->get_function(i));
+        }
+        for(size_t i = 0; i < cpn_context->num_places(); i++){
+            LnaNodePtr node = cpn_context->get_place(i);
+            if(node->get_node_type() == LnaNodeTypeComment){
+                current_submodel_name = get_model_name_from_comment(std::static_pointer_cast<CommentNode>(node));
+                if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
+                    unfold_model->add_place(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
                 }
-
-                if(temp->get_out_arc_by_name("S") != nullptr){
-                    ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
-                    cflow_arc_out->set_placeName("cflow");
-                    cflow_arc_out->set_label("epsilon");
-                    temp->add_outArc(cflow_arc_out);
+            }else if(node->get_node_type() == LnaNodeTypePlace){
+                PlaceNodePtr place = std::static_pointer_cast<PlaceNode>(node);
+                if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
+                    unfold_model->add_place(place);
                 }
-
-                model->add_member(temp);
-            }
-        }else{
-            for(size_t i = 0; i < (*it)->num_context_places(); i++){
-                model->add_member((*it)->get_context_place(i));
-            }
-            for(size_t i = 0; i < (*it)->num_context_transitions(); i++){
-                TransitionNodePtr temp = (*it)->get_context_transition(i);
-
-                ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
-                cflow_arc_in->set_placeName("cflow");
-                cflow_arc_in->set_label("epsilon");
-                temp->add_inArc(cflow_arc_in);
-
-                ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
-                cflow_arc_out->set_placeName("cflow");
-                cflow_arc_out->set_label("epsilon");
-                temp->add_outArc(cflow_arc_out);
-
-                model->add_member(temp);
             }
         }
+        for(size_t i = 0; i < cpn_context->num_transitions(); i++){
+            LnaNodePtr node = cpn_context->get_transition(i);
+            if(node->get_node_type() == LnaNodeTypeComment){
+                current_submodel_name = get_model_name_from_comment(std::static_pointer_cast<CommentNode>(node));
+                unfold_model->add_transition(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
+            }else if(node->get_node_type() == LnaNodeTypeTransition){
+                TransitionNodePtr transition = std::static_pointer_cast<TransitionNode>(node);
+                if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
+                    ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
+                    cflow_arc_in->set_placeName("state_cflow");
+                    cflow_arc_in->set_label("epsilon");
+                    transition->add_inArc(cflow_arc_in);
+
+                    ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
+                    cflow_arc_out->set_placeName(current_submodel_name+"_cflow");
+                    cflow_arc_out->set_label("epsilon");
+                    transition->add_outArc(cflow_arc_out);
+
+                    unfold_model->add_transition(transition);
+                }else{
+                    ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
+                    cflow_arc_in->set_placeName("state_cflow");
+                    cflow_arc_in->set_label("epsilon");
+                    transition->add_inArc(cflow_arc_in);
+
+                    ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
+                    cflow_arc_out->set_placeName("state_cflow");
+                    cflow_arc_out->set_label("epsilon");
+                    transition->add_outArc(cflow_arc_out);
+
+                    unfold_model->add_transition(transition);
+                }
+            }
+        }
+
+
+        for(size_t i = 0; i < cpn_model->num_parameters(); i++){
+            unfold_model->add_parameter(cpn_model->get_parameter(i));
+        }
+        for(size_t i = 0; i < cpn_model->num_colors(); i++){
+            unfold_model->add_color(cpn_model->get_color(i));
+        }
+        for(size_t i = 0; i < cpn_model->num_functions(); i++){
+            unfold_model->add_function(cpn_model->get_function(i));
+        }
+
+        std::vector<std::string> list_func;
+        for(size_t i = 0; i < cpn_model->num_places(); i++){
+            LnaNodePtr node = cpn_model->get_place(i);
+            if(node->get_node_type() == LnaNodeTypeComment){
+                current_submodel_name = get_model_name_from_comment(std::static_pointer_cast<CommentNode>(node));
+                if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
+                    unfold_model->add_place(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
+                    if(std::find(list_func.begin(), list_func.end(), current_submodel_name) == list_func.end()){
+                        PlaceNodePtr cflow = std::make_shared<PlaceNode>();
+                        cflow->set_name(current_submodel_name+"_cflow");
+                        cflow->set_domain("epsilon");
+                        if(current_submodel_name == "state"){
+                            cflow->set_init("epsilon");
+                        }
+                        unfold_model->add_place(cflow);
+                        list_func.push_back(current_submodel_name);
+                    }
+                }
+            }else if(node->get_node_type() == LnaNodeTypePlace){
+                PlaceNodePtr place = std::static_pointer_cast<PlaceNode>(node);
+                if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
+                    unfold_model->add_place(place);
+                }
+            }
+        }
+        for(size_t i = 0; i < cpn_model->num_transitions(); i++){
+            LnaNodePtr node = cpn_model->get_transition(i);
+            if(node->get_node_type() == LnaNodeTypeComment){
+                current_submodel_name = get_model_name_from_comment(std::static_pointer_cast<CommentNode>(node));
+                if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
+                    unfold_model->add_transition(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
+                }
+            }else if(node->get_node_type() == LnaNodeTypeTransition){
+                TransitionNodePtr transition = std::static_pointer_cast<TransitionNode>(node);
+                if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
+                    if(transition->get_in_arc_by_name("S") != nullptr){
+                        ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
+                        cflow_arc_in->set_placeName(current_submodel_name+"_cflow");
+                        cflow_arc_in->set_label("epsilon");
+                        transition->add_inArc(cflow_arc_in);
+                    }
+
+                    if(transition->get_out_arc_by_name("S") != nullptr){
+                        ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
+                        cflow_arc_out->set_placeName("state_cflow");
+                        cflow_arc_out->set_label("epsilon");
+                        transition->add_outArc(cflow_arc_out);
+                    }
+
+                    unfold_model->add_transition(transition);
+                }
+            }
+        }
+
     }
+    return unfold_model;
 }
 
+std::string Unfolder::get_model_name_from_comment(const CommentNodePtr& _comment){
+    std::string name = substr_by_edge(_comment->get_comment(),"Function:","*/");
+    trim_ex(name);
+    return name;
+}

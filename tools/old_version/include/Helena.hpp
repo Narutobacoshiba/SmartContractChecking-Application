@@ -353,7 +353,8 @@ enum LnaNodeType {
     LnaNodeTypeA_String,
     LnaNodeTypeNumber,
     LnaNodeTypeList,
-    LnaNodeTypeSubNet
+    LnaNodeTypeSubNet,
+    LnaNodeTypeStructuredNet
 };
 
 class LnaNode;
@@ -419,6 +420,48 @@ private:
     std::vector<ParameterNodePtr> param_nodes;
 };
 typedef std::shared_ptr<NetNode> NetNodePtr;
+
+
+class StructuredNetNode : public LnaNode {
+public:
+    StructuredNetNode() : LnaNode(LnaNodeTypeStructuredNet) {}
+    StructuredNetNode(std::string _name) : LnaNode(LnaNodeTypeStructuredNet), name(_name) {}
+    std::string source_code();
+
+    void set_name(const std::string& _name);
+    std::string get_name() const;
+
+    void add_parameter(const ParameterNodePtr& _node);
+    ParameterNodePtr get_parameter(const unsigned int& x);
+    size_t num_parameters();
+
+    void add_color(const LnaNodePtr& _color);
+    LnaNodePtr get_color(const unsigned int& x);
+    size_t num_colors();
+
+    void add_place(const LnaNodePtr& _place);
+    LnaNodePtr get_place(const unsigned int& x);
+    size_t num_places();
+
+    void add_function(const LnaNodePtr& _function);
+    LnaNodePtr get_function(const unsigned int& x);
+    size_t num_functions();
+
+    void add_transition(const LnaNodePtr& _transition);
+    LnaNodePtr get_transition(const unsigned int& x);
+    size_t num_transitions();
+
+private:
+    std::string name;
+    std::vector<ParameterNodePtr> param_nodes;
+    std::vector<LnaNodePtr> color_nodes;
+    std::vector<LnaNodePtr> place_nodes;
+    std::vector<LnaNodePtr> function_nodes;
+    std::vector<LnaNodePtr> transition_nodes;
+};
+typedef std::shared_ptr<StructuredNetNode> StructuredNetNodePtr;
+
+
 
 class CommentNode : public LnaNode {
 public:
