@@ -27,7 +27,6 @@ from subprocess import Popen, PIPE, STDOUT
 #     except Exception as e:
 #         print("status: failed!", "output:", str(e))
 
-
 # unfolding_script()
 lna = '''	/******************************************************************************
 	*
@@ -470,115 +469,63 @@ transition claimReward {
 
 }'''
 
-# param = 'play'
-helenaReport = '''Helena report
---------------------------------------------------------------------------------
+path = r"C:\Users\Admin\Desktop\SmartContractChecking-Application-hadt\tools"
 
-  General informations
-  ------------------------------------------------------------------------------
-    Model analyzed
-      test
-    Model parameters
-      N = 20
-    Model language
-      Helena
-    Analysis date
-      September, 29, 2021 at 15:46:10
-    Command used
-      /home/thien/helena/bin/helena test.lna
-    File path
-      /home/thien/Downloads/SmartContractChecking-Application-
-         hadt/tools/dcr2cpn/test.lna
+#C:\Users\Admin\Desktop\\tools
 
-  Search report
-  ------------------------------------------------------------------------------
-    Action performed
-      state space exploration
-    Host machine
-      thien-VirtualBox (pid = 11865)
-    Termination state
-      SEARCH_TERMINATED
-    Options
-      Search algorithm = DFS
-      Partial order reduction = off
-      Hash compaction = off
-      State compression = off
-      Random successor selection = off
-      Hash table size = 4194304 states
-      Worker threads = 1
-
-  Statistics report
-  ------------------------------------------------------------------------------
-
-    Model statistics
-    ----------------------------------------------------------------------------
-      1 places
-      20 transitions
-      40 arcs
-
-    Time statistics
-    ----------------------------------------------------------------------------
-      2.02 s. for source compilation
-      19.03 s. for exploration
-
-    Exploration statistics
-    ----------------------------------------------------------------------------
-      1576128 states stored
-      1576128 states processed
-      0 deadlock states
-      8866768 transitions
-
-    Other statistics
-    ----------------------------------------------------------------------------
-      8866768 events executed
-      94.00 % of average CPU Usage
---------------------------------------------------------------------------------'''
-
-def unfolding(lna, context, param):
-    lnaFile = "EtherGame.lna"
-    contextFile = "context.lna"
-    param = "function1"
-    outFileUnf = "./output/out123"
-    commandUnf = "./unfolding --lna ./test/" + lnaFile + "  --context ./test/" + contextFile + " --param " + param + " --out_file "+outFileUnf
-    pathUnf = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools\unfolding"
-    unfolding = subprocess.run(commandUnf, cwd=pathUnf, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-
-def dcr2cpn(xml):
-    xmlFile = "test.xml"
-    outFile = "outFile"
-    commandDcr = "./dcr2cpn --xml ./test/" + xmlFile + " --out_file " + outFile
-    pathDcr = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools\dcr2cpn"
-    dcr2cpnpro = subprocess.run(commandDcr, cwd=pathDcr, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-def ltlToPro():
-    lnaFileLtl = "out.lna"
-    ltlFile = "test.prop"
-    jsonFile = "etherGame.json"
-    outltlFile = "outFile"
-    ltlcommand = "./ltl2prop --lna ./test/" + lnaFileLtl + " --json ./test/" + jsonFile + " --ltl ./test/" + ltlFile + " --out_file " + outltlFile
-    ltlPath = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools\ltl2prop"
-    ltl2propro = subprocess.run(ltlcommand, cwd=ltlPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+def unfolding(xml, ltlJson):
+		lna_PATH='./test/EtherGame.lna'
+		context_PATH='./test/test.xml'
+		ltl_PATH='./test/ltl.json'
+		sol_ast_PATH='./test/blindAuction.ast'
+		lna_json_PATH='./test/etherGame.json'		
+		output_PATH='./output/'
+		output_NAME='test3'
+    # commandUnf = "./unfolding --lna ./test/" + lnaFile + "  --context ./test/" + contextFile + " --param " + param + " --out_file "+outFileUnf
+		commandUnf = "unfolding --lna "+ lna_PATH + " --context " + context_PATH+ " --ltl "+ltl_PATH+" --sol-ast "+sol_ast_PATH+" --lna-json "+lna_json_PATH+" --output_path "+output_PATH+" --output_name "+output_NAME
+		pathUnf = path + r"/unfolding"
+		unfolding = subprocess.run(commandUnf, cwd=pathUnf, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 def runHelena():
-    property = "outOfRange"
-    helenaPath = r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools/ltl2prop"
-    helena = "helena helena -N=CHECK -p="+ property + helenaPath
-    # pro4 = subprocess.run(helena, cwd=helenaPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    pro4 = subprocess.run(helena, shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output = str(pro4.stdout.decode("cp932"))
-    start = output.find("Helena report")
-    report = output[start:]
-    # print(report)
-    return helenaReport
+	helenaPath = path + r"/unfolding/output"	
+	helenaFile = "test3.lna"
+	propfile = helenaPath + "/" +helenaFile[0:-4]+".prop.lna"
+	f = open(propfile, 'r')
+	propLna = str(f.read())
+	begin = propLna.find("property ")+9
+	end = propLna.find(":")
+	property = propLna[begin:end]
+	print(property)
+	helena = "helena -N=CHECK -p="+ property +" "+ helenaFile
+	pro4 = subprocess.run(helena, cwd=helenaPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	output = str(pro4.stdout.decode("cp932"))
+	start = output.find("Helena report")
+	report = output[start:]
+	print(report)
+	f.close()
+	return report
 
-#runHelena()
+# runHelena()
 
+# def solidityToCpn():
+# 	sodityFile = ""
+# 	outsodility = ""
+# 	soditycommand = ""
+# 	soldityPath = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools\ltl2prop"
+# 	solidity2cpnpro = subprocess.run(soditycommand, cwd= soldityPath,shell=True, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
 
-def solidityToCpn():
-	sodityFile = ""
-	outsodility = ""
-	soditycommand = ""
-	soldityPath = r"C:\Users\Admin\Desktop\(dev)SmartContractChecking-Application\tools\ltl2prop"
-	solidity2cpnpro = subprocess.run(soditycommand, cwd= soldityPath,shell=True, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+# def dcr2cpn(xml):
+#     xmlFile = "test.xml"
+#     outFile = "outFile"
+#     commandDcr = "./dcr2cpn --xml ./test/" + xmlFile + " --out_file " + outFile
+#     pathDcr = path + r"\dcr2cpn"
+#     dcr2cpnpro = subprocess.run(commandDcr, cwd=pathDcr, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+# def ltlToPro():
+#     lnaFileLtl = "out.lna"
+#     ltlFile = "test.prop"
+#     jsonFile = "etherGame.json"
+#     outltlFile = "outFile"
+#     ltlcommand = "./ltl2prop --lna ./test/" + lnaFileLtl + " --json ./test/" + jsonFile + " --ltl ./test/" + ltlFile + " --out_file " + outltlFile
+#     ltlPath = path + r"\ltl2prop"
+#     ltl2propro = subprocess.run(ltlcommand, cwd=ltlPath, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
