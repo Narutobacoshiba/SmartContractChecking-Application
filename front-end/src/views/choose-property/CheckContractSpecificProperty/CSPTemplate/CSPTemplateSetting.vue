@@ -52,15 +52,23 @@ followed by an occurrence of {function 4}
 
 <script>
 import FormularEditor from "../../../../components/FormularEditor.vue"
+import {GetGloLocArgOfSmartContract} from "../../../../services/data"
 export default {
   data: function () {
     return {};
+  },
+  mounted(){
+    this.fetchData();
   },
   components:{
     FormularEditor
   }
   ,
   methods: {
+    async fetchData(){
+      const res = await GetGloLocArgOfSmartContract(3);
+      console.log(res)
+    },
     routing(param) {
       if (param == "add") {
         this.$router.push({ name: "Initial" });
