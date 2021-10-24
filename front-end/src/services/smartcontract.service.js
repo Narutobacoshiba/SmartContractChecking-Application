@@ -131,5 +131,20 @@ export class SmartContractsService extends BaseService {
             throw new ErrorWrapper(error, message)
         }
     }
+    /*---------Get GlobalVariable,Argument,Localvariable--------- */
+    static async getArguLocalGlobalVar(id) {
+        try {
+            
+            const response = await this.request({ auth: true }).get(`${this.getUnity()}/getvariablefunctionargu?id=${id}`)
+            // const data = {
+            //     content: response.data.data,
+            //     headers: response.headers['']
+            // }
+            return new ResponseWrapper(response, response.data)
+        } catch (error) {
+            const message = error.response.data ? error.response.data.error : error.response.statusText
+            throw new ErrorWrapper(error, message)
+        }
+    }
 
 }

@@ -1,105 +1,41 @@
-#ifndef UNFOLDING_H_
-#define UNFOLDING_H_
+#ifndef UNFOLDER_H_
+#define UNFOLDER_H_
 
 #include<string>
 #include<list>
 #include<vector>
 #include<sstream>
 #include<memory>
-#include<map>
 #include<iostream>
-#include<algorithm>
 #include <cctype>
 #include "../../include/LNAAnalyser.hpp"
+#include "../../include/nlohmann/json.hpp"
 #include "../../include/Utils.hpp"
 #include "../../include/Helena.hpp"
+#include "./ltl2prop/LTLtranslator.hpp"
 
 using namespace HELENA;
 
-/** @class SubmodelHolder
- * 
- *  hold code for a submodel in context and sol file
- */
-class SubmodelHolder{
+class Unfolder {
     public:
-        SubmodelHolder(const std::string& _name): name(_name){}
-        std::string get_name();
+        Unfolder(const StructuredNetNodePtr& _context, std::stringstream& _sol_lna_stream, const nlohmann::json& lna_json,const nlohmann::json& ltl_json);
 
-        void add_context_transition(TransitionNodePtr _transition);
-        TransitionNodePtr get_context_transition(size_t i);
-        size_t num_context_transitions();
+        std::vector<std::string> FindUnfoldedFunction();
 
-        void add_solidity_transition(TransitionNodePtr _transition);
-        TransitionNodePtr get_solidity_transition(size_t i);
-        size_t num_solidity_transitions();
-
-        void add_context_place(PlaceNodePtr _place);
-        PlaceNodePtr get_context_place(size_t i);
-        size_t num_context_places();
-
-        void add_solidity_place(PlaceNodePtr _place);
-        PlaceNodePtr get_solidity_place(size_t i);
-        size_t num_solidity_places();
+        void analyseLnaFile(std::stringstream& _sol_lna_stream);
         
+        StructuredNetNodePtr unfoldModelWithDCRContext();
+        std::map<std::string,std::string> UnfoldModel();
 
-    private:
-        std::string name;
-
-        std::vector<PlaceNodePtr> context_places;
-        std::vector<PlaceNodePtr> solidity_places;
-        std::vector<TransitionNodePtr> context_transitions;
-        std::vector<TransitionNodePtr> solidity_transitions;
-};
-typedef std::shared_ptr<SubmodelHolder> SubmodelHolderPtr;
-
-// context
-const std::string DCRContext = "dcr";
-const std::string FreeContext = "free";
-
-// Static string in .lna file
-const std::string ColoursDefinitions = " Colours Definitions ";
-const std::string FunctionsDefinitions = " Functions Definitions ";
-const std::string PLACES = " PLACES ";
-const std::string TRANSITIONS = " TRANSITIONS ";
-
-const std::list<std::string> DefinitionsList = {
-    ColoursDefinitions,
-    FunctionsDefinitions,
-    PLACES,
-    TRANSITIONS
-};
-
-class Unfolding{
-    public:
-        Unfolding(const std::string& _context, std::stringstream& _sol_stream, std::stringstream& _context_stream, const std::string& param);
-        NetNodePtr unfolding();
-
-        void unfolding_dcr_context();
-        void unfolding_free_context();
-
-        void analyseLnaFile(const std::string type);
+        std::string get_model_name_from_comment(const CommentNodePtr& _comment);
         
-        void add_context_transition_to_submodel(const std::string& _name, TransitionNodePtr _transition);
-        void add_solidity_transition_to_submodel(const std::string& _name, TransitionNodePtr _transition);
-
-        void add_solidity_place_to_submodel(const std::string& _name, PlaceNodePtr _place);
-        void add_context_place_to_submodel(const std::string& _name, PlaceNodePtr _place);
-
-        SubmodelHolderPtr get_submodel_holder_by_name(const std::string& _name);
-
     private:
-        std::string context;
-        std::vector<std::string> unfold_func;
-
-        NetNodePtr model;
-
-        std::vector<SubmodelHolderPtr>  submodelHolders;
-
-        std::list<std::string> _sol_lines;
-        std::list<std::string> _context_lines;
-
-        std::list<std::string>::iterator ptr_pointer_end;
-        std::list<std::string>::iterator ptr_pointer_line;
+        nlohmann::json sol_information;
+        nlohmann::json ltl_information;
+        std::vector<std::string> unfolded_func;
+        StructuredNetNodePtr cpn_model;
+        StructuredNetNodePtr cpn_context;
 };
+
 
 #endif

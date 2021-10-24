@@ -5,5 +5,8 @@ from smartconstract import views
 
 urlpatterns = [
     path('select-smart-contract/',SmartConstractAPIView.as_view()),
-    path('scbyid',views.getScById)
+    path('scbyid',views.getScById),
+    path('globalvarialbe',views.getGBByScId),
+    path('localvariable',views.getLocalVar),
+    path('getvariablefunctionargu',views.getFunctionVarArgu),
 ]

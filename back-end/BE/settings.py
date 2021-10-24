@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'smartconstract',
-    'context',
     'demo_middleware',
     'corsheaders',
     'LTLpro',

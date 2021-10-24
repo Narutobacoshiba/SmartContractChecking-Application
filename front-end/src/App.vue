@@ -16,7 +16,7 @@ export default {
         Index: true,
         RoadMap: true,
         ListOfCheckedTransactions: true,
-        CheckRentrancy: true,
+        CheckingResult:true,
         SelectSmartContract: true,
         Initial:true,
         UpLoadSc: true,
