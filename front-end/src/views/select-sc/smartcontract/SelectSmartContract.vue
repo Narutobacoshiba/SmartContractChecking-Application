@@ -1,7 +1,7 @@
 <template>
   <div id="main" class="container">
     <div id="header">
-      <h1>Select Smart Contracts</h1>
+      <h1>Select Smart Contracts </h1>
     </div>
 
     <div class="row type">
@@ -10,11 +10,11 @@
       <div class="col">
         <div class="input-group mb-3">
           <label class="input-group-text" for="inputGroupSelect01">Type</label>
-          <select class="form-select" id="inputGroupSelect01">
-            <option value="1">Common</option>
-            <option value="2">Private</option>
-            <option value="3">Pending</option>
-            <option value="4">All</option>
+          <select class="form-select" id="inputGroupSelect01" v-model="selected">
+            <option value="common" >Common</option>
+            <option value="private">Private</option>
+            <option value="pending">Pending</option>
+            <option value="0">All</option>
           </select>
         </div>
       </div>
@@ -32,21 +32,14 @@
         </thead>
         <tbody>
           <tr
-            v-for="(item, index) in Common(getlistSmartContract)"
+            v-for="(item, index) in filterlist"
             v-bind:key="index"
           >
             <th scope="row">{{ index + 1 }}</th>
             <td>{{ item.name }}</td>
+            <td>{{ item.type }}</td>
             <td>
-              <input type="checkbox" id="one" value="One" />
-            </td>
-          </tr>
-          <tr>
-            <th>1</th>
-            <td>blindAuction</td>
-            <td>Common</td>
-            <td>
-              <input type="checkbox" id="one" name="ch" value="one" />
+              <input type="checkbox" id="one" value="One" name="ch" />
             </td>
           </tr>
         </tbody>
@@ -70,10 +63,9 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      selected: '0',
       isOpen: false,
       info: null,
-      k: 1,
-      h: 1,
     };
   },
   methods: {
@@ -111,23 +103,23 @@ export default {
       this.isOpen = false;
     },
     ...mapActions(["setListSmartContract"]),
-    Private: function (arrays) {
-      return arrays.filter(function (array) {
-        return array.type === "Private";
-      });
-    },
-    Common: function (arrays) {
-      return arrays.filter(function (array) {
-        return array.type === "Common";
-      });
-    },
   },
   created() {
     this.setListSmartContract();
   },
   computed: {
     ...mapGetters(["getlistSmartContract"]),
-
+    filterlist(){
+      const { selected } = this;
+      if (selected === "0") return this.getlistSmartContract; 
+      var items = []; 
+      this.getlistSmartContract.forEach(function (item) {
+        if (item.type === selected ){
+          items.push(item);
+        }
+      })
+      return items;  
+    }
     // return k;
   },
   components: {

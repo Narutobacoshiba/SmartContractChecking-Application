@@ -2,7 +2,11 @@
   <div class="container">
     <div id="header">Checking Result</div>
     <div class="main">
-      <div class="content"></div>
+      <div class="content">
+        <p v-for="(item, index) in getListCheck" v-bind:key="index">
+            {{item[0]}}
+        </p>
+      </div>
     </div>
 
     <div class="button">
@@ -23,6 +27,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   methods:{
     routing(param){
@@ -32,8 +37,15 @@ export default {
       if(param=='start'){
         this.$router.push({ name: "SelectSmartContract" });
       }
-    }
-  }
+    },
+    ...mapActions(["setlistcheck"]),
+  },
+  computed: {
+    ...mapGetters(["getListCheck"]),
+  },
+  created() {
+    this.setlistcheck(this.$route.query.id);
+  },
 };
 </script>
 

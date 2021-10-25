@@ -14,8 +14,7 @@ class SmartConstractAPIView(APIView):
         try:
             if request.method == 'GET':
                 smartConstractDB = Smartcontract.objects.all()
-                serialiSmartConstract = GetSmartConstractSerializer(
-                    smartConstractDB, many=True)
+                serialiSmartConstract = GetSmartConstractSerializer(smartConstractDB, many=True)
                 return Response(serialiSmartConstract.data, status=status.HTTP_200_OK)
         except:
             return Response({"message": "Get Data Fail!!"}, status=status.HTTP_400_BAD_REQUEST)

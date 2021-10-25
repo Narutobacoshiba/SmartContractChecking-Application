@@ -24,14 +24,14 @@
               <th scope="row">{{ index + 1 }}</th>
               <td>
                 <div v-on:click="set(item.bid)" v-bind:id="item.bid"><router-link
-                  :to="{path:'checkreentrancydetail', query: { id: item.bid }}"
+                  :to="{path:'checking-result', query: { id: item[0] }}"
                   tag="a"
                   class="lk"
-                  >{{ item.name }}</router-link
+                  >{{ item[0] }} {{item[2]}} </router-link
                 ></div>
               </td>
-              <td>{{ item.checkeddate }}</td>
-              <td>{{ item.description }}</td>
+              <td>{{ item[3] }}</td>
+              <td>{{ item[4] }}</td>
             </tr>
           </tbody>
         </table>
