@@ -1,2 +1,0 @@
-ltl property prop:
-	<> ( not outOfRange and proposition_number_1 ) ;

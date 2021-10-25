@@ -67,22 +67,22 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 *************/
 //these 3 places would be part of the free context in a final full model
 /*
-* Function: state
-*/
+ * Function: state
+ */
    place S {
    	dom : STATE;
    	init : <( {UINT(cb), UINT(v1), UINT(v2), UINT(v3), UINT(v4), UINT(v5), UINT(v6), initRedeemableEther(users)} )>;
    }
 /*
-* Function: play
-*/
+ * Function: play
+ */
    place P_Play {
    	dom : PLAY_PAR;
    	init : for (i in ADDRESS range 1 .. ADDRESS (users)) <( {{i , UINT(i*100)},UINT(1)} )>;
    }
 /*
-* Function: claimReward
-*/
+ * Function: claimReward
+ */
    place P_ClaimReward {
    	dom : CLAIM_REWARD_PAR;
    }
@@ -367,4 +367,5 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 			S : <( sp.state :: (contractBalance := sp.state.contractBalance - getElement(sp.state.redeemableEther,sp.claimRewardPar.sender.adr).uint) )>;
 		}
 	}
+	dsad
 }
