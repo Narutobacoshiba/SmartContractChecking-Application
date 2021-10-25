@@ -17,7 +17,7 @@
       </div>
       <div id="input-section">
         <div class="number-cell">
-          <input type="text" placeholder="0" id="number-user" class="input-text-form">
+          <input type="text" placeholder="0" v-model="init_marking.NumberOfUser" id="number-user" class="input-text-form">
         </div>
         <div class="multi-cell">
           <div id="multi-radio-chooses">
@@ -35,38 +35,38 @@
             </div>
           </div>
           <div id="multi-input-forms">
-            <input type="text" class="input-text-form" id="fixed-input-form" placeholder="0" v-if="getSelectedRadio == 'fixed'">
+            <input type="text" class="input-text-form" v-model="init_marking.Balance.fixed" id="fixed-input-form" placeholder="0" v-if="getSelectedRadio == 'fixed'">
             <div id="random-input-form" v-if="getSelectedRadio == 'random'">
               <div id="input-from-range">
                 <span>From:</span>
-                <input type="text" placeholder="0" class="input-text-form">
+                <input type="text" placeholder="0" v-model="init_marking.Balance.random.from" class="input-text-form">
               </div>
               <div id="input-to-range">
                 <span>To:</span>
-                <input type="text" placeholder="10" class="input-text-form">
+                <input type="text" placeholder="10" v-model="init_marking.Balance.random.to" class="input-text-form">
               </div>
             </div>
-            <input type="text" class="input-text-form" id="map-input-form" placeholder="0,1,2" v-if="getSelectedRadio == 'map'">
+            <input type="text" v-model="init_marking.Balance.map" class="input-text-form" id="map-input-form" placeholder="0,1,2" v-if="getSelectedRadio == 'map'">
           </div>
         </div>
         <div class="function-cell">
             <div id="list-smart-contract">
-                <ul class="nav nav-tabs">
+              <ul class="nav nav-tabs">
                   <li
-                    class="nav-item d-inline-block text-truncate"
-                    v-for="item in list_smart_contract"
-                    :key="item.id"
+                  class="nav-item d-inline-block text-truncate"
+                  v-for="item in list_smart_contract"
+                  :key="item.id"
+                >
+                  <a
+                    class="nav-link"
+                    v-on:click="selected_sc = item.id"
+                    v-bind:class="{ active: item.id == selected_sc}"
+                    >{{ item.name }}</a
                   >
-                    <a
-                      class="nav-link"
-                      v-on:click="selected_sc = item.id, function_cell_selected = 'function'"
-                      v-bind:class="{ active: item.id == selected_sc}"
-                      >{{ item.name }}</a
-                    >
-                  </li>
-                </ul>
-            </div>
-            <div id="sm-information-table">
+                </li>
+              </ul>
+          </div>
+          <div id="sm-information-table">
               <div v-if="function_cell_selection == 'function'">
                 <div id="table-list">
                   <div class="table-row" id="header-row">
@@ -83,92 +83,264 @@
                     </div>
                   </div>
 
-                  <div class="table-row" v-for="(lv, index) in list_ssm_function[selected_sc]" v-bind:key="lv.id" :class="{ even_row: index % 2 == 0}">
-                    <div class="table-cell first-cell">{{ index }}</div>
-                    <div class="table-cell second-cell">{{ lv.name }}</div>
+                  <div class="table-row" v-for="(func, index) in getSelectedSc" v-bind:key="func.fid" :class="{ even_row: index % 2 == 0}">
+                    <div class="table-cell first-cell">{{ index+1 }}</div>
+                    <div class="table-cell second-cell">{{ func.name }}</div>
                     <div class="table-cell third-cell">
-                      <div class="input-param-text" @click="setFunctionParam(lv)">Input Params</div>
+                      <div class="input-param-text" @click="setFunctionParam(func.fid)">Input Params</div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div v-if="function_cell_selection == 'params'">
-                <div id="params-setting-header">
-                  <span id="return-arrow" class="material-icons" @click="function_cell_selected = 'function',selected_function = {}">
-                    keyboard_backspace
-                    </span>
-                  <span id="ps-function-name">Function: {{selected_function.name}}</span>
-                </div>
-                <div id="params-setting-input">
-                  <div id="sender-value-section">
-                    <span>Sender value</span>
-                    <input type="text" placeholder="0">
-                    <span>To</span>
-                    <input type="text" placeholder="10">
-                  </div>
-                  <div id="table-params">
-                    <div class="table-params-row" id="header-params-row">
-                      <div class="table-params-cell first-params-cell">
-                        #
-                        <span class="material-icons"> swap_vert </span>
-                      </div>
-                      <div class="table-params-cell second-params-cell">
-                        Parameters
-                        <span class="material-icons"> swap_vert </span>
-                      </div>
-                      <div class="table-params-cell third-cell">
-                        Range
-                        <span class="material-icons"> swap_vert </span>
-                      </div>
-                    </div>
-
-                    <div class="table-row" v-for="(param, index) in list_function_params[selected_function.id]" v-bind:key="param.id" :class="{ even_row: index % 2 == 0}">
-                      <div class="table-params-cell first-params-cell">{{ index }}</div>
-                      <div class="table-params-cell second-params-cell">{{ param.name }}</div>
-                      <div class="table-params-cell third-params-cell">
-                        <input type="text">
-                        <span>To</span>
-                        <input type="text">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            </div>
+            <div v-if="function_cell_selection == 'params'">
+                <function-table :list_argument="getFunctionArgument" @changeInitMarking="updateInitMarking"/>
             </div>
           </div>
+        </div>
       </div>
-      <div id="routing-button">
-        <!-- save and back button add here -->
+    </div>
+    <div id="processing-btn">
+      <div class="pr-button">
+        Next
+      </div>
+      <div class="pr-button">
+        Back
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import functionTable from "./initmarking/FunctionTable.vue"
 export default {
+  components: {
+    "function-table": functionTable,
+  },
   data() {
     return {
       radio_seleted: "fixed",
-      list_smart_contract: [{name:"smart I",id:1},{name:"smart II",id:2},{name:"smart III",id:3},{name:"smart IV",id:4}],
-      selected_sc: 1,
       function_cell_selected: "function",
-      list_ssm_function: {1:[{name:"func I",id:1},{name:"func II",id:2},{name:"func III",id:3},{name:"func IV",id:4},{name:"func V",id:5}]},
-      selected_function: {},
-      list_function_params: {1:[{name:"param I",id:1},{name:"param II",id:2},{name:"param III",id:3},{name:"param IV",id:4}]},
+      list_smart_contract: [{name:"smart I",id:1},{name:"smart II",id:2},{name:"smart III",id:3},{name:"smart IV",id:4}],
+      smart_contract_infors: {1:{
+                              "name": "smart I",
+                              "functions": [
+                                  {
+                                      "fid": 3,
+                                      "name": "bidding",
+                                      "argument": [
+                                          {
+                                              "id": 1,
+                                              "name": "biddingTime",
+                                              "vartype": "state",
+                                              "type": "uint",
+                                              "value": 1,
+                                              "fid": 3
+                                          },
+                                          {
+                                              "id": 2,
+                                              "name": "revealTime",
+                                              "vartype": "local",
+                                              "type": "uint",
+                                              "value": 3,
+                                              "fid": 3
+                                          }
+                                      ],
+                                      "localVar": []
+                                  },
+                                  {
+                                      "fid": 4,
+                                      "name": "reveal",
+                                      "argument": [
+                                          {
+                                              "id": 4,
+                                              "name": "blindedBid",
+                                              "vartype": "local",
+                                              "type": "bytes32",
+                                              "value": 7,
+                                              "fid": 4
+                                          }
+                                      ],
+                                      "localVar": []
+                                  },
+                                  {
+                                      "fid": 5,
+                                      "name": "claimReward",
+                                      "argument": [
+                                        
+                                      ],
+                                      "localVar": [
+                                          {
+                                              "id": 2,
+                                              "name": "length",
+                                              "vartype": "public",
+                                              "type": "unit",
+                                              "value": "bids[msg.sender].length"
+                                          },
+                                          {
+                                              "id": 3,
+                                              "name": "refund",
+                                              "vartype": "public",
+                                              "type": "unit",
+                                              "value": "+= bid.deposit"
+                                          },
+                                          {
+                                              "id": 4,
+                                              "name": "bid",
+                                              "vartype": "public",
+                                              "type": "var",
+                                              "value": "bids[msg.sender][i]"
+                                          },
+                                          {
+                                              "id": 5,
+                                              "name": "(value,fake,secret)",
+                                              "vartype": "public",
+                                              "type": "var",
+                                              "value": "(_values[i], _fake[i], _secret[i])"
+                                          }
+                                      ]
+                                  },
+                                  {
+                                      "fid": 6,
+                                      "name": "playAround",
+                                      "argument": [
+                                          {
+                                              "id": 8,
+                                              "name": "bidder",
+                                              "vartype": "local",
+                                              "type": "address",
+                                              "value": 4,
+                                              "fid": 6
+                                          },
+                                          {
+                                              "id": 9,
+                                              "name": "value",
+                                              "vartype": "state",
+                                              "type": "uint",
+                                              "value": 6,
+                                              "fid": 6
+                                          }
+                                      ],
+                                      "localVar": []
+                                  }
+                              ],
+                              "globalVar": [
+                                  {
+                                      "id" : 1,
+                                      "name": "beneficiary",
+                                      "vartype": "address",
+                                      "type": "public",
+                                      "value": ""
+                                  },
+                                  {
+                                      "id" : 2,
+                                      "name": "auctionStart",
+                                      "vartype": "uint",
+                                      "type": "public",
+                                      "value": ""
+                                  },
+                                  {
+                                      "id" : 3,
+                                      "name": "biddingEnd",
+                                      "vartype": "uint",
+                                      "type": "public",
+                                      "value": ""
+                                  },
+                                  {
+                                      "id" : 4,
+                                      "name": "revealEnd",
+                                      "vartype": "uint",
+                                      "type": "public",
+                                      "value": ""
+                                  },
+                                  {
+                                      "id" : 5,
+                                      "name": "ended",
+                                      "vartype": "bool",
+                                      "type": "public",
+                                      "value": ""
+                                  },
+                                  {
+                                      "id" : 6,
+                                      "name": "highestBidder",
+                                      "vartype": "address",
+                                      "type": "public",
+                                      "value": ""
+                                  },
+                                  {
+                                      "id" : 7,
+                                      "name": "highestBid",
+                                      "vartype": "uint",
+                                      "type": "public",
+                                      "value": ""
+                                  }
+                              ]
+                          }},
+      selected_sc: 1,
+      selected_function: null,
+      init_marking: {}
     };
+  },
+  beforeMount(){
+    this.initInitialMarkingHolder()
+  },
+  watch: {
+    init_marking: {
+      handler(val){
+        this.$store.commit("SetInitialMarking", val);
+      },
+      deep: true
+    }
   },
   computed:{
     getSelectedRadio(){
       return this.radio_seleted
     },
+    getSelectedSc(){
+      if(this.selected_sc in this.smart_contract_infors){
+        return this.smart_contract_infors[this.selected_sc].functions
+      }else{
+        return []
+      }
+    },
     function_cell_selection(){
       return this.function_cell_selected
+    },
+    getFunctionArgument(){
+      return this.init_marking.Funtion_params[this.selected_sc].functions[this.selected_function]
     }
   },
   methods: {
-    setFunctionParam(func){
-      this.function_cell_selected = "params"
-      this.selected_function = func
+    updateInitMarking(val){
+      this.function_cell_selected = "function"
+      this.selected_function = null
+      this.init_marking.Funtion_params[this.selected_sc].functions[this.selected_function] = val
+    },
+    initInitialMarkingHolder(){
+      this.init_marking = this.$store.getters["GetInitialMarking"]; 
+      for(let i = 0; i < this.list_smart_contract.length; i++){
+        let sm = this.list_smart_contract[i]
+
+        if(!(sm.id in this.init_marking.Funtion_params)){
+          this.init_marking.Funtion_params[sm.id] = {name: sm.name,functions: {}}
+        }
+
+        if(sm.id in this.smart_contract_infors){
+          let sm_func_infor = this.smart_contract_infors[sm.id].functions
+          for(let j = 0; j < sm_func_infor.length; j++){
+            let sm_func =  sm_func_infor[j]
+            if(!(sm_func.fid in this.init_marking.Funtion_params[sm.id].functions)){
+                this.init_marking.Funtion_params[sm.id].functions[sm_func.fid] = {name: sm_func.name, sender_value:{from:null,to:null}, arguments: {}}
+            }
+            let sm_func_args = sm_func.argument
+            for(let m = 0; m < sm_func_args.length; m++){
+              let arg = sm_func_args[m]
+              if(!(arg.id in this.init_marking.Funtion_params[sm.id].functions[sm_func.fid].arguments)){
+                this.init_marking.Funtion_params[sm.id].functions[sm_func.fid].arguments[arg.id] = {name: arg.name, from: null, to: null}
+              }
+            }
+          }
+        }
+      }
     },
     routing(param) {
       if (param == "save") {
@@ -177,6 +349,10 @@ export default {
       if (param == "back") {
         this.$router.push({ name: "CSPSettingType" });
       }
+    },
+    setFunctionParam(func){
+            this.function_cell_selected = "params"
+            this.selected_function = func
     },
   },
 };
@@ -282,6 +458,9 @@ export default {
   padding: 3% 2% 3% 2%;
 }
 
+
+/* function */
+
 #table-list {
   width: 100%;
   margin: auto;
@@ -333,103 +512,33 @@ export default {
   color: rgb(78, 78, 243);
 }
 
-
-/* param */
-#params-setting-header{
+/* button */
+#processing-btn{
+  width: 60%;
+  height: 80px;
+  margin-left: 20%;
   display: flex;
-  height: 30px;
-  vertical-align: middle;
+  justify-content: space-between;
+  align-items: center;
 }
-
-#params-setting-header span{
-  margin-right: 20px;
-  
-}
-#ps-function-name{
-  font-weight: bold;
-}
-#return-arrow{
+#processing-btn .pr-button {
   cursor: pointer;
-  color: rgb(38, 38, 192);
-  font-size: 26px;
-}
-
-#return-arrow:hover{
-  color: rgb(81, 81, 231);
-}
-
-#params-setting-input{
-  height: 270px;
-  border: 2px solid black;
-  padding-left: 4%;
-  padding-right: 4%;  
-}
-
-#sender-value-section{
-  margin-top: 10px;
-}
-
-#sender-value-section span{
-  font-size: 14px;
-}
-#sender-value-section input{
-  width: 80px;
-  height: 25px;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-#table-params {
-  width: 100%;
-  margin-top: 10px;
-  font-size: 0.9em;
-  height: 200px;
-  overflow-y: auto;
+  width: 20%;
+  height: 30px;
+  border: 1px solid #2196f3;
+  text-align: center;
+  color: #2196f3;
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 600;
+  padding-top: 4px;
   border-radius: 4px;
-  border: 2px solid black;
-  
-  background: rgb(241, 240, 240);
 }
-
-.table-params-row{
-  display: flex;
-  height: 40px;
+#processing-btn .pr-button:hover {
+  background-color: #1079cf;
+  color: white;
 }
-#header-params-row{
-  background-color: rgb(196, 194, 194);
-  font-weight: bold;
-}
-
-#header-params-row span {
-  float: right;
-  margin: 0 20% 0 0;
-  padding: 0;
-  font-size: 150%;
-}
-.even_row{
-  background-color: rgb(226, 224, 224);
-}
-.table-params-cell{
-  padding-top: 10px;
-}
-.first-params-cell{
-  flex-basis: 12%;
-  padding-left: 5px;
-}
-.second-params-cell{
-  flex-basis: 58%;
-}
-.third-params-cell{
-  padding-left: 5%;
-  flex-basis: 30%;
-}
-
-.third-params-cell input{
-  height: 20px;
-  width: 30px;
-}
-.third-params-cell span{
-  margin-left: 5px;
-  margin-right: 5px;
+.btn{
+  margin: 0 3%;
 }
 </style>
