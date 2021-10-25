@@ -45,7 +45,6 @@
         </tbody>
       </table>
     </div>
-    {{checkedNames}}
     <div id="action">
       <div id="btn" @click="funtionNext()">Next</div>
       <div id="btn" v-on:click="load">Upload Smart Contract</div>
