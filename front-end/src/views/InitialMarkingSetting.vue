@@ -22,15 +22,15 @@
         <div class="multi-cell">
           <div id="multi-radio-chooses">
             <div class="radio-choose">
-              <input type="radio" name="radio" class="radio-buttons" value="fixed" v-model="radio_seleted">
+              <input type="radio" name="radio" class="radio-buttons" value="fixed" v-model="init_marking.Balance.type">
               <span>Fixed</span>
             </div>
             <div class="radio-choose">
-              <input type="radio" name="radio" class="radio-buttons" value="random" v-model="radio_seleted">
+              <input type="radio" name="radio" class="radio-buttons" value="random" v-model="init_marking.Balance.type">
               <span>Random</span>
             </div>
             <div class="radio-choose">
-              <input type="radio" name="radio" class="radio-buttons" value="map" v-model="radio_seleted">
+              <input type="radio" name="radio" class="radio-buttons" value="map" v-model="init_marking.Balance.type">
               <span>Map</span>
             </div>
           </div>
@@ -293,7 +293,7 @@ export default {
   },
   computed:{
     getSelectedRadio(){
-      return this.radio_seleted
+      return this.init_marking.Balance.type
     },
     getSelectedSc(){
       if(this.selected_sc in this.smart_contract_infors){
