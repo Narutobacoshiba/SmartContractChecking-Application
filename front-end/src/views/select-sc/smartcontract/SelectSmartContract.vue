@@ -39,13 +39,13 @@
             <td>{{ item.name }}</td>
             <td>{{ item.type }}</td>
             <td>
-              <input type="checkbox" id="one" value="One" name="ch" />
+              <input type="checkbox" id="one" name="ch" v-model="checkedNames" :value="item"/>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-
+    {{checkedNames}}
     <div id="action">
       <div id="btn" @click="funtionNext()">Next</div>
       <div id="btn" v-on:click="load">Upload Smart Contract</div>
@@ -66,6 +66,7 @@ export default {
       selected: '0',
       isOpen: false,
       info: null,
+      checkedNames: []
     };
   },
   methods: {
