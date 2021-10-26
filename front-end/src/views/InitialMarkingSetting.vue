@@ -100,10 +100,10 @@
       </div>
     </div>
     <div id="processing-btn">
-      <div class="pr-button">
+      <div class="pr-button" @click="routing('save')">
         Next
       </div>
-      <div class="pr-button">
+      <div class="pr-button" @click="routing('back')">
         Back
       </div>
     </div>
