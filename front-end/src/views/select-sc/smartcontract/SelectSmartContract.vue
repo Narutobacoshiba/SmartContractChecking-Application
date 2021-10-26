@@ -89,22 +89,24 @@ export default {
       }
     },
     async funtionNext() {
-      const res = await GetGloLocArgOfSmartContract(1);
-      this.SetSCSelectedInfo(res.data);
-      // var checkbox = document.getElementsByName("ch");
-      // var kt = false;
-      // for (var i = 0; i < checkbox.length; i++) {
-      //   if (checkbox[i].checked === true) {
-      //     kt = true;
-      //     break;
-      //   }
-      // }
+      var checkbox = document.getElementsByName("ch");
+      var kt = false;
+      for (var i = 0; i < checkbox.length; i++) {
+        if (checkbox[i].checked === true) {
+          kt = true;
+          break;
+        }
+      }
 
-      // if (!kt) {
-      //   alert("Please selet a smart contrac at least to go to the next step!");
-      // } else {
-      //   this.routing("add");
-      // }
+      if (!kt) {
+        alert("Please selet a smart contrac at least to go to the next step!");
+      } else {
+        // Doan nay demo voi smartcontract dau tien duoc chon nhe.
+        const res = await GetGloLocArgOfSmartContract(this.checkedNames[0].sid);
+        this.SetSCSelectedInfo(res.data);
+        console.log(this.GetSCSelectedInfor)
+        // this.routing("add");
+      }
     },
     load() {
       this.isOpen = true;
@@ -113,13 +115,13 @@ export default {
       this.isOpen = false;
     },
     ...mapActions(["setListSmartContract"]),
-    ...mapMutations(['SetSCSelectedInfo'])
+    ...mapMutations(["SetSCSelectedInfo"]),
   },
   created() {
     this.setListSmartContract();
   },
   computed: {
-    ...mapGetters(["getlistSmartContract","GetSCSelectedInfor"]),
+    ...mapGetters(["getlistSmartContract", "GetSCSelectedInfor"]),
     filterlist() {
       const { selected } = this;
       if (selected === "0") return this.getlistSmartContract;
