@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h1>Choose Element Of The Smart Contract</h1>
+      <h1>Select Variables Of Smart Contract</h1>
       <button @click="routing('next')">Next</button>
       <button @click="routing('back')">Back</button>
   </div>
@@ -10,7 +10,7 @@ export default {
     methods:{
         routing(param){
             if(param=='next'){
-                this.$router.push({name:"VulSummary"})
+                this.$router.push({name:"Initial"})
             }
             if(param=='back'){
                 this.$router.push({name:"LTLCheckOption"})

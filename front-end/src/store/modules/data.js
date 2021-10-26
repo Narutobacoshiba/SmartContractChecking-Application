@@ -12,7 +12,7 @@ const state = {
         initialMarkingInfor: {
           NumberOfUser: null,
           Balance:{
-            type: "",
+            type: "fixed",
             fixed: null,
             random: {from: null, to: null},
             map: null

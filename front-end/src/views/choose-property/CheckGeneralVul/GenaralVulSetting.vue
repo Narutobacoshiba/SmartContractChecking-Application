@@ -32,22 +32,27 @@
     <div class="row">
       <div class="col-2">Description</div>
       <div class="col-10">
-        <textarea name="" id="" cols="30" rows="5" class="form-control" v-model="description">
-           
-          </textarea
+        <textarea
+          name=""
+          id=""
+          cols="30"
+          rows="5"
+          class="form-control"
+          v-model="description"
         >
+        </textarea>
       </div>
     </div>
     <div id="btn-group">
       <button class="btn btn-primary-outline btn-sm" @click="routing('add')">
-        Add
+        Next
       </button>
       <button
         class="btn btn-primary-outline btn-sm"
         type="button"
         @click="routing('back')"
       >
-        Cancel
+        Back
       </button>
     </div>
     <div id="selection-table" v-if="isSelectVariable">
@@ -77,7 +82,6 @@ import { analyseLTLCode } from "../../../mixins/text-parser.js";
 import ArgumentSelection from "../../../components/ArgumentTable.vue";
 import VariableSelection from "../../../components/VarialbleTable.vue";
 import FunctionSelection from "../../../components/FunctionTable.vue";
-import { GetAllltltemplates } from "../../../services/data";
 export default {
   data: function () {
     return {
@@ -86,8 +90,16 @@ export default {
       select_variable_id: "",
       select_variable_type: "",
       selected_template: "",
-      ltlcode:"abc",
-      ltltemplate: [],
+      ltlcode: "abc",
+      ltltemplate: [
+        { lteid: 1, name: "Integer Overflow/Underflow" },
+        { lteid: 2, name: "Reentrancy" },
+        { lteid: 3, name: "Self-Destruction" },
+        { lteid: 4, name: "Timestamp Dependence" },
+        { lteid: 5, name: "Ship EmptyString Literal" },
+        { lteid: 6, name: "Uninitialized Storage Variable" },
+        { lteid: 7  , name: "Others" },
+      ],
       description: "",
     };
   },
@@ -104,10 +116,9 @@ export default {
         this.updateContent(1, "");
       }
     },
-    ltlcode: function (newVal){
-      this.updateContent(1,newVal);
-    } 
-   
+    ltlcode: function (newVal) {
+      this.updateContent(1, newVal);
+    },
   },
   computed: {
     isSelectVariable() {
@@ -122,15 +133,14 @@ export default {
   },
   methods: {
     async initData() {
-      this.ltltemplate = await GetAllltltemplates();
-      this.ltlcode =  this.ltltemplate[0].formula;
-      this.description =  this.ltltemplate[0].description;
+      this.ltlcode = this.ltltemplate[0].formula;
+      this.description = this.ltltemplate[0].description;
     },
     changeid(value) {
       const data = this.ltltemplate.find((i) => {
         return i.lteid == value;
       });
-      this.ltlcode= data.formula;
+      this.ltlcode = data.formula;
       this.description = data.description;
     },
     routing(param) {

@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <div id="header">
-      <h1>Checking Smart Contracts</h1>
+      <h1>Generating CPN Model</h1>
     </div>
     <div class="text-2">
       <span>Smart Contracts</span>

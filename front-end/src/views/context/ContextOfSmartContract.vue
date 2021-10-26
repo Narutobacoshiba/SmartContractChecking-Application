@@ -65,6 +65,14 @@
       </button>
       <button
         id="btn2"
+        type="button back-btn"
+        class="btn btn-outline-primary btn-sm"
+        @click="routing('ship')"
+      >
+        Ship
+      </button>
+      <button
+        id="btn2"
         type="button"
         class="btn btn-outline-primary btn-sm"
         @click="routing('back')"
@@ -129,6 +137,9 @@ export default {
       }
       if (param == "upfile") {
         this.$router.push({ name: "UpLoadContext" });
+      }
+      if (param == "ship") {
+        this.$router.push({ name: "LTLCheckOption" });
       }
       if (param == "back") {
         this.$router.push({ name: "SelectSmartContract" });
@@ -211,5 +222,8 @@ export default {
   #section {
     width: 100%;
   }
+}
+.back-btn{
+  
 }
 </style>

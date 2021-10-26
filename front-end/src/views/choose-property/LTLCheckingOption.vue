@@ -30,6 +30,12 @@
           :class="{ choosen_button: getCurrentChoose == 'check-general-vul' }"
           >Check a General Vulnerability
         </a>
+        <a
+          class="link-button"
+          @click="goBack"
+          :class="{ choosen_button: getCurrentChoose == 'check-general-vul' }"
+          >Back
+        </a>
       </div>
       <div id="showConfirmation" v-if="showDialog">
         <div id="components-holder">
@@ -45,20 +51,23 @@ export default {
   data() {
     return {};
   },
-  methods:{
-    goCSP(){
-      this.$router.push({name:"CSPSettingType"})
+  methods: {
+    goCSP() {
+      this.$router.push({ name: "CSPSettingType" });
     },
-    goGV(){
-      this.$router.push({name:"GenaralVulSetting"})
-    }
-  }
+    goGV() {
+      this.$router.push({ name: "GenaralVulSetting" });
+    },
+    goBack() {
+      this.$router.push({ name: "" });
+    },
+  },
 };
 </script>
 
 <style scoped>
 #pc-body {
-  width: 600px;
+  width: 640px;
   margin: 0 auto;
   margin-top: 100px;
   padding: 20px;
