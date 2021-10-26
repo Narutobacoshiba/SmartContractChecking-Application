@@ -8,7 +8,7 @@ from subprocess import Popen, PIPE, STDOUT
 path = r"C:\Users\Admin\Desktop\SmartContractChecking-Application-hadt\tools"
 
 # for Ubuntu
-path = "/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/tools"
+path = "/home/leanhson/Desktop/SmartContractChecking-Application/tools"
 
 
 # ---save file to temporary----

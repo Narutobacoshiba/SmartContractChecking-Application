@@ -1,7 +1,7 @@
 <template>
   <div id="main" class="container">
     <div id="header">
-      <h1>Select Smart Contracts </h1>
+      <h1>Select Smart Contracts</h1>
     </div>
 
     <div class="row type">
@@ -10,8 +10,12 @@
       <div class="col">
         <div class="input-group mb-3">
           <label class="input-group-text" for="inputGroupSelect01">Type</label>
-          <select class="form-select" id="inputGroupSelect01" v-model="selected">
-            <option value="common" >Common</option>
+          <select
+            class="form-select"
+            id="inputGroupSelect01"
+            v-model="selected"
+          >
+            <option value="common">Common</option>
             <option value="private">Private</option>
             <option value="pending">Pending</option>
             <option value="0">All</option>
@@ -31,15 +35,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(item, index) in filterlist"
-            v-bind:key="index"
-          >
+          <tr v-for="(item, index) in filterlist" v-bind:key="index">
             <th scope="row">{{ index + 1 }}</th>
             <td>{{ item.name }}</td>
             <td>{{ item.type }}</td>
             <td>
-              <input type="checkbox" id="one" name="ch" v-model="checkedNames" :value="item"/>
+              <input
+                type="checkbox"
+                id="one"
+                name="ch"
+                v-model="checkedNames"
+                :value="item"
+              />
             </td>
           </tr>
         </tbody>
@@ -58,14 +65,15 @@
 
 <script>
 import Popup from "./Popup.vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { GetGloLocArgOfSmartContract } from "../../../services/data";
 export default {
   data() {
     return {
-      selected: '0',
+      selected: "0",
       isOpen: false,
       info: null,
-      checkedNames: []
+      checkedNames: [],
     };
   },
   methods: {
@@ -80,21 +88,23 @@ export default {
         this.$router.push({ name: "UpLoadSc" });
       }
     },
-    funtionNext() {
-      var checkbox = document.getElementsByName("ch");
-      var kt = false;
-      for (var i = 0; i < checkbox.length; i++) {
-        if (checkbox[i].checked === true) {
-          kt = true;
-          break;
-        }
-      }
+    async funtionNext() {
+      const res = await GetGloLocArgOfSmartContract(1);
+      this.SetSCSelectedInfo(res.data);
+      // var checkbox = document.getElementsByName("ch");
+      // var kt = false;
+      // for (var i = 0; i < checkbox.length; i++) {
+      //   if (checkbox[i].checked === true) {
+      //     kt = true;
+      //     break;
+      //   }
+      // }
 
-      if (!kt) {
-        alert("Please selet a smart contrac at least to go to the next step!");
-      } else {
-        this.routing("add");
-      }
+      // if (!kt) {
+      //   alert("Please selet a smart contrac at least to go to the next step!");
+      // } else {
+      //   this.routing("add");
+      // }
     },
     load() {
       this.isOpen = true;
@@ -103,23 +113,24 @@ export default {
       this.isOpen = false;
     },
     ...mapActions(["setListSmartContract"]),
+    ...mapMutations(['SetSCSelectedInfo'])
   },
   created() {
     this.setListSmartContract();
   },
   computed: {
-    ...mapGetters(["getlistSmartContract"]),
-    filterlist(){
+    ...mapGetters(["getlistSmartContract","GetSCSelectedInfor"]),
+    filterlist() {
       const { selected } = this;
-      if (selected === "0") return this.getlistSmartContract; 
-      var items = []; 
+      if (selected === "0") return this.getlistSmartContract;
+      var items = [];
       this.getlistSmartContract.forEach(function (item) {
-        if (item.type === selected ){
+        if (item.type === selected) {
           items.push(item);
         }
-      })
-      return items;  
-    }
+      });
+      return items;
+    },
     // return k;
   },
   components: {

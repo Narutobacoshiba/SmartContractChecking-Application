@@ -15,7 +15,7 @@ export default {
     },
 
     setid({commit},data) {
-        console.log("action setid")
+        // console.log("action setid")
         commit('SET_ID',data)
     }, 
 
@@ -33,13 +33,13 @@ export default {
 
     async setListSmartContract({commit}) {
         try {
-            console.log("setListSmartContract");
+            // console.log("setListSmartContract");
             var result = await Axios.get('http://127.0.0.1:8000/smartconstract/select-smart-contract/');
             commit('SET_LIST_SMART_CONTRACT',result.data)
             if(result.data.status === 200) {
                 commit('SET_LIST_SMART_CONTRACT',result.data)
             }
-            console.log("setListSmartContract");
+            // console.log("setListSmartContract");
         } catch(error) {
             console.log("error", error);
         }
