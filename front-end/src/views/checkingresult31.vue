@@ -58,6 +58,7 @@ export default {
   justify-content: center;
 }
 .content {
+  overflow: scroll;
   width: 800px;
   border: 1px solid black;
   width: 60%;

@@ -153,14 +153,12 @@ export default {
     },
     async callUnfoldingTool() {
       const tName = "unfolding";
-      const tLna = "";
-      const tContext = "";
-      const tParam = "";
+      const tcontext_PATH_xml = "<DCRModel>\n    <id>220802</id>\n    <title>Healthcare Workflow</title>\n    <events>\n        <id>play</id>\n    </events>\n    <events>\n        <id>claimReward</id>\n    </events>\n    \n    <rules>\n        <type>condition</type>\n        <source>play</source>\n        <target>claimReward</target>\n    </rules>\n    <rules>\n        <type>include</type>\n        <source>claimReward</source>\n        <target>play</target>\n    </rules>\n</DCRModel>";
+      const tltl_PATH_json = "{\n    \"type\": \"general\",\n    \"params\": {\n        \"name\": \"under_over_flow\",\n        \"inputs\": [\"currentBalance\"]\n    }\n}";
       const res = await CheckService.callUnfoldingTools(
         tName,
-        tLna,
-        tContext,
-        tParam
+        tcontext_PATH_xml,
+        tltl_PATH_json
       );
       console.log("here");
       console.log(res);
@@ -169,12 +167,12 @@ export default {
     async callToolHelena() {
       console.log("bat dau goi tool helena");
       const tName = "helena";
-      this.$store.commit("Setrs","11");
+      this.$store.commit("Setrs","wait a sec...");
       const res = await CheckService.callHelenaTools(tName);
       if (res.status == 200 && res !== null && res != undefined) {
         const mess = res.data.message;
         this.results.push(mess);
-        this.$store.commit("Setrs","11");
+        this.$store.commit("Setrs", mess);
       } else {
         console.log("bat dau mutation");
         this.$store.commit("Setrs","11");

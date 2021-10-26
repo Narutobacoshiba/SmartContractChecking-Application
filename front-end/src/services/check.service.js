@@ -37,12 +37,11 @@ export default class CheckService extends BaseService {
         }
     }
 
-    static async callUnfoldingTools(tName, tLna, tContext, tParam) {
+    static async callUnfoldingTools(tName, tcontext_PATH_xml, tltl_PATH_json) {
         const paraData = {
-            toolname: tName,
-            lna: tLna,
-            context: tContext,
-            param: tParam
+            name: tName,
+            "context_PATH.xml": tcontext_PATH_xml,
+            "ltl_PATH.json": tltl_PATH_json
         };
         // console.log(paraData)
         try {
@@ -71,7 +70,7 @@ export default class CheckService extends BaseService {
 
     static async callHelenaTools(tName) {
         const paraData = {
-            toolname: tName
+            name: tName
         };
         console.log(paraData)
         try {
