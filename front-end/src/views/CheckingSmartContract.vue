@@ -46,7 +46,9 @@
     </div>
     <div id="locate-4">
       <div class="label">Configuration</div>
-      <div class="link-to"><a href="" @click="navgiate('config')">Link to setting Configuration</a></div>
+      <div class="link-to">
+        <a href="" @click="navgiate('config')">Link to setting Configuration</a>
+      </div>
     </div>
     <div class="contain-process">
       <div id="processing-section">
@@ -102,15 +104,17 @@
       >
         Generate
       </button>
-      <button v-if="step=='check'" class="btn btn-primary-outline" @click="check">
+      <button
+        v-if="step == 'check'"
+        class="btn btn-primary-outline"
+        @click="check"
+      >
         Check
       </button>
-      <button v-if="step=='finish'" class="btn btn-primary-outline">
+      <button v-if="step == 'finish'" class="btn btn-primary-outline">
         Next
       </button>
-      <button class="btn btn-primary-outline">
-        Back
-      </button>
+      <button class="btn btn-primary-outline">Back</button>
     </div>
   </div>
 </template>
@@ -142,9 +146,9 @@ export default {
     };
   },
   methods: {
-    navgiate(param){
-      if(param=='config'){
-        this.$router.push({path:""})
+    navgiate(param) {
+      if (param == "config") {
+        this.$router.push({ path: "" });
       }
     },
     async callUnfoldingTool() {
@@ -163,13 +167,19 @@ export default {
     },
 
     async callToolHelena() {
+      console.log("bat dau goi tool helena");
       const tName = "helena";
+      this.$store.commit("Setrs","11");
       const res = await CheckService.callHelenaTools(tName);
       if (res.status == 200 && res !== null && res != undefined) {
         const mess = res.data.message;
         this.results.push(mess);
+        this.$store.commit("Setrs","11");
       } else {
+        console.log("bat dau mutation");
+        this.$store.commit("Setrs","11");
         this.results.push("Can't run HELENA tools");
+        
       }
     },
     async callToolLTL() {
@@ -231,6 +241,7 @@ export default {
       this.step = "finish";
       this.$store.commit("data/SetProcessView", "finish");
       this.callToolHelena();
+      this.$router.push({name:"checkingresult31"})
     },
     routing(processview) {
       this.$store.commit("data/SetProcessView", processview);
@@ -290,11 +301,15 @@ export default {
   mounted() {
     this.list_selected_sc = this.$store.getters["data/GetSelectedSC"];
     this.context = this.$store.getters["data/GetSelectedContext"];
-    this.list_selected_vuls =
-      this.$store.getters["data/GetSelectedVulnerbility"];
+    this.list_selected_vuls = this.$store.getters[
+      "data/GetSelectedVulnerbility"
+    ];
     this.view = this.$store.getters["data/GetProcessView"];
   },
   computed: {
+    done_result() {
+      return this.$store.getters.Getrs;
+    },
     selectedSc() {
       return this.list_selected_sc;
     },
@@ -342,7 +357,7 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
-.btn{
+.btn {
   margin: 0 3%;
 }
 #locate-1 {
@@ -460,10 +475,12 @@ export default {
 <style scoped>
 /* -----Context Style------ */
 
-#locate-2,#locate-3,#locate-4 {
+#locate-2,
+#locate-3,
+#locate-4 {
   width: 70%;
   margin: 0 auto;
-  padding:3% 2%;
+  padding: 3% 2%;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
     rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   border: 1px solid #d9edf7;
@@ -479,7 +496,7 @@ export default {
 .input-area {
   width: 80%;
 }
-.link-to{
+.link-to {
   width: 80%;
   display: flex;
   align-items: center;

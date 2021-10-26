@@ -20,6 +20,8 @@ import LTLCheckingOption from "../views/choose-property/LTLCheckingOption.vue"
 import ContractSpecificProperty from "../views/choose-property/CheckContractSpecificProperty/ContractSpecificProperty.vue"
 import CSPTemplateSetting from "../views/choose-property/CheckContractSpecificProperty/CSPTemplate/CSPTemplateSetting.vue"
 import CheckingSmartContract from "../views/CheckingSmartContract.vue"
+import checkingresult31 from "../views/checkingresult31.vue"
+
 import ContractSpecificPropertyNonTemplate from "../views/choose-property/CheckContractSpecificProperty/ContractSpecificPropertyNonTemplate.vue"
 
 import ChooseEleOfSC from "../views/choose-property/CheckGeneralVul/ChooseElementOfTheSmartContract.vue"
@@ -167,6 +169,12 @@ export const routes = [
     path: "/check-sc",
     name: "CheckSmartContract",
     component: CheckingSmartContract,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Initial` },
+  },
+  {
+    path: "/check-rs",
+    name: "checkingresult31",
+    component: checkingresult31,
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Initial` },
   },
   {

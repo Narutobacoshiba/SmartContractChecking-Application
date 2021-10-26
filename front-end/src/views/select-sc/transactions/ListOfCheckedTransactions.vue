@@ -14,9 +14,9 @@
           <thead class="table-inside">
             <tr>
               <th style="width: 10%" scope="col">#</th>
-              <th style="width: 40%" scope="col">Batch Name</th>
-              <th style="width: 25%" scope="col">Checked Date</th>
-              <th style="width: 25%" scope="col">Description</th>
+              <th style="width: 20%" scope="col">Checker</th>
+              <th style="width: 30%" scope="col">Checked Date</th>
+              <th style="width: 60%" scope="col">Number of smart contracts</th>
             </tr>
           </thead>
           <tbody>
@@ -27,7 +27,7 @@
                   :to="{path:'checking-result', query: { id: item[0] }}"
                   tag="a"
                   class="lk"
-                  >{{ item[0] }} {{item[2]}} </router-link
+                  >{{ item[1] }} {{item[2]}} </router-link
                 ></div>
               </td>
               <td>{{ item[3] }}</td>
@@ -38,9 +38,8 @@
       </div>
     </div>
     <div id="action">
-      <div id="btn-addsc" @click="routing('addsc')">Add Smart Contracts</div>
+      <div id="btn-addsc" @click="routing('addsc')">Start a new checing session</div>
       <div id="btn-backnext" @click="routing('back')">Back</div>
-      <div id="btn-backnext" @click="routing('next')">Next</div>
     </div>
   </div>
 </template>

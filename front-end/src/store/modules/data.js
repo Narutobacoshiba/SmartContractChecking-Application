@@ -1,4 +1,5 @@
 const state = {
+    rs: 'asdasdas',
     used: false,
     version: 2,
     date_modified: 0,
@@ -17,8 +18,9 @@ const state = {
             map: null
           },
           Funtion_params: {}
-        }
+        },       
     },
+
     views: {
         process: 'sc-selection',
         road_page: 1,
@@ -29,6 +31,9 @@ const state = {
   }
   
   const getters = {
+    Getrs: state => {
+      return state.rs;
+    },
     /* -- data -- */
     GetSelectedSC: state => {
       return state.data.selectedSc;
@@ -57,6 +62,10 @@ const state = {
   }
   
   const mutations = {
+    Setrs(state,value){
+      console.log("commit result");
+      state.rs = value;
+    },
       /* -- used */
     SetUsedState(state,value){
         state.used = value

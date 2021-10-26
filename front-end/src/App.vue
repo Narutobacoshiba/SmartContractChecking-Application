@@ -32,6 +32,7 @@ export default {
         ContractSpecificPropertyNonTemplate:true,
         GenaralVulSetting:true,
         CheckSmartContract:true,
+        checkingresult31:true,
       },
     };
   },
