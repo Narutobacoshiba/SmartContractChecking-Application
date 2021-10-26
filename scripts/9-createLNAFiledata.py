@@ -16,14 +16,14 @@ def InsertIMG(FilePath):
 mycursor = db.cursor()
 sqlFomular = "INSERT INTO LNAFile (hcpnfile,propfile) VALUES (%s,%s)"
 multi = [
-    (InsertIMG(r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/scripts/XMLfile/finnal_model.lna"),
-     InsertIMG(r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/scripts/XMLfile/finnal_model.prop.lna")),
-    (InsertIMG(r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/scripts/XMLfile/finnal_model.lna"),
-     InsertIMG(r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/scripts/XMLfile/finnal_model.prop.lna")),
-    (InsertIMG(r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/scripts/XMLfile/finnal_model.lna"),
-     InsertIMG(r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/scripts/XMLfile/finnal_model.prop.lna")),
-    (InsertIMG(r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/scripts/XMLfile/finnal_model.lna"),
-     InsertIMG(r"/home/meedee/Desktop/project/ducdm/SmartContractChecking-Application/scripts/XMLfile/finnal_model.prop.lna")),
+    (InsertIMG(r"D:\SmartContract\SmartContractChecking-Application\scripts\XMLfile\finnal_model.lna"),
+     InsertIMG(r"D:\SmartContract\SmartContractChecking-Application\scripts\XMLfile\finnal_model.prop.lna")),
+    (InsertIMG(r"D:\SmartContract\SmartContractChecking-Application\scripts\XMLfile\finnal_model.lna"),
+     InsertIMG(r"D:\SmartContract\SmartContractChecking-Application\scripts\XMLfile\finnal_model.prop.lna")),
+    (InsertIMG(r"D:\SmartContract\SmartContractChecking-Application\scripts\XMLfile\finnal_model.lna"),
+     InsertIMG(r"D:\SmartContract\SmartContractChecking-Application\scripts\XMLfile\finnal_model.prop.lna")),
+    (InsertIMG(r"D:\SmartContract\SmartContractChecking-Application\scripts\XMLfile\finnal_model.lna"),
+     InsertIMG(r"D:\SmartContract\SmartContractChecking-Application\scripts\XMLfile\finnal_model.prop.lna")),
 
 
 ]

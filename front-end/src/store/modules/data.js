@@ -1,14 +1,26 @@
 const state = {
+    rs: 'asdasdas',
     used: false,
     version: 2,
     date_modified: 0,
     data: {
         selectedSc: [],
-        selectedSCInfor: {},
+        selectedSCInfor: {name:"hello"},
         selectedContext: [],
         selectedVulnerbility: [],
-        configVul: {}
+        configVul: {},
+        initialMarkingInfor: {
+          NumberOfUser: null,
+          Balance:{
+            type: "fixed",
+            fixed: null,
+            random: {from: null, to: null},
+            map: null
+          },
+          Funtion_params: {}
+        },       
     },
+
     views: {
         process: 'sc-selection',
         road_page: 1,
@@ -19,6 +31,9 @@ const state = {
   }
   
   const getters = {
+    Getrs: state => {
+      return state.rs;
+    },
     /* -- data -- */
     GetSelectedSC: state => {
       return state.data.selectedSc;
@@ -35,6 +50,9 @@ const state = {
     GetConfigVul: state => {
       return state.data.configVul;
     },
+    GetInitialMarking: state => {
+      return state.data.initialMarkingInfor;
+    },
     /* -- view -- */
     GetProcessView: (state) => state.views.process,
     GetRoadPage: (state) => state.views.road_page,
@@ -44,6 +62,10 @@ const state = {
   }
   
   const mutations = {
+    Setrs(state,value){
+      console.log("commit result");
+      state.rs = value;
+    },
       /* -- used */
     SetUsedState(state,value){
         state.used = value
@@ -121,6 +143,9 @@ const state = {
     },
     SetConfigVul(state, vul){
       state.data.configVul = vul
+    },
+    SetInitialMarking(state, new_initial_data){
+      state.data.initialMarkingInfor = new_initial_data
     },
     /* -- view -- */
     SetViewsState(state,views){

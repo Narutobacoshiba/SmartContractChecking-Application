@@ -15,25 +15,22 @@ def calltools(request):
         if request.method == 'POST':
             data = request.data
             # ------test data------
-            print(data.keys())
-            toolname = data["toolname"]
-            print("toolname: ", toolname)
+            # print (data)
+            print ('***data keys:', data.keys())
+            name = data['name']
+            print ('***name:', name)
 
-            # -----unfolding--------
-            if (toolname == 'unfolding'):
-                lna = ""
-                context = ""
-                param = ""
-                unfolding(lna, context, param)
-            # -----dcr2cpn----------
-            elif (toolname == 'dcr2cpn'):
-                xml = ""
-                dcr2cpn(xml)
-            elif (toolname == 'ltl'):
-                ltlToPro()
-            elif (toolname == 'helena'):
+            #------save-to-temporary--------
+            if (name == 'unfolding'):
+                savetotemporary(data=data)  
+                unfolding() 
+                return Response({"message": "Run Unfolding Successfully"}, status=status.HTTP_200_OK) 
+            #------helena-----------               
+            elif (name == 'helena'):
                 result = runHelena()
                 return Response({"message": result}, status=status.HTTP_200_OK)
             return Response({"message": "Run Tool Successfully"}, status=status.HTTP_200_OK)
     except:
         return Response({"message": "Run Tool Fail!!"}, status=status.HTTP_400_BAD_REQUEST)
+        
+

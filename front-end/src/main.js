@@ -1,4 +1,5 @@
 import Vue from "vue";
+// import Vuex from "vuex"
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -18,7 +19,14 @@ Vue.mixin({
 VueCookies.config("90d")
 Vue.use(VueCookies)
 
+// const store1 = new Vuex.Store({
+//   state:{
+//     result: ''
+//   }
+// })
+
 new Vue({
+  // store1,
   store,
   router,
   render: (h) => h(App),

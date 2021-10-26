@@ -9,4 +9,4 @@ class  ltltemplate(models.Model):
     ltyid = models.IntegerField (null= False)
 
     class Meta:
-        db_table = 'ltltemplate'
+        db_table = 'LTLTemplate'

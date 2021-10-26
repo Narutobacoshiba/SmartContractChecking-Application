@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <div id="header">
-    <h1>List of Checked Transactions</h1>
+    <h1>Checked Smart Contract List</h1>
     </div>
 
     <div class="grey">
@@ -14,9 +14,9 @@
           <thead class="table-inside">
             <tr>
               <th style="width: 10%" scope="col">#</th>
-              <th style="width: 40%" scope="col">Batch Name</th>
-              <th style="width: 25%" scope="col">Checked Date</th>
-              <th style="width: 25%" scope="col">Description</th>
+              <th style="width: 20%" scope="col">Checker</th>
+              <th style="width: 30%" scope="col">Checked Date</th>
+              <th style="width: 60%" scope="col">Number of smart contracts</th>
             </tr>
           </thead>
           <tbody>
@@ -24,23 +24,22 @@
               <th scope="row">{{ index + 1 }}</th>
               <td>
                 <div v-on:click="set(item.bid)" v-bind:id="item.bid"><router-link
-                  :to="{path:'checkreentrancydetail', query: { id: item.bid }}"
+                  :to="{path:'checking-result', query: { id: item[0] }}"
                   tag="a"
                   class="lk"
-                  >{{ item.name }}</router-link
+                  >{{ item[1] }} {{item[2]}} </router-link
                 ></div>
               </td>
-              <td>{{ item.checkeddate }}</td>
-              <td>{{ item.description }}</td>
+              <td>{{ item[3] }}</td>
+              <td>{{ item[4] }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
     <div id="action">
-      <div id="btn-addsc" @click="routing('addsc')">Add Smart Contracts</div>
+      <div id="btn-addsc" @click="routing('addsc')">Start a new checing session</div>
       <div id="btn-backnext" @click="routing('back')">Back</div>
-      <div id="btn-backnext" @click="routing('next')">Next</div>
     </div>
   </div>
 </template>
@@ -58,7 +57,7 @@ export default {
     
     routing(param) {
       if (param == "next") {
-        this.$router.push({ name: "CheckRentrancy" });
+        this.$router.push({ name: "CheckingResult" });
       }
       if (param == "addsc") {
         this.$router.push({ name: "SelectSmartContract" });

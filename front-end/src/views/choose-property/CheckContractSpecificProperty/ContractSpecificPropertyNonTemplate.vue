@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="con-setting" class="container">
-      <div id="header">Contract-Specifc Property Setting Non-Template</div>
+      <div id="header">Contract-Specifc Property Setting - Non Template</div>
       <div class="row">
         <div class="col-2">Name</div>
         <div class="col-9">
@@ -11,16 +11,14 @@
       <div class="row">
         <div class="col-2">Formular</div>
         <div class="col-9">
-          <!-- <LTLEditor @update="getLTLCode" :code="ltlcode" /> -->
+         <formular-editor/>
         </div>
       </div>
       <div class="row">
       <div class="col-2">Description</div>
       <div class="col-9">
         <textarea name="" id="" cols="30" rows="5" class="form-control">
-            If {variable 1} occurs infnitely often and {variable 2} occurs 
-inifnitely often, then each occurrence of {function 3} is 
-followed by an occurrence of {function 4}
+            No other function 1 orders are accepted between the function 2 of the amount due and the function 3
           </textarea
         >
       </div>
@@ -29,7 +27,7 @@ followed by an occurrence of {function 4}
         <div class="col-2"></div>
         <div id="btn-group" class="col-9">
           <button class="btn btn-primary-outline btn-sm" @click="routing('save')">
-            Add
+            Next
           </button>
           <button
             class="btn btn-outline btn-sm"
@@ -44,11 +42,11 @@ followed by an occurrence of {function 4}
 </template>
 
 <script>
-// import LTLEditor from "../../../components/LTLEditor.vue";
+import FormularEditor from "../../../components/FormularEditor.vue"
 export default {
-  // components: {
-  //   LTLEditor,
-  // },
+  components: {
+    FormularEditor
+  },
   methods: {
     getLTLCode(code) {
       this.ltlcode = code;

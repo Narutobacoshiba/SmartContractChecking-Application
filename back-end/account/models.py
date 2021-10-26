@@ -12,7 +12,7 @@ class Account(AbstractBaseUser):
 
     class Meta:
         managed = False
-        db_table = 'account'
+        db_table = 'Account'
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
@@ -42,5 +42,5 @@ class Contact(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'contact'
+        db_table = 'Contact'
 

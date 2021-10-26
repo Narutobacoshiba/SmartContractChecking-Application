@@ -53,17 +53,8 @@ export default {
     };
   },
   methods: {
-    async callUnfoldingTools(){
-      const tName = "unfolding"
-      const tLna = ""
-      const tContext = ""
-      const tParam = ""
-      const res = await CheckService.callUnfoldingTools(tName,tLna,tContext,tParam)
-      console.log(res)
-    },
     routing(param) {
       if (param == "unfolding") {
-        this.callUnfoldingTools()
         // this.$router.push({ name: "LTLCheckOption" });
       }
       if (param == "next") {

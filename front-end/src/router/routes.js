@@ -7,7 +7,7 @@ import InitialMarkingSetting from "../views/InitialMarkingSetting.vue"
 import ChooseProperty from "../views/ChooseProperty"
 
 import ListOfCheckedTransactions from "../views/select-sc/transactions/ListOfCheckedTransactions.vue"
-import CheckReenTrancyDetail from "../views/select-sc/transactions/CheckReenTrancyDetail.vue"
+import CheckingResult from "../views/select-sc/transactions/CheckingResult.vue"
 
 import SelectSmartContract from "../views/select-sc/smartcontract/SelectSmartContract.vue"
 import UpLoadSc from "../views/select-sc/smartcontract/UpLoadSc.vue"
@@ -20,6 +20,8 @@ import LTLCheckingOption from "../views/choose-property/LTLCheckingOption.vue"
 import ContractSpecificProperty from "../views/choose-property/CheckContractSpecificProperty/ContractSpecificProperty.vue"
 import CSPTemplateSetting from "../views/choose-property/CheckContractSpecificProperty/CSPTemplate/CSPTemplateSetting.vue"
 import CheckingSmartContract from "../views/CheckingSmartContract.vue"
+import checkingresult31 from "../views/checkingresult31.vue"
+
 import ContractSpecificPropertyNonTemplate from "../views/choose-property/CheckContractSpecificProperty/ContractSpecificPropertyNonTemplate.vue"
 
 import ChooseEleOfSC from "../views/choose-property/CheckGeneralVul/ChooseElementOfTheSmartContract.vue"
@@ -72,9 +74,9 @@ export const routes = [
         meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | listofcheckedtransactions` },
       },
       {
-        path: 'checkreentrancydetail',
-        name: 'CheckRentrancy',
-        component: CheckReenTrancyDetail
+        path: 'checking-result',
+        name: 'CheckingResult',
+        component: CheckingResult
       },
       {
         path: 'select-smart-contract',
@@ -167,6 +169,12 @@ export const routes = [
     path: "/check-sc",
     name: "CheckSmartContract",
     component: CheckingSmartContract,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Initial` },
+  },
+  {
+    path: "/check-rs",
+    name: "checkingresult31",
+    component: checkingresult31,
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | Initial` },
   },
   {

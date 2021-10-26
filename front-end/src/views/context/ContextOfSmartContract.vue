@@ -29,7 +29,7 @@
         >
           <option>--- Select Type ---</option>
           <option v-for="c in contexts" :key="c" :value="c">
-            {{ c.name1 }}
+            {{ c.context_type }}
           </option>
         </select>
       </div>
@@ -65,6 +65,14 @@
       </button>
       <button
         id="btn2"
+        type="button back-btn"
+        class="btn btn-outline-primary btn-sm"
+        @click="routing('ship')"
+      >
+        Ship
+      </button>
+      <button
+        id="btn2"
         type="button"
         class="btn btn-outline-primary btn-sm"
         @click="routing('back')"
@@ -85,7 +93,6 @@
 
 <script>
 import UploadContext from "./UpLoadContext.vue";
-import CheckService from "../../services/check.service.js";
 import {GetAllcpncontext} from "../../services/data"
 export default {
   components: { UploadContext },
@@ -113,13 +120,7 @@ export default {
     async initData() {
       this.contexts = await GetAllcpncontext();
     },
-    async checkContext() {
-      const toolName ="dcr2cpn"
-      const xml = ""
-      // console.log(context);
-      const res = await CheckService.callDCNTools(toolName,xml);
-      console.log(res);
-    },
+    
     cComponents() {
       this.showComponents = false;
     },
@@ -132,11 +133,13 @@ export default {
     },
     routing(param) {
       if (param == "add") {
-        this.checkContext();
         this.$router.push({ name: "LTLCheckOption" });
       }
       if (param == "upfile") {
         this.$router.push({ name: "UpLoadContext" });
+      }
+      if (param == "ship") {
+        this.$router.push({ name: "LTLCheckOption" });
       }
       if (param == "back") {
         this.$router.push({ name: "SelectSmartContract" });
@@ -219,5 +222,8 @@ export default {
   #section {
     width: 100%;
   }
+}
+.back-btn{
+  
 }
 </style>

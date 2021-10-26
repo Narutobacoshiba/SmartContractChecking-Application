@@ -218,6 +218,12 @@ export function AcceptPendingSmartContracts(sc_id, name_sc, code) {
 //   }
 // }
 
+/* --------------Get GlobalVariable,LocalVariable,Argument of SmartContract by ID-------------- */
+export async function GetGloLocArgOfSmartContract(id){
+    const res = await SmartContractsService.getArguLocalGlobalVar(id);
+    return res  
+}
+
 /* ------Context------- */
 export async function GetContext() {
     const response = await ContextService.GetAllContext()
