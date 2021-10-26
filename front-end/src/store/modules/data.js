@@ -5,7 +5,7 @@ const state = {
     date_modified: 0,
     data: {
         selectedSc: [],
-        selectedSCInfor: {},
+        selectedSCInfor: {name:"hello"},
         selectedContext: [],
         selectedVulnerbility: [],
         configVul: {},

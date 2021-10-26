@@ -14,10 +14,10 @@ class Listofcheckedtransactions(APIView):
     def get(self, request):
         try:
             if request.method == 'GET':
-                sql = '''select a.aid as id ,c.firstname as firstname,c.lastname as lastname, cb.checkedDate as CheckedDate, cb.noSC as num from contact as c 
-                        inner join account as a
+                sql = '''select a.aid as id ,c.firstname as firstname,c.lastname as lastname, cb.checkedDate as CheckedDate, cb.noSC as num from Contact as c 
+                        inner join Account as a
                         on c.aid = a.aid
-                        inner join checkedbatchsc as cb
+                        inner join CheckedBatchSC as cb
                         on a.aid = cb.aid'''
             cursor = connection.cursor()
             try:
@@ -33,7 +33,7 @@ class Checkreentrancydetail(APIView):
     def get(self,request):
         try:
             if request.method == 'GET':
-                sql = '''SELECT result FROM soliditycpn.checkedbatchsc
+                sql = '''SELECT result FROM CheckedBatchSC
                         where aid = %s'''
             cursor = connection.cursor()
             try:

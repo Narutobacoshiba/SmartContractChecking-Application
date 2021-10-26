@@ -29,7 +29,7 @@
         >
           <option>--- Select Type ---</option>
           <option v-for="c in contexts" :key="c" :value="c">
-            {{ c.name1 }}
+            {{ c.context_type }}
           </option>
         </select>
       </div>

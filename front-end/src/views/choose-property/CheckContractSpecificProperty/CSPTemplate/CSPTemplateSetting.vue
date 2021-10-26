@@ -21,7 +21,7 @@
     <div class="row">
       <div class="col-2">Formular</div>
       <div class="col-10">
-        <formular-editor/>
+        <formular-editor />
       </div>
     </div>
     <div class="row">
@@ -51,23 +51,25 @@ followed by an occurrence of {function 4}
 </template>
 
 <script>
-import FormularEditor from "../../../../components/FormularEditor.vue"
-import {GetGloLocArgOfSmartContract} from "../../../../services/data"
+import FormularEditor from "../../../../components/FormularEditor.vue";
+import { GetGloLocArgOfSmartContract } from "../../../../services/data";
 export default {
   data: function () {
     return {};
   },
-  mounted(){
+  mounted() {
     this.fetchData();
   },
-  components:{
-    FormularEditor
-  }
-  ,
+  components: {
+    FormularEditor,
+  },
+  computed: {
+  },
   methods: {
-    async fetchData(){
+    async fetchData() {
       const res = await GetGloLocArgOfSmartContract(3);
-      console.log(res)
+      console.log(res);
+      console.log(this.GetSCSelectedInfor.name);
     },
     routing(param) {
       if (param == "add") {
