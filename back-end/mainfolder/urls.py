@@ -20,6 +20,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("auth/", include("account.urls")),
     path("smartcontract/", include("smartcontract.urls")),
+    path("tools/", include("tools.urls")),
+    path("ltlproperty/", include("ltlproperty.urls")),
 ]
 
 

@@ -22,9 +22,8 @@ std::vector<std::string> Unfolder::FindUnfoldedFunction(){
         std::string ltl_name = ltl_param.at("name");
         if(ltl_name == "under_over_flow"){
             auto inputs = ltl_param.at("inputs");
-            for(size_t i = 0; i < inputs.size(); i++){
-                list_required_variables.push_back(inputs[i]);
-            }
+            std::string variable = inputs.at("selected_variable");
+            list_required_variables.push_back(variable);
         }
     }
 

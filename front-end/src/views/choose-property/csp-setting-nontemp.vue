@@ -18,7 +18,7 @@
                 </div>
                 <div class="cspsn-second-cell">
                     <div id="cspsn-ltl-editor">
-                        <LtlEditor :ltlcode="selected_vul.params.code" @changeContent="getContent"/>
+                        <LtlEditor :ltlcode="selected_vul.params.formula" @changeContent="getContent"/>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@ export default ({
         }
     },
     beforeMount(){
-        this.selected_vul = this.$store.getters["data/GetSelectedVulnerbility"]
+        this.selected_vul = this.$store.getters["data/GetSelectedVulnerability"]
 
         if(!("name" in this.selected_vul.params)){
             this.selected_vul.params.name = ""
@@ -58,27 +58,27 @@ export default ({
         if(!("description" in this.selected_vul.params)){
             this.selected_vul.params.description = ""
         }
-        if(!("code" in this.selected_vul.params)){
-            this.selected_vul.params.code = "* create new property here. *"
+        if(!("formula" in this.selected_vul.params)){
+            this.selected_vul.params.formula = "* create new property here. *"
         }
     },
     watch: {
         selected_vul: {
             handler(val){
-                this.$store.commit("data/SetSelectedVulnerbility", val);
+                this.$store.commit("data/SetSelectedVulnerability", val);
             },
             deep: true
         }
     },
     methods: {
         getContent(e){
-            this.selected_vul.params.code = e
+            this.selected_vul.params.formula = e
         },
         goNextPage(){
             this.$router.push({ name: "InitialMarkingSetting"})
         },
         goPrePage(){
-            this.$router.push({ name: "LtlCheckingOptions"});
+            this.$router.push({ name: "CSPSettingChooseType"});
         }
     }
 })

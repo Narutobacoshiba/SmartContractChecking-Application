@@ -3,16 +3,16 @@
         <div id="outc-set-limmit">
             <div class="outc-limmit-sec">
                 <div>MinThreshold</div>
-                <input type="text" v-model="min_threshold">
+                <input type="text" v-model="sdata.min_threshold">
             </div>
             <div class="outc-limmit-sec">
                 <div>MaxThreshold</div>
-                <input type="text" v-model="max_threshold">
+                <input type="text" v-model="sdata.max_threshold">
             </div>
         </div>
 
         <div id="outc-select-var">
-            <VariableTable :selectValue="selected_var"/>
+            <VariableTable :selectValue="sdata.selected_variable" @changeValue="changeValue"/>
         </div>
     </div>
 </template>
@@ -24,11 +24,37 @@ export default({
     components: {VariableTable},
     data() {
         return{
-            min_threshold: 0,
-            max_threshold: 65535,
-            selected_var: "",
+            vul_data: null,
+            sdata: {}
         }
     },
+    beforeMount(){
+        this.vul_data = this.$store.getters["data/GetSelectedVulnerability"]
+        this.sdata = this.vul_data.params.inputs
+        if(!("min_threshold" in this.sdata)){
+            this.sdata.min_threshold = "0"
+        }
+        if(!("max_threshold" in this.sdata)){
+            this.sdata.max_threshold = "65535"
+        }
+        if(!("selected_variable" in this.sdata)){
+            this.sdata.selected_variable = ""
+        }
+    },
+    watch: {
+        sdata: {
+            handler(val){
+                this.vul_data.params.inputs = val
+                this.$store.commit("data/SetSelectedVulnerability", this.vul_data);
+            },
+            deep: true
+        }
+    },
+    methods: {
+        changeValue(e){
+            this.sdata.selected_variable = e
+        }
+    }
 })
 </script>
 

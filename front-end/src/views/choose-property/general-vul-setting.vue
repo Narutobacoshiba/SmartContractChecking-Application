@@ -8,7 +8,7 @@
                 <div class="gvs-list-label gvs-list-row">
                     Vulnerability
                 </div>
-                <div class="gvs-vul-element gvs-list-row" v-for="v in list_vulnerability" :key="v.id" @click="selected_vul = v.id" 
+                <div class="gvs-vul-element gvs-list-row" v-for="v in list_vulnerability" :key="v.id" @click="selectVul(v.id)" 
                     :class="{'gvs-selected-row':selected_vul == v.id, 'gvs-unselected-row': selected_vul != v.id}">
                     <li>{{v.name}}</li>
                 </div>
@@ -48,6 +48,9 @@ export default({
             vulnerability_descriptions: {"iou":"outOfRange(x) = (x < minThreshold) V (x > maxThreshold)"},
         }
     },
+    beforeMount(){
+        this.setOutData()
+    },
     computed: {
         getVulDescription(){
             return this.vulnerability_descriptions[this.selected_vul]
@@ -57,6 +60,21 @@ export default({
         }
     },
     methods: {
+        selectVul(id){
+            if(this.selected_vul != id){
+                if(confirm("Current you choose iou vulnerability, did you want to reset it!") == true){
+                    if(id == "iou"){
+                        this.setOutData()
+                    }
+                    this.selected_vul = id
+                }
+            }
+        },
+        setOutData(){
+            let temp = this.$store.getters["data/GetSelectedVulnerability"]
+            temp.params = {name:"under_over_flow",inputs:{"min_threshold":"0","max_threshold":"65535","selected_variable":""}} 
+            this.$store.commit("data/SetSelectedVulnerability",temp)
+        },
         goNextPage(){
             this.$router.push({ name: "InitialMarkingSetting"})
         },

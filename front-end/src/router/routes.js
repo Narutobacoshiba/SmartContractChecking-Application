@@ -9,10 +9,18 @@ import ContextSelection from "../views/select-context/context-selection.vue"
 import UploadContext from "../views/select-context/upload-context.vue"
 
 import LtlCheckingOptions from "../views/choose-property/ltl-checking-options.vue"
+import CSPSettingChooseType from "../views/choose-property/csp-setting-choosetype.vue"
 import CSPSettingNonTemp from "../views/choose-property/csp-setting-nontemp.vue"
+import CSPPropertyTemp from "../views/choose-property/csp-property-temp.vue"
 import GeneralVulSetting from "../views/choose-property/general-vul-setting.vue"
 
 import InitialMarkingSetting from "../views/InitialMarkingSetting.vue"
+
+import GenerateCPNModel from "../views/Generate-CPN-Model.vue"
+
+import CheckCPNModel from "../views/Check-CPN-Model.vue"
+
+import CheckingResult from "../views/Checking-Result.vue"
 
 import { DOMAIN_TITLE } from '../.env'
 
@@ -61,9 +69,19 @@ export const routes = [
         component: LtlCheckingOptions
       },
       {
+        path: 'choose-type',
+        name: 'CSPSettingChooseType',
+        component: CSPSettingChooseType
+      },
+      {
         path: 'csp-setting-nontemp',
         name: 'CSPSettingNonTemp',
         component: CSPSettingNonTemp
+      },
+      {
+        path: 'csp-property-template',
+        name: 'CSPPropertyTemp',
+        component: CSPPropertyTemp
       },
       {
         path: 'general-vulnerabilities-setting',
@@ -74,6 +92,21 @@ export const routes = [
         path: 'initial-marking',
         name: 'InitialMarkingSetting',
         component: InitialMarkingSetting
+      },
+      {
+        path: 'generate-cpn-model',
+        name: 'GenerateCPNModel',
+        component: GenerateCPNModel
+      },
+      {
+        path: 'checking-cpn-model',
+        name: 'CheckCPNModel',
+        component: CheckCPNModel
+      },
+      {
+        path: 'checking-result',
+        name: 'CheckingResult',
+        component: CheckingResult
       }
     ],
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | check-vulnerabilities` },

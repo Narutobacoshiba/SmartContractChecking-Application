@@ -71,7 +71,7 @@ class LTLTranslator{
         void handleVariable(const nlohmann::json& lna_json);
         std::map<std::string,std::string>  translate(); 
 
-        std::map<std::string, std::string> createUnderOverFlowVul(std::vector<std::string> _param);
+        std::map<std::string, std::string> createUnderOverFlowVul(const std::string& min_threshold, const std::string& max_threshold, const std::string& variable);
         std::map<std::string, std::string> createVulFileFromFormula(std::string _formula);
 
         void handleConstDefinition();

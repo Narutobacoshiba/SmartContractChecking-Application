@@ -34,18 +34,18 @@ export default {
   data() {
     return {
       pages: [
-        { id: 1, name: "start", view: "SmartContractSelection"},
-        { id: 2, name: "Select Smart Contracts", view: "SmartContractSelection"},
-        { id: 3, name: "Select Context", view: "ContextSelection"},
-        { id: 4, name: "Choose Vulnerabilities", view: "LtlCheckingOptions"},
-        { id: 5, name: "Generate SC to CPN",view: "generate-sc2cpn"},
-        { id: 6, name: "Check the SCs",view: "check-sc" },
-        { id: 7, name: "Finish",view: "finish"},
+        { id: 1, name: "Select Smart Contracts", view: "SmartContractSelection"},
+        { id: 2, name: "Select Context", view: "ContextSelection"},
+        { id: 3, name: "Choose Vulnerabilities", view: "LtlCheckingOptions"},
+        { id: 4, name: "Generate SC to CPN",view: "GenerateCPNModel"},
+        { id: 5, name: "Check the SCs",view: "CheckCPNModel" },
+        { id: 6, name: "Finish",view: "finish"},
       ],
-      views_to_id:{"SmartContractSelection":2,
-                   "ContextSelection":3,"UploadContext":3,
-                   "LtlCheckingOptions":4,"CSPSettingNonTemp":4,"GeneralVulSetting":4,"InitialMarkingSetting":4},
-      current_page: 1,
+      views_to_id:{"SmartContractSelection":1,
+                   "ContextSelection":2,"UploadContext":2,
+                   "LtlCheckingOptions":3,"CSPSettingNonTemp":3,"GeneralVulSetting":3,"InitialMarkingSetting":3,"CSPPropertyTemp":3,
+                   "GenerateCPNModel":4,
+                   "CheckCPNModel":5},
     };
   },
    methods: {
@@ -59,7 +59,7 @@ export default {
       this.$router.push("/roadmap")
     }, 
     routing(page){
-      if(page.id <= this.getRoadPageId && page.id != this.current_page){
+      if(page.id <= this.getRoadPageId && page.id != this.getCurrentPageId){
         this.$router.push({ name: page.view})
       }
     }
@@ -71,16 +71,16 @@ export default {
         if(view_id > this.$store.getters["data/GetCheckingRoadView"]){
           this.$store.commit("data/SetCheckingRoadView",view_id)
         }
-        this.current_page = view_id
+        this.$store.commit("data/SetCurrentRoadView",view_id)
       }
     }
   },
   computed: {
       getCurrentPageId(){
-          return this.current_page
+          return this.$store.getters["data/GetCurrentRoadView"]
         },
       getCurrentPageName(){
-        return this.pages[this.current_page-1].name
+        return this.pages[this.getCurrentPageId-1].name
       },
       getRoadPageId(){
         return this.$store.getters["data/GetCheckingRoadView"]
@@ -207,10 +207,11 @@ export default {
 }
 #ps-roadmap li:hover .ttip{
   display: inline-block;
-  background-color: black;
-  opacity: 0.8;
+  background-color: rgb(56, 55, 55);
+  opacity: 0.9;
   color: white;
   padding: 5px;
+  font-size: 14px;
   border-radius: 3px;
   margin: 0;
 }

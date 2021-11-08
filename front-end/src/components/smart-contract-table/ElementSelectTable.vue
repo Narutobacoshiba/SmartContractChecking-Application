@@ -97,9 +97,13 @@ export default ({
 .first-cell{
   flex-basis: 16%;
   padding-left: 5px;
+  display: flex;
+  justify-content: space-between;
 }
 .second-cell{
   flex-basis: 64%;
+  display: flex;
+  justify-content: space-between;
 }
 .third-cell{
   flex-basis: 20%;

@@ -33,7 +33,7 @@ class CurrentAPIView(APIView):
 	def get(self, request):
 		user = request.user
 		try:
-			contact = Contact.objects.filter(aid=user.aid).first()
+			contact = Contact.objects.get(aid=user.aid)
 			return Response({'id':user.aid,'username':user.username,
 			                 'role':user.role,'firstname':contact.firstname,
 			                 'lastname':contact.lastname,'email':contact.email}, status=status.HTTP_200_OK)

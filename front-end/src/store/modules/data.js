@@ -16,10 +16,21 @@ const state = {
           Funtion_params: {}
         },      
         selectedContext: {used:false,data:{}},
-        selectedVulnerbility: {type:"",params:{}},
+        selectedVulnerability: {type:"",subtype:"",params:{}},
+        generateModelData: {
+            generated: false,
+            code: "",
+            data: {}
+        },
+        checkingModelData: {
+            checked: false,
+            code: "",
+            data: {}
+        }
     },
     views: {
         checking_road_view: 1,
+        current_road_view: 1,
     }
   }
   
@@ -34,14 +45,21 @@ const state = {
     GetSelectedContext: state => {
       return state.data.selectedContext;
     },
-    GetSelectedVulnerbility: state => {
-      return state.data.selectedVulnerbility;
+    GetSelectedVulnerability: state => {
+      return state.data.selectedVulnerability;
     },
     GetInitialMarking: state => {
       return state.data.initialMarkingInfor;
     },
+    GetGenerateModelData: state => {
+      return state.data.generateModelData;
+    },
+    GetCheckingModelData: state => {
+      return state.data.checkingModelData;
+    },
     /* -- view -- */
     GetCheckingRoadView: (state) => state.views.checking_road_view,
+    GetCurrentRoadView: (state) => state.views.current_road_view,
   }
 
   const mutations = {
@@ -63,14 +81,49 @@ const state = {
       state.data.selectedContext.used = true
       state.data.selectedContext.data = newArr;
     },
-    SetSelectedVulnerbility(state, newArr){
-      state.data.selectedVulnerbility = newArr;
+    SetSelectedVulnerability(state, newArr){
+      state.data.selectedVulnerability = newArr;
+    },
+    ResetSelectedVulnerability(state){
+      state.data.selectedVulnerability = {type:"",subtype:"",params:{}};
     },
     SetSCSelectedInfo(state, newArr){
       state.data.selectedSCInfor = newArr;
     },
     SetInitialMarking(state, new_initial_data){
       state.data.initialMarkingInfor = new_initial_data
+    },
+    ResetInitialMarking(state){
+      state.data.initialMarkingInfor = {
+                                        NumberOfUser: null,
+                                        Balance:{
+                                          type: "fixed",
+                                          fixed: null,
+                                          random: {from: null, to: null},
+                                          map: null
+                                          },
+                                        Funtion_params: {}
+                                      }
+    },
+    SetGenerateModelData(state, new_generate_data){
+      state.data.generateModelData = new_generate_data
+    },
+    ResetGenerateModelData(state){
+      state.data.generateModelData = {
+                                          generated: false,
+                                          code: "",
+                                          data: {}
+                                      }
+    },
+    SetCheckingModelData(state, new_checking_data){
+      state.data.checkingModelData = new_checking_data
+    },
+    ResetCheckingModelData(state){
+      state.data.checkingModelData = {
+                                          checked: false,
+                                          code: "",
+                                          data: {}
+                                      }
     },
     /* -- view -- */
     SetViewsState(state,views){
@@ -79,11 +132,40 @@ const state = {
     SetCheckingRoadView(state, road_view){
         state.views.checking_road_view = road_view
     },
+    SetCurrentRoadView(state, road_view){
+        state.views.current_road_view = road_view
+    },
     /* ---- set all data ---- */
-    SetAllData(state,value){
-      state.date_modified = value.date_modified
-      state.views = value.views
-      state.data = value.data
+    ResetAllData(state){
+      state.data =  {
+                      selectedSc: [],
+                      selectedSCInfor: [],
+                      initialMarkingInfor: {
+                        NumberOfUser: null,
+                        Balance:{
+                          type: "fixed",
+                          fixed: null,
+                          random: {from: null, to: null},
+                          map: null
+                          },
+                        Funtion_params: {}
+                      },      
+                      selectedContext: {used:false,data:{}},
+                      selectedVulnerability: {type:"",subtype:"",params:{}},
+                      generateModelData: {
+                          generated: false,
+                          code: "",
+                          data: {}
+                      },
+                      checkingModelData: {
+                          checked: false,
+                          code: "",
+                          data: {}
+                      }
+                    }
+      state.views = {
+                        checking_road_view: 1,
+                    }
     }
   }
   

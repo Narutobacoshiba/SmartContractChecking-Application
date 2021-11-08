@@ -111,17 +111,20 @@ std::map<std::string,std::string> LTLTranslator::translate(){
     if(ltl_type == "general"){
         std::string ltl_name = ltl_param.at("name");
         if(ltl_name == "under_over_flow"){
-            return createUnderOverFlowVul(ltl_param.at("inputs"));
+            auto inputs = ltl_param.at("inputs");
+            std::string min_threshold = inputs.at("min_threshold");
+            std::string max_threshold = inputs.at("max_threshold");
+            std::string variable = inputs.at("selected_variable");
+            return createUnderOverFlowVul(min_threshold,max_threshold,variable);
         }
     }else if(ltl_type == "specific"){
         return createVulFileFromFormula(ltl_param.at("formula"));
     }
 }
 
-std::map<std::string, std::string> LTLTranslator::createUnderOverFlowVul(std::vector<std::string> _param){
-    std::string variable = _param[0];
+std::map<std::string, std::string> LTLTranslator::createUnderOverFlowVul(const std::string& min_threshold, const std::string& max_threshold,  const std::string& variable){
     std::stringstream _vul;
-    _vul << "const minThreshold = 0;" << "\n" << "const maxThreshold = 10000" << "\n";
+    _vul << "const minThreshold = " + min_threshold + ";" << "\n" << "const maxThreshold = " + max_threshold + "" << "\n";
     _vul << "proposition oFut: ('" + variable + "' < minThreshold) | ('" + variable + "' > maxThreshold);" << "\n";
     _vul << "property outOfRange: G ( ! oFut );";
     return createVulFileFromFormula(_vul.str());

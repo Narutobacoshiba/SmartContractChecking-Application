@@ -284,9 +284,14 @@ export default ({
                     list_new_sc.push(this.selected_sc[i].id)
                 }
             }
-
-            let response = await SmartContractService.getSmartContractInformation(list_new_sc)
-            let data = response.data
+            let data = []
+            try{
+                let response = await SmartContractService.getSmartContractInformation(list_new_sc)
+                data = response.data
+            }catch(error){
+                console.log(error)
+            }
+            
             for(let i=0; i<data.length; i++){
                 sc_infor.push(data[i])
             }

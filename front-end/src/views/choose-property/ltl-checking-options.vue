@@ -28,7 +28,7 @@ export default({
         }
     },
     mounted(){
-        this.selected_vul = this.$store.getters["data/GetSelectedVulnerbility"]
+        this.selected_vul = this.$store.getters["data/GetSelectedVulnerability"]
     },
     computed:{
         getSelectedVulType(){
@@ -40,15 +40,15 @@ export default({
             if(this.selected_vul.type != 'specific'){
                 this.selected_vul.type = 'specific'
                 this.selected_vul.params = {}
-                this.$store.commit("data/SetSelectedVulnerbility",this.selected_vul)
+                this.$store.commit("data/SetSelectedVulnerability",this.selected_vul)
             }
-            this.$router.push({ name: "CSPSettingNonTemp"});
+            this.$router.push({ name: "CSPSettingChooseType"});
         },
         goGeneralVul(){
             if(this.selected_vul.type != 'general'){
                 this.selected_vul.type = 'general'
                 this.selected_vul.params = {}
-                this.$store.commit("data/SetSelectedVulnerbility",this.selected_vul)
+                this.$store.commit("data/SetSelectedVulnerability",this.selected_vul)
             }
             this.$router.push({ name: "GeneralVulSetting"});
         },

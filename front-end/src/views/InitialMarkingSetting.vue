@@ -59,7 +59,7 @@
                 >
                   <a
                     class="nav-link"
-                    v-on:click="selected_sc = item.id"
+                    v-on:click="selectSC(item.id)"
                     v-bind:class="{ active: item.id == selected_sc}"
                     >{{ item.name }}</a
                   >
@@ -116,7 +116,7 @@ export default {
     return {
       radio_seleted: "fixed",
       function_cell_selected: "function",
-      list_smart_contract: [{name:"smart I",id:1},{name:"smart II",id:2},{name:"smart III",id:3},{name:"smart IV",id:4}],
+      list_smart_contract: [],
       smart_contract_infors: {},
       selected_sc: null,
       selected_function: null,
@@ -130,6 +130,10 @@ export default {
       this.smart_contract_infors[smi[i].id] = smi[i].functions 
     }
     this.initInitialMarkingHolder()
+    
+    if(this.list_smart_contract.length > 0){
+      this.selected_sc = this.list_smart_contract[0].id
+    }
   },
   watch: {
     init_marking: {
@@ -158,6 +162,12 @@ export default {
     }
   },
   methods: {
+    selectSC(id){
+      if(this.selected_sc != id){
+        this.selected_sc = id
+        this.function_cell_selected = 'function'
+      }
+    },
     updateInitMarking(val){
       this.function_cell_selected = "function"
       this.selected_function = null
@@ -191,10 +201,20 @@ export default {
       }
     },
     goNextPage() {
-      this.$router.push({ name: "CSPSettingType" })
+      this.$router.push({ name: "GenerateCPNModel" })
     },
     goPrePage(){
-      this.$router.push({ name: "GeneralVulSetting" })
+      let temp = this.$store.getters["data/GetSelectedVulnerability"]
+      if(temp.type == "general"){
+        this.$router.push({ name: "GeneralVulSetting" })
+      }else if(temp.type == "specific"){
+        if(temp.subtype == "temp"){
+          this.$router.push({ name: "CSPPropertyTemp" })
+        }else if(temp.subtype == "nontemp"){
+          this.$router.push({ name: "CSPSettingNonTemp" })
+        }
+      }
+      
     },
     setFunctionParam(func){
             this.function_cell_selected = "params"

@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'account',
-    'smartcontract'
+    'smartcontract',
+    'tools',
+    'ltlproperty'
 ]
 
 MIDDLEWARE = [
@@ -75,8 +77,8 @@ WSGI_APPLICATION = 'mainfolder.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'solidity2cpn',
-        'USER': 'hadt',
+        'NAME': 'solidityTocpn',
+        'USER': 'admin',
         'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': '3306',
