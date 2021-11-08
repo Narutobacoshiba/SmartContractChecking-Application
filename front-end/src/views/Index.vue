@@ -29,7 +29,7 @@ export default ({
   },
   methods: {
       check_smart_contracts(){
-          this.$router.push({name:'ContextSelection'})
+          this.$router.push({name:'SmartContractSelection'})
       }
   }
 })

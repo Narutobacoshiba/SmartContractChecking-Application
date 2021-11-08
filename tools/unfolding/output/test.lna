@@ -354,8 +354,8 @@ transition PLAY_return {
 		state_cflow : epsilon;
 	}
 }
-proposition oFut:
-	exists (t in PLAY_currentBalance | t->1 < 0) or exists (t in PLAY_currentBalance | t->1 > 10000);
+proposition outOfRange:
+	exists (t in PLAY_currentBalance | t->1 < 0) or exists (t in PLAY_currentBalance | t->1 > 10);
 
 
 }

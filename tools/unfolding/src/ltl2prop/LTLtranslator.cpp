@@ -168,6 +168,43 @@ std::map<std::string, std::string> LTLTranslator::createVulFileFromFormula(std::
     result["property"] = property_string;
     return result;
 }
+
+std::vector<std::string> LTLTranslator::getListVariableFromFormula(const std::string& _formula){
+    std::vector<std::string> lines = split(_formula,"\n");
+    std::list<std::string> temp_ltl_lines;
+
+    for(size_t i = 0; i < lines.size(); i++){
+        std::string line = lines[i];
+        if (!line.empty()) {
+            std::string temp = std::string(line);
+            trim_ex(temp);
+            if(temp.length() > 0)
+                temp_ltl_lines.emplace_back(line);
+        }
+    }
+    std::list<std::string>::iterator temp_ptr_ltl_line = temp_ltl_lines.begin();
+
+    std::vector<std::string> ret;
+    while (temp_ptr_ltl_line != temp_ltl_lines.end()){
+        std::string keyword = retrieve_string_element(*temp_ptr_ltl_line,0," ");
+        if(std::find(TokensDefine.begin(), TokensDefine.end(), keyword) != TokensDefine.end()){
+            if(keyword == PROPOSITION_STRING || keyword == PROPERTY_STRING){
+                std::string prop_def = retrieve_string_element(*temp_ptr_ltl_line,1,":");
+                std::vector<std::string> expression = splitExpression(prop_def);
+                for(auto it = expression.begin(); it != expression.end(); ++it){
+                    std::string op = *it;
+                    if(op.find("'") != std::string::npos){
+                        std::string variable = substr_by_edge(op,"'","'");
+                        ret.push_back(variable);
+                    }
+                }
+            }
+        }
+        ++temp_ptr_ltl_line;
+    }
+    return ret;
+}
+
 /** Analyse const definition
  */
 void LTLTranslator::handleConstDefinition(){

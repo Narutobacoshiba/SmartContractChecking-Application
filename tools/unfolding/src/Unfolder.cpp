@@ -25,7 +25,9 @@ std::vector<std::string> Unfolder::FindUnfoldedFunction(){
             std::string variable = inputs.at("selected_variable");
             list_required_variables.push_back(variable);
         }
-    }
+    }else if(ltl_type == "specific"){
+        list_required_variables = LTLTranslator::getListVariableFromFormula(ltl_param.at("formula"));
+    } 
 
     std::map<std::string, std::string> global_variables;
     auto gvs = sol_information.at("globalVariables");
