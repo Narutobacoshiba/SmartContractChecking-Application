@@ -86,6 +86,10 @@ export default ({
     watch: {
         generate_data: {
             handler(val){
+                if(val.generated && "hcpn" in val.data && "prop" in val.data){
+                    this.hcpn = val.data.hcpn
+                    this.prop = val.data.prop
+                }
                 this.$store.commit("data/SetGenerateModelData", val);
             },
             deep: true

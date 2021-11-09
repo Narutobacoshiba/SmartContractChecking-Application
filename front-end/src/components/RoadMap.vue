@@ -39,13 +39,14 @@ export default {
         { id: 3, name: "Choose Vulnerabilities", view: "LtlCheckingOptions"},
         { id: 4, name: "Generate SC to CPN",view: "GenerateCPNModel"},
         { id: 5, name: "Check the SCs",view: "CheckCPNModel" },
-        { id: 6, name: "Finish",view: "finish"},
+        { id: 6, name: "Finish",view: "CheckingResult"},
       ],
       views_to_id:{"SmartContractSelection":1,
                    "ContextSelection":2,"UploadContext":2,
                    "LtlCheckingOptions":3,"CSPSettingNonTemp":3,"GeneralVulSetting":3,"InitialMarkingSetting":3,"CSPPropertyTemp":3,
                    "GenerateCPNModel":4,
-                   "CheckCPNModel":5},
+                   "CheckCPNModel":5,
+                   "CheckingResult":6},
     };
   },
    methods: {
@@ -64,8 +65,19 @@ export default {
       }
     }
   },
+  mounted(){
+    let route_name = this.$route.name
+    if(route_name in this.views_to_id){
+      let view_id = this.views_to_id[route_name]
+      if(view_id > this.$store.getters["data/GetCheckingRoadView"]){
+        this.$store.commit("data/SetCheckingRoadView",view_id)
+      }
+      this.$store.commit("data/SetCurrentRoadView",view_id)
+    }
+  },
   watch: {
     $route(new_val){
+      console.log(new_val)
       if(new_val.name in this.views_to_id){
         let view_id = this.views_to_id[new_val.name]
         if(view_id > this.$store.getters["data/GetCheckingRoadView"]){

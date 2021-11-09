@@ -165,6 +165,7 @@ const state = {
                     }
       state.views = {
                         checking_road_view: 1,
+                        current_road_view: 1
                     }
     }
   }

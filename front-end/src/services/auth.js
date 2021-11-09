@@ -153,9 +153,6 @@ function _resetAuthData () {
   $store.commit('user/SET_CURRENT_USER', {})
   $store.commit('auth/SET_ATOKEN_EXP_DATE', null)
 
-  // reset pageData
-  $store.commit('data/resetAll')
-  $store.commit('views/resetAll')
   // reset tokens
   AuthService.setRefreshToken('')
   AuthService.setBearer('')

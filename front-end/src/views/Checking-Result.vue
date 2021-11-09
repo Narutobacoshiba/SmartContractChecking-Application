@@ -40,18 +40,21 @@ export default ({
             this.$store.commit("data/ResetGenerateModelData")
             this.$store.commit("data/ResetCheckingModelData")
             this.$store.commit("data/ResetInitialMarking")
-            this.$store.commit("data/SetCheckingRoadView",4)
+            this.$store.commit("data/SetCheckingRoadView",3)
+            this.$store.commit("data/SetCurrentRoadView",3)
             this.$router.push({ name: "InitialMarkingSetting" })
         },
         checkDLTL(){
             this.$store.commit("data/ResetGenerateModelData")
             this.$store.commit("data/ResetCheckingModelData")
-            this.$store.commit("data/SetCheckingRoadView",4)
+            this.$store.commit("data/ResetSelectedVulnerability")
+            this.$store.commit("data/SetCheckingRoadView",3)
+            this.$store.commit("data/SetCurrentRoadView",3)
             this.$router.push({ name: "LtlCheckingOptions" })
         },
         startNewSession(){
             this.$store.commit("data/ResetAllData")
-            this.$router.push({ name: "CheckVulnerabilities" })
+            this.$router.push({ name: "SmartContractSelection" })
         },
         goPrePage(){
             this.$router.push({ name: "CheckCPNModel" })
