@@ -2,6 +2,8 @@ import Index from "../views/Index.vue";
 import Login from "../views/Login.vue"
 import Register from "../views/Register.vue"
 
+import CheckedSCList from "../views/CheckedSCList.vue"
+
 import CheckVunerabilities from "../views/Check-Vulnerabilities.vue"
 import SmartContractSelection from "../views/select-smart-contract/smart-contract-selection.vue"
 
@@ -48,6 +50,16 @@ export const routes = [
     name: "CheckVulnerabilities",
     component: CheckVunerabilities,
     children: [
+      {
+        path: '',
+        name: 'CheckedSCList',
+        component: CheckedSCList
+      },
+      {
+        path: 'start',
+        name: 'CheckedSCList',
+        component: CheckedSCList
+      },
       {
         path: 'select-smart-contract',
         name: 'SmartContractSelection',

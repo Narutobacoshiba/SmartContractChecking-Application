@@ -15,7 +15,7 @@ const state = {
             },
           Funtion_params: {}
         },      
-        selectedContext: {used:false,data:{}},
+        selectedContext: {used:false,data:{name:"",context_type:"",content:"",description:""}},
         selectedVulnerability: {type:"",subtype:"",params:{}},
         generateModelData: {
             generated: false,
@@ -25,7 +25,7 @@ const state = {
         checkingModelData: {
             checked: false,
             code: "",
-            data: {}
+            data: "",
         }
     },
     views: {

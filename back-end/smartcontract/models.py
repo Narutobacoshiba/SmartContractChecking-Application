@@ -5,7 +5,7 @@ class Smartcontract(models.Model):
 	sid = models.CharField(max_length=64, db_collation='utf8_general_ci', primary_key=True)
 	name = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
 	type = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
-	created_timestamp = models.IntegerField(null=True)
+	created_timestamp = models.BigIntegerField(null=True)
 	content = models.TextField(blank=True, null=True)
 	description = models.TextField(blank=True, null=True)
 	aid = models.ForeignKey(Account, models.DO_NOTHING,db_column='aid')

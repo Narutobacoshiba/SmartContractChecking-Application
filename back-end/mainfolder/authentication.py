@@ -9,7 +9,7 @@ class JSONWebTokenAuthentication(BaseAuthentication):
     def authenticate(self, request):
         jwt_token = request.headers['authorization']
         try:
-            payload = jwt.decode(jwt_token, settings.SECRET_KEY)
+            payload = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
             user = Account.objects.get(username=payload['user_name'])
         except (jwt.DecodeError, Account.DoesNotExist):
             raise exceptions.AuthenticationFailed('Invalid token')

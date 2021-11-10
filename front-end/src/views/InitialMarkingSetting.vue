@@ -170,8 +170,8 @@ export default {
     },
     updateInitMarking(val){
       this.function_cell_selected = "function"
+      this.init_marking.Funtion_params[this.selected_sc].functions[this.selected_function] = JSON.parse(JSON.stringify(val))
       this.selected_function = null
-      this.init_marking.Funtion_params[this.selected_sc].functions[this.selected_function] = val
     },
     initInitialMarkingHolder(){
       this.init_marking = this.$store.getters["data/GetInitialMarking"]; 

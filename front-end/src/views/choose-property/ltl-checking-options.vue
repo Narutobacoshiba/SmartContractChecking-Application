@@ -39,6 +39,7 @@ export default({
         goCSProperty(){
             if(this.selected_vul.type != 'specific'){
                 this.selected_vul.type = 'specific'
+                this.selected_vul.subtype = ''
                 this.selected_vul.params = {}
                 this.$store.commit("data/SetSelectedVulnerability",this.selected_vul)
             }
@@ -47,6 +48,7 @@ export default({
         goGeneralVul(){
             if(this.selected_vul.type != 'general'){
                 this.selected_vul.type = 'general'
+                this.selected_vul.subtype = ''
                 this.selected_vul.params = {}
                 this.$store.commit("data/SetSelectedVulnerability",this.selected_vul)
             }

@@ -132,6 +132,15 @@ export default ({
     },
     mounted(){
         this.getSmartContract()
+
+        let selected_sc = this.$store.getters["data/GetSelectedSC"]
+        let sm_infor = this.$store.getters["data/GetSCSelectedInfor"]
+        if(selected_sc.length != sm_infor.length){
+            let pre_map = []    
+            selected_sc.forEach(i => pre_map.push(i.id)) 
+            this.updateAllSc(pre_map)
+        }
+        
     },
     watch: {
         type_selection: function(){
@@ -174,12 +183,24 @@ export default ({
         }
     },
     methods: {
+        async updateAllSc(list_id){
+            let data = []
+            try{
+                let response = await SmartContractService.getSmartContractInformation(list_id)
+                data = response.data
+            }catch(error){
+                console.log(error)
+            }
+
+            this.$store.commit("data/SetSCSelectedInfo",data)
+        },
         async getSmartContract () {
             try {
                 let response = await SmartContractService.getAllSmartContract()
                 
                 this.list_sc = response.data   
-                this.selected_sc = this.$store.getters["data/GetSelectedSC"];
+                this.selected_sc = this.$store.getters["data/GetSelectedSC"]
+
                 this.pre_selected_sc = this.selected_sc
                 this.filtername_items = this.list_sc
                 
@@ -284,6 +305,7 @@ export default ({
                     list_new_sc.push(this.selected_sc[i].id)
                 }
             }
+            
             let data = []
             try{
                 let response = await SmartContractService.getSmartContractInformation(list_new_sc)
@@ -304,7 +326,7 @@ export default ({
             this.$router.push({ name: "ContextSelection" });
         },
         goPrePage(){
-            this.$router.push({ name: "ContextSelection" });
+            this.$router.push({ name: "CheckedSCList" });
         }
     }
 })

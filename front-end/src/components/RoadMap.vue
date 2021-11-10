@@ -34,19 +34,21 @@ export default {
   data() {
     return {
       pages: [
-        { id: 1, name: "Select Smart Contracts", view: "SmartContractSelection"},
-        { id: 2, name: "Select Context", view: "ContextSelection"},
-        { id: 3, name: "Choose Vulnerabilities", view: "LtlCheckingOptions"},
-        { id: 4, name: "Generate SC to CPN",view: "GenerateCPNModel"},
-        { id: 5, name: "Check the SCs",view: "CheckCPNModel" },
-        { id: 6, name: "Finish",view: "CheckingResult"},
+        { id: 1, name: "Start", view: "CheckedSCList"},
+        { id: 2, name: "Select Smart Contracts", view: "SmartContractSelection"},
+        { id: 3, name: "Select Context", view: "ContextSelection"},
+        { id: 4, name: "Choose Vulnerabilities", view: "LtlCheckingOptions"},
+        { id: 5, name: "Generate SC to CPN",view: "GenerateCPNModel"},
+        { id: 6, name: "Check the SCs",view: "CheckCPNModel" },
+        { id: 7, name: "Finish",view: "CheckingResult"},
       ],
-      views_to_id:{"SmartContractSelection":1,
-                   "ContextSelection":2,"UploadContext":2,
-                   "LtlCheckingOptions":3,"CSPSettingNonTemp":3,"GeneralVulSetting":3,"InitialMarkingSetting":3,"CSPPropertyTemp":3,
-                   "GenerateCPNModel":4,
-                   "CheckCPNModel":5,
-                   "CheckingResult":6},
+      views_to_id:{"CheckedSCList":1,
+                  "SmartContractSelection":2,
+                   "ContextSelection":3,"UploadContext":3,
+                   "LtlCheckingOptions":4,"CSPSettingNonTemp":4,"GeneralVulSetting":4,"InitialMarkingSetting":4,"CSPPropertyTemp":4,
+                   "GenerateCPNModel":5,
+                   "CheckCPNModel":6,
+                   "CheckingResult":7},
     };
   },
    methods: {
@@ -77,7 +79,6 @@ export default {
   },
   watch: {
     $route(new_val){
-      console.log(new_val)
       if(new_val.name in this.views_to_id){
         let view_id = this.views_to_id[new_val.name]
         if(view_id > this.$store.getters["data/GetCheckingRoadView"]){

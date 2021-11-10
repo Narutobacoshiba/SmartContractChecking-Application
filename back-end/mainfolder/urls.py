@@ -22,6 +22,7 @@ urlpatterns = [
     path("smartcontract/", include("smartcontract.urls")),
     path("tools/", include("tools.urls")),
     path("ltlproperty/", include("ltlproperty.urls")),
+    path("history/", include("history.urls")),
 ]
 
 

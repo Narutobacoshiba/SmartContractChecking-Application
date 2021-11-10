@@ -102,11 +102,7 @@ export default ({
         if(this.checking_data.checked){
             if(this.checking_data.code == "error"){
                 this.is_success = false
-                if("message" in this.checking_data.data){
-                    this.response_message = this.checking_data.data.message
-                }else{
-                    this.checking_data.data.message = ""
-                }
+                this.response_message = this.checking_data.data
             }else if(this.checking_data.code == "success"){
                 this.is_success = true
                 this.response_message = "The checking process completed successfully"
@@ -130,6 +126,7 @@ export default ({
     methods:{
         async CheckModel(){
             try{
+                this.$store.commit("data/ResetCheckingModelData")
                 let generate_data = this.$store.getters["data/GetGenerateModelData"]
 
                 if(generate_data.generated && generate_data.code == "success"){
@@ -151,7 +148,7 @@ export default ({
                 this.wait_response = false
                 this.is_success = false
 
-                this.checking_data = {checked:true,code:"error",data:{message:error.detail}}
+                this.checking_data = {checked:true,code:"error",data:error.detail}
             }
         },
         goPrePage(){

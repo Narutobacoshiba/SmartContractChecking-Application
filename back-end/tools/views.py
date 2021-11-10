@@ -33,7 +33,6 @@ class GenerateCpnModelAPIView(APIView):
 		
 		success = True
 		success = saveFileToTemp(full_path,context["data"]["name"],context["data"]["content"],dtype="text") & success
-		print(vulnerability)
 		success = saveFileToTemp(full_path,"vulnerability.json",vulnerability,dtype="json") & success
 		success = saveTempFile(full_path) & success
 		#saveFileToTemp(full_path,"initial_marking",initial_marking,dtype="json")

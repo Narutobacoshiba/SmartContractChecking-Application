@@ -45,6 +45,7 @@ export default {
       try {
         this.user_error = ""
         this.pass_error = ""
+        console.log(this.username)
         await AuthService.makeLogin({username:this.username,password:this.password})
         await this.$store.dispatch('user/getCurrent')
         this.$router.push({name:"Index"})

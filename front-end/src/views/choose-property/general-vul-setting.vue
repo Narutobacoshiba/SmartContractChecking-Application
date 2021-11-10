@@ -72,8 +72,10 @@ export default({
         },
         setOutData(){
             let temp = this.$store.getters["data/GetSelectedVulnerability"]
-            temp.params = {name:"under_over_flow",inputs:{"min_threshold":"0","max_threshold":"65535","selected_variable":""}} 
-            this.$store.commit("data/SetSelectedVulnerability",temp)
+            if(!("inputs" in temp.params)){
+                temp.params = {name:"under_over_flow",description:this.vulnerability_descriptions[this.selected_vul],inputs:{"min_threshold":"0","max_threshold":"65535","selected_variable":""}} 
+                this.$store.commit("data/SetSelectedVulnerability",temp)   
+            }
         },
         goNextPage(){
             this.$router.push({ name: "InitialMarkingSetting"})

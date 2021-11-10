@@ -55,7 +55,7 @@ export default ({
         }
     },
     beforeMount(){
-      this.own_list_argument = this.list_argument
+      this.own_list_argument = JSON.parse(JSON.stringify(this.list_argument)) 
     },
     methods:{
         existParamTable(){

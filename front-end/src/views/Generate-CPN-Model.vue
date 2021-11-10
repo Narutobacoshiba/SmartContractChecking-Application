@@ -145,6 +145,9 @@ export default ({
     methods:{
         async generateModel(){
             try{
+                this.$store.commit("data/ResetGenerateModelData")
+                this.$store.commit("data/ResetCheckingModelData")
+
                 this.is_generate = true
 
                 this.wait_response = true
