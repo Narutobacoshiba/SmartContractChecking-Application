@@ -208,7 +208,9 @@ std::vector<std::string> LTLTranslator::getListVariableFromFormula(const std::st
 /** Analyse const definition
  */
 void LTLTranslator::handleConstDefinition(){
-    std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
+    std::string temp = *ptr_ltl_line;
+    trim_ex(temp);
+    std::string definition = split_ex(temp," ",2)[1];
     
     std::string variable = removeNoneAlnum(retrieve_string_element(definition,0,"="));
     std::string value = removeNoneAlnum(retrieve_string_element(definition,1,"="));
@@ -219,7 +221,9 @@ void LTLTranslator::handleConstDefinition(){
 /** Analyse proposition definition
  */
 void LTLTranslator::handlePropositionDefinition(){
-    std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
+    std::string temp = *ptr_ltl_line;
+    trim_ex(temp);
+    std::string definition = split_ex(temp," ",2)[1];
 
     std::string prop_name = removeNoneAlnum(retrieve_string_element(definition,0,":"));
     std::string prop_def = retrieve_string_element(definition,1,":");
@@ -349,7 +353,9 @@ std::string LTLTranslator::analysePropositionExpression(const std::string& _exp)
 /** Analyse property definition
  */
 void LTLTranslator::handlePropertyDefinition(){
-    std::string definition = split_ex(*ptr_ltl_line," ",2)[1];
+    std::string temp = *ptr_ltl_line;
+    trim_ex(temp);
+    std::string definition = split_ex(temp," ",2)[1];
 
     std::string property_name = removeNoneAlnum(split_ex(definition,":",2)[0]);
     std::string property_def = split_ex(definition,":",2)[1];
