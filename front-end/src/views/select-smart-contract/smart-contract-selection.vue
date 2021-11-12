@@ -132,14 +132,6 @@ export default ({
     },
     mounted(){
         this.getSmartContract()
-
-        let selected_sc = this.$store.getters["data/GetSelectedSC"]
-        let sm_infor = this.$store.getters["data/GetSCSelectedInfor"]
-        if(selected_sc.length != sm_infor.length){
-            let pre_map = []    
-            selected_sc.forEach(i => pre_map.push(i.id)) 
-            this.updateAllSc(pre_map)
-        }
         
     },
     watch: {
@@ -183,17 +175,6 @@ export default ({
         }
     },
     methods: {
-        async updateAllSc(list_id){
-            let data = []
-            try{
-                let response = await SmartContractService.getSmartContractInformation(list_id)
-                data = response.data
-            }catch(error){
-                console.log(error)
-            }
-
-            this.$store.commit("data/SetSCSelectedInfo",data)
-        },
         async getSmartContract () {
             try {
                 let response = await SmartContractService.getAllSmartContract()

@@ -49,11 +49,12 @@ export default ({
         },
         createSaveContext(){
             let data = this.$store.getters["data/GetSelectedContext"].data
-            let current_date = Date.now()
+            let cpnContextData = this.$store.getters["data/GetGenerateModelData"].data["context"]       
             let user_id = this.$store.state.user.currentUser.id
-            data["ccid"] = this.hashValue("context"+current_date+user_id)
-            data["aid"] = user_id
-            return data
+            cpnContextData["ccid"] = data["ccid"]
+            cpnContextData["aid"] = user_id
+            cpnContextData["description"] = data["description"]
+            return cpnContextData
         },
         createSaveVulnerability(){
             let selectedVulnerability = this.$store.getters["data/GetSelectedVulnerability"] 

@@ -126,6 +126,7 @@ export default ({
     methods:{
         async CheckModel(){
             try{
+                this.$store.commit("data/SetCheckingRoadView",6)
                 this.$store.commit("data/ResetCheckingModelData")
                 let generate_data = this.$store.getters["data/GetGenerateModelData"]
 
@@ -133,8 +134,10 @@ export default ({
                     this.is_checking = true
 
                     this.wait_response = true
-
-                    let response = await ToolsServices.checkingCpnModel(generate_data.data)
+                    let check_data = {}
+                    check_data["hcpn"] = generate_data.data["hcpn"]
+                    check_data["prop"] = generate_data.data["prop"]
+                    let response = await ToolsServices.checkingCpnModel(check_data)
                 
                     this.response_message = "The checking process completed successfully"
                     this.wait_response = false

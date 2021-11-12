@@ -77,6 +77,7 @@ TransitionNodePtr handleTransition(list<string>::iterator& _iter, list<string>::
             ++_iter;           
         }
 
+        std::string temp;
         do{
             string keyword = get_first_alpha_only_string(*_iter);
             if(keyword == IN_TOKEN){
@@ -93,6 +94,7 @@ TransitionNodePtr handleTransition(list<string>::iterator& _iter, list<string>::
                 string let = handleElementBody(_iter,_end_iter);
                 transition->add_let(let);
             }else if(keyword == GUARD_TOKEN){
+                std::cout<<*_iter<<"\n";
                 string guard = trim_copy(split_ex(*_iter,":",2)[1]);
                 transition->set_guard(guard);
             }else if(keyword == PRIORITY_TOKEN){
@@ -101,7 +103,9 @@ TransitionNodePtr handleTransition(list<string>::iterator& _iter, list<string>::
             }
 
             ++_iter;
-        }while(_iter != _end_iter && (*_iter).find("}") == string::npos);
+            temp = *_iter;
+            trim_ex(temp);
+        }while(_iter != _end_iter && temp[0] != '}');
         --_iter;
         return transition;
     }

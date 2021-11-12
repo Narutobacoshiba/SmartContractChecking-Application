@@ -22,6 +22,7 @@ int main(int argc, char** argv){
      */
     string MODEL_LNA_FILE_PATH;
     string CONTEXT_FILE_PATH;
+    string CONTEXT_TYPE;
     string LTL_FILE_PATH; 
     string AST_FILE_PATH; 
     string LNA_JSON_FILE_PATH;
@@ -37,6 +38,8 @@ int main(int argc, char** argv){
     app.add_option("--context", CONTEXT_FILE_PATH, "CONTEXT file (.xml), context of model")
         ->required()
         ->check(CLI::ExistingFile);
+    app.add_option("--context-type", CONTEXT_TYPE, "Context type (DCR,CPN,...)")
+        ->required();
     app.add_option("--ltl", LTL_FILE_PATH, "LTL file (.json), Vulnerabilities to check")
         ->required()
         ->check(CLI::ExistingFile);
@@ -88,13 +91,9 @@ int main(int argc, char** argv){
     nlohmann::json ltl_json = nlohmann::json::parse(ltl_json_content);
     nlohmann::json sol_json = nlohmann::json::parse(sol_json_content);
 
-    DCRClass dcrClass =  readDCRFromXML(CONTEXT_FILE_PATH);
-    Dcr2CpnTranslator contextTranslator = Dcr2CpnTranslator(dcrClass);
-    StructuredNetNodePtr context_net =  contextTranslator.translate();
-    
-    Unfolder unfolder = Unfolder(context_net,model_lna_text_stream,sol_json,ltl_json);
-    std::map<std::string,std::string> unfold_model = unfolder.UnfoldModel();
-
+    /**
+     * name
+     */
     std::string outfile_name;
     if(OUT_FILE_NAME.compare("") == 0){
         std::vector<std::string> t = split(MODEL_LNA_FILE_PATH,"/");
@@ -111,6 +110,38 @@ int main(int argc, char** argv){
     }
 
     std::string full_outpath = outfile_path+outfile_name; 
+
+    /**
+     * run
+     */
+    StructuredNetNodePtr context_net;
+    if(CONTEXT_TYPE == "DCR"){
+        DCRClass dcrClass =  readDCRFromXML(CONTEXT_FILE_PATH);
+        Dcr2CpnTranslator contextTranslator = Dcr2CpnTranslator(dcrClass);
+        context_net =  contextTranslator.translate();
+    }else if(CONTEXT_TYPE == "CPN"){
+        ifstream context_file_stream(CONTEXT_FILE_PATH);
+        stringstream context_text_stream;
+
+        while (getline(context_file_stream, new_line)) {
+            context_text_stream << new_line << "\n";
+        }
+        context_net = Unfolder::analyseLnaFile(context_text_stream);
+    }else if(CONTEXT_TYPE == "FREE"){
+        context_net = std::make_shared<StructuredNetNode>();
+    }else {
+        context_net = std::make_shared<StructuredNetNode>();
+    }
+
+    ofstream context_file;
+    context_file.open(full_outpath+".context.lna");
+    context_file << context_net->source_code();
+    context_file.close();
+
+
+    Unfolder unfolder = Unfolder(context_net,model_lna_text_stream,sol_json,ltl_json);
+    std::map<std::string,std::string> unfold_model = unfolder.UnfoldModel(CONTEXT_TYPE);
+    
     ofstream lna_file;
     lna_file.open(full_outpath+".lna");
     lna_file << unfold_model["lna"];

@@ -51,11 +51,6 @@ export const routes = [
     component: CheckVunerabilities,
     children: [
       {
-        path: '',
-        name: 'CheckedSCList',
-        component: CheckedSCList
-      },
-      {
         path: 'start',
         name: 'CheckedSCList',
         component: CheckedSCList

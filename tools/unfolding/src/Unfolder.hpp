@@ -22,10 +22,12 @@ class Unfolder {
 
         std::vector<std::string> FindUnfoldedFunction();
 
-        void analyseLnaFile(std::stringstream& _sol_lna_stream);
+        static StructuredNetNodePtr analyseLnaFile(std::stringstream& _sol_lna_stream);
         
         StructuredNetNodePtr unfoldModelWithDCRContext();
-        std::map<std::string,std::string> UnfoldModel();
+        StructuredNetNodePtr unfoldModelWithFreeContext();
+
+        std::map<std::string,std::string> UnfoldModel(const std::string& _context);
 
         std::string get_model_name_from_comment(const CommentNodePtr& _comment);
         

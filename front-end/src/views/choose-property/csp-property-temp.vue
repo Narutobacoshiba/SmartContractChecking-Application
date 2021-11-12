@@ -1,7 +1,7 @@
 <template>
     <div id="csps-nontemp-container">
         <div id="cspsn-header">
-            <p>Contract-Specifc Property Setting - Non Template</p>
+            <p>Contract-Specifc Property Setting - Template</p>
         </div>
         <div id="cspsn-body">
             <div class="cspsn-row" id="cspsn-row-name">

@@ -22,7 +22,7 @@
                                 </div>
                             </div>
                             <div id="options">
-                                <span v-for="c in list_contexts" :key="c.name" class="label" @click="selected_context = c" :class="{selected_context_row: c == selected_context}">{{c.name}}</span>
+                                <span v-for="c in getListContext" :key="c.ccid" class="label" @click="selected_context = c" :class="{selected_context_row: c.ccid == getSelectContextId}">{{c.name}}</span>
                             </div>
                         </div>
                     </div>
@@ -56,28 +56,68 @@
         <div id="ssc-button">
             <button class="button-style" role="button" @click="goNextPage">Next</button>
             <button class="button-style" role="button" @click="goUploadContext">Upload a Context File</button>
+            <button class="button-style" role="button" @click="skipSelectContext">Skip</button>
             <button class="button-style" role="button" @click="goPrePage">Back</button>
         </div>
     </div>
 </template>
 
 <script>
+import {ContextService} from "../../services/context.services"
 export default ({
     data(){
         return{
-            selected_context: {name:"Context name",type:"Context Type"},
-            list_contexts: [{name:"Medicine",type:"DCR"},{name:"Bong",type:"DCR"},{name:"Lotto",type:"BPMN"}]
+            selected_context: {},
+            list_contexts: [],
         }
     },
+    mounted(){
+        let data = this.$store.getters["data/GetSelectedContext"].data
+        this.selected_context = data
+
+        this.getAllContext()
+    },
     computed: {
+        getSelectContextId(){
+            if("ccid" in this.selected_context){
+                return this.selected_context.ccid
+            }else{
+                return ""
+            }
+        },
         getSelectContextName(){
-            return this.selected_context.name
+            if("name" in this.selected_context){
+                return this.selected_context.name
+            }else{
+                return ""
+            }
         },
         getSelectContextType(){
-            return this.selected_context.type
+            if("context_type" in this.selected_context){
+                return this.selected_context.context_type
+            }else{
+                return ""
+            }
+        },
+        getListContext(){
+            return this.list_contexts
         }
     },
     methods: {
+        async getAllContext(){
+            try{
+                let response = await ContextService.getAllContext()
+                this.list_contexts = response.data
+            }catch(error){
+                console.log(error)
+            }
+        },
+        skipSelectContext(){
+            let current_date = Date.now()
+            let user_id = this.$store.state.user.currentUser.id
+            this.$store.commit("data/SetSelectedContext",{ccid:this.hashValue("context"+current_date+user_id),name:"free_context",context_type:"FREE",content:"",description:""})
+            this.$router.push({ name: "LtlCheckingOptions" });
+        },
         goNextPage(){
             this.$router.push({ name: "LtlCheckingOptions" });
         },
