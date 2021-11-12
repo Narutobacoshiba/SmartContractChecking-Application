@@ -42,7 +42,7 @@
                 <div class="cs-first-cell">
                     <p>Description</p>
                 </div>
-                <div class="cs-second-cell">
+                <div class="cs-second-cell" v-if="getDescription == ''">
                     <p>There are several options:</p>
                     <ul>
                         <li>BPMN: The user will choose the BPMN context by clicking on the "Load a Context" button.</li>
@@ -50,6 +50,9 @@
                         <li>....</li>
                         <li>Free</li>
                     </ul>
+                </div>
+                <div class="cs-second-cell" v-else>
+                    {{getDescription}}
                 </div>
             </div>
         </div>
@@ -106,6 +109,9 @@ export default ({
         },
         getListContext(){
             return this.list_contexts
+        },
+        getDescription(){
+            return this.selected_context.description
         }
     },
     methods: {
