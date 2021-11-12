@@ -29,10 +29,20 @@ class GenerateCpnModelAPIView(APIView):
 				os.makedirs(full_path)
 		except OSError:
 			removeFolder(full_path)
-			return Response({"detail":"Generate file error!"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+			return Response({"detail":"Generate file error!"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)	
 		
 		success = True
-		success = saveFileToTemp(full_path,context["data"]["name"],context["data"]["content"],dtype="text") & success
+		context_name = context["data"]["name"]
+		if context["data"]["context_type"] == "DCR":
+			context_name += ".xml"
+		elif context["data"]["context_type"] == "CPN":
+			context_name += ".lna"
+		elif context["data"]["context_type"] == "FREE":
+			context_name += ".txt"
+		else:
+			context_name += ".txt"
+			
+		success = saveFileToTemp(full_path,context_name,context["data"]["content"],dtype="text") & success
 		success = saveFileToTemp(full_path,"vulnerability.json",vulnerability,dtype="json") & success
 		success = saveTempFile(full_path) & success
 		#saveFileToTemp(full_path,"initial_marking",initial_marking,dtype="json")
@@ -40,7 +50,7 @@ class GenerateCpnModelAPIView(APIView):
 			removeFolder(full_path)
 			return Response({"detail":"Generate file error!"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 			
-		output = unfolding(full_path,"EtherGame.lna",context["data"]["name"],"vulnerability.json","blindAuction.ast","etherGame.json")
+		output = unfolding(full_path,"EtherGame.lna",context_name,context["data"]["context_type"],"vulnerability.json","blindAuction.ast","etherGame.json")
 		
 		if len(output["err"]) > 0:
 			removeFolder(full_path)
@@ -48,7 +58,10 @@ class GenerateCpnModelAPIView(APIView):
 		else:
 			hcpn_content = ""
 			prop_content = ""
+			context_content = ""
 			try:
+				with open(output["file_path"]+output["file_name"]+".context.lna","r") as f:
+					context_content = f.read()
 				with open(output["file_path"]+output["file_name"]+".lna","r") as f:
 					hcpn_content = f.read()
 				with open(output["file_path"]+output["file_name"]+".prop.lna","r") as f:
@@ -56,7 +69,8 @@ class GenerateCpnModelAPIView(APIView):
 				
 				removeFolder(full_path)
 				return Response({"hcpn":{"name":output["file_name"]+".lna","content":hcpn_content},
-				                 "prop":{"name":output["file_name"]+".prop.lna","content":prop_content}}
+				                 "prop":{"name":output["file_name"]+".prop.lna","content":prop_content},
+				                 "context":{"name":context["data"]["name"],"content":context_content,"context_type":"CPN"}}
 				                 ,status=status.HTTP_200_OK)	
 			except:
 				removeFolder(full_path)
@@ -73,7 +87,7 @@ class CheckCpnModelAPIView(APIView):
 		user = request.user
 		
 		hcpn_data = data["hcpn-data"]
-		
+
 		current_path = "./tools/temp/"
 		full_path = current_path + str(user.aid) + "_checking" + "/"
 		try:

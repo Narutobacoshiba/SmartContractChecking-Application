@@ -13,6 +13,8 @@ class SaveCheckedBatchAPIView(APIView):
 	authentication_classes  = [JSONWebTokenAuthentication]
 	def post(self, request):
 		data = request.data
+		user = request.user
+		
 		try:
 			saveCheckedBatchData(data)
 			return Response("Success!",status=status.HTTP_200_OK)
@@ -60,7 +62,7 @@ class GetCheckedBatchAPIView(APIView):
 				#contenxt
 				try:	
 					context = CPNContext.objects.get(ccid=checkedbatch.ccid)
-					ret["selected-context"] = {"name":context.name,"context_type":context.context_type,
+					ret["selected-context"] = {"ccid":context.ccid,"name":context.name,"context_type":context.context_type,
 						                   "content":context.content,"description":context.description}
 				except:
 					pass

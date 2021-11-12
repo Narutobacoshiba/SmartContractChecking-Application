@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'smartcontract',
     'tools',
     'ltlproperty',
-    'history'
+    'history',
+    'context'
 ]
 
 MIDDLEWARE = [

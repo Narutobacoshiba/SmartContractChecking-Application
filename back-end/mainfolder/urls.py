@@ -23,6 +23,7 @@ urlpatterns = [
     path("tools/", include("tools.urls")),
     path("ltlproperty/", include("ltlproperty.urls")),
     path("history/", include("history.urls")),
+    path("context/", include("context.urls")),
 ]
 
 
