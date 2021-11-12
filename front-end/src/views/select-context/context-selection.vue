@@ -71,6 +71,11 @@ export default ({
             list_contexts: [],
         }
     },
+    watch:{
+        selected_context(val){
+            this.$store.commit("data/SetSelectedContext",val)
+        },
+    },
     mounted(){
         let data = this.$store.getters["data/GetSelectedContext"].data
         this.selected_context = data
