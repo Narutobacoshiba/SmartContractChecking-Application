@@ -50,6 +50,7 @@ export default {
         await this.$store.dispatch('user/getCurrent')
         this.$router.push({name:"Index"})
       } catch (error) {
+        console.log(error)
         if(error.detail.target == "password"){
           this.pass_error = error.detail.message
         }else if(error.detail.target == "user"){

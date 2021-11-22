@@ -21,7 +21,6 @@ SECRET_KEY = 'django-insecure-fgc4l!h_y+t(rj_1t6!jbzyq(s5yc=x8%yoiy0^c*o-i2+emnq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -34,12 +33,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    "corsheaders",
     'account',
     'smartcontract',
     'tools',
     'ltlproperty',
     'history',
-    'context'
+    'context',
 ]
 
 MIDDLEWARE = [
@@ -47,11 +47,12 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'mainfolder.urls'
 
 TEMPLATES = [
@@ -80,8 +81,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'solidityTocpn',
-        'USER': 'admin',
-        'PASSWORD': '123456',
+        'USER': 'root',
+        'PASSWORD': '12345678',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -131,4 +132,4 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['192.168.1.28', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']

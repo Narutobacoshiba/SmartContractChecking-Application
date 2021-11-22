@@ -24,6 +24,13 @@ import CheckCPNModel from "../views/Check-CPN-Model.vue"
 
 import CheckingResult from "../views/Checking-Result.vue"
 
+
+import ListSC from "../views/select-smart-contract/list-smartcontract.vue"
+
+// import AddSC from '../views/smartcontract-crud/AddSC.vue'
+
+// import EditSC from '../views/smartcontract-crud/EditSC.vue'
+
 import { DOMAIN_TITLE } from '../.env'
 
 export const routes = [
@@ -118,4 +125,22 @@ export const routes = [
     ],
     meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | check-vulnerabilities` },
   },
+  {
+    path: "/list-sc",
+    name: "ListSC",
+    component: ListSC,
+    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | listsc` },
+  },
+  // {
+  //   path: "/add-sc",
+  //   name: "AddSC",
+  //   component: AddSC,
+  //   meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | addsc` },
+  // },
+  // {
+  //   path: "/edit-sc",
+  //   name: "EditSc",
+  //   component: EditSC,
+  //   meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | editsc` },
+  // },
 ]
