@@ -1,8 +1,9 @@
 #include "./Unfolder.hpp"
 
-Unfolder::Unfolder(const StructuredNetNodePtr& _context, std::stringstream& _sol_lna_stream, const nlohmann::json& lna_json,const nlohmann::json& ltl_json){
+Unfolder::Unfolder(const StructuredNetNodePtr& _context, std::stringstream& _sol_lna_stream, const nlohmann::json& lna_json,const nlohmann::json& ltl_json, const nlohmann::json& im_json){
     sol_information = lna_json;
     ltl_information = ltl_json;
+    im_information = im_json;
 
     unfolded_func = FindUnfoldedFunction();
   
@@ -142,7 +143,118 @@ StructuredNetNodePtr Unfolder::analyseLnaFile(std::stringstream& _sol_lna_stream
     return model;
 }
  
+void Unfolder::initialMarkingSetting(){
+    ListColorNodePtr uint_array = std::make_shared<ListColorNode>();
+    uint_array->set_name("UINT_ARRAY");
+    uint_array->set_index_type("UINT");
+    uint_array->set_element_type("UINT");
+    uint_array->set_capacity("1000");
+    cpn_model->add_color(std::static_pointer_cast<ColorNode>(uint_array));
+    std::string s_numberOfUser = im_information.at("NumberOfUser");
+    int numberOfUser = std::stoi(s_numberOfUser);
+
+    ParameterNodePtr users = std::make_shared<ParameterNode>();
+    users->set_name("users");
+    users->set_number(s_numberOfUser);
+    cpn_model->add_parameter(users);
+
+    std::string balance_value;
+    auto balance = im_information.at("balance");
+    std::string balance_type = balance.at("type");
+    if(balance_type == "fixed"){
+        std::string fixed_value = balance.at("fixed");
+        balance_value = fixed_value;
+        for(int i = 1; i < numberOfUser; i++){
+            balance_value += "," + fixed_value;
+        }
+    }else if(balance_type == "map"){
+        std::string map_value = balance.at("map");
+        balance_value = map_value;
+    }else if(balance_type == "random"){
+        auto random_value = balance.at("random");
+        std::string s_from = random_value.at("from");
+        std::string s_to = random_value.at("to");
+        int from = std::stoi(s_from);
+        int to = std::stoi(s_to);
+
+        std::random_device rd; // obtain a random number from hardware
+        std::mt19937 gen(rd()); // seed the generator
+        std::uniform_int_distribution<> distr(from, to); // define the range
+        
+        balance_value = std::to_string(distr(gen));
+        for(int i = 1; i < numberOfUser; i++){
+            balance_value += "," + std::to_string(distr(gen));
+        } 
+    }
+
+    ConstantNodePtr user_balance = std::make_shared<ConstantNode>();
+    user_balance->set_name("user_balance");
+    user_balance->set_type("UINT_ARRAY");
+    user_balance->set_expression("|"+balance_value+"|");
+    cpn_model->add_color(user_balance);
+
+
+    auto smart_contract = im_information.at("smart_contract");
+    for(size_t i = 0; i < smart_contract.size(); i++){
+        auto sc = smart_contract[i];
+        std::string sc_name = sc.at("name");
+        if(sc_name == cpn_model->get_name()){
+            auto functions = sc.at("functions");
+            for(size_t j = 0; j < functions.size(); j++){
+                auto function = functions[j];
+                std::string function_name = function.at("name");
+                auto f_sender_value = function.at("sender_value");
+                std::string sf_from = f_sender_value.at("from");
+                std::string sf_to = f_sender_value.at("to");
+                int f_from = std::stoi(sf_from);
+                int f_to = std::stoi(sf_to);
+                
+                std::string fs_sender_value;
+                fs_sender_value = sf_from;
+                for(int k = f_from+1; k <= f_to; k++){
+                    fs_sender_value += "," + std::to_string(k);
+                }
+
+                ParameterNodePtr function_sender_range = std::make_shared<ParameterNode>();
+                function_sender_range->set_name(function_name+"_sdr");
+                function_sender_range->set_number(std::to_string(f_to-f_from+1));
+                cpn_model->add_parameter(function_sender_range);
+
+                ConstantNodePtr function_sender_value = std::make_shared<ConstantNode>();
+                function_sender_value->set_name(function_name+"_sender_value");
+                function_sender_value->set_type("UINT_ARRAY");
+                function_sender_value->set_expression("|"+fs_sender_value+"|");
+                cpn_model->add_color(function_sender_value);
+            }
+        }
+    }
+
+    std::map<std::string, std::string> P_functions;
+    for(auto it = unfolded_func.begin(); it != unfolded_func.end(); it++){
+        P_functions["P_"+*it] = *it;
+    }
+
+    for(size_t i = 0; i < cpn_model->num_places(); i++){
+        LnaNodePtr node = cpn_model->get_place(i);
+        if(node->get_node_type() == LnaNodeTypePlace){
+            PlaceNodePtr place = std::static_pointer_cast<PlaceNode>(node);
+            std::string place_name = place->get_name();
+            if (P_functions.find(place_name) != P_functions.end()){
+                std::string func_name = P_functions[place_name];
+                std::string init_place;
+
+                init_place += "for (i in ADDRESS range 1 .. ADDRESS (users), j in UINT range 0 .. UINT("+func_name+"_sdr-1"+"))";
+                init_place += " <( {{i, UINT(user_balance[UINT(i-1)])},"+func_name+"_sender_value[j]"+"})>";
+                place->set_init(init_place);
+            }
+        }
+    }
+}
+
+
 std::map<std::string,std::string> Unfolder::UnfoldModel(const std::string& _context){
+    initialMarkingSetting();
+
     StructuredNetNodePtr unfold_model;
     if(_context == "DCR" || _context == "CPN"){
         unfold_model = unfoldModelWithDCRContext();
@@ -160,6 +272,8 @@ std::map<std::string,std::string> Unfolder::UnfoldModel(const std::string& _cont
     std::map<std::string,std::string> result;
     result["lna"] = unfold_model->source_code();
     result["prop"] = ltl_result["property"];
+
+
 
     return result;
 }
@@ -187,6 +301,16 @@ StructuredNetNodePtr Unfolder::unfoldModelWithFreeContext(){
                 current_submodel_name = get_model_name_from_comment(std::static_pointer_cast<CommentNode>(node));
                 if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
                     unfold_model->add_place(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
+                    if(std::find(list_func.begin(), list_func.end(), current_submodel_name) == list_func.end()){
+                        list_func.push_back(current_submodel_name);
+                        PlaceNodePtr cflow = std::make_shared<PlaceNode>();
+                        cflow->set_name(current_submodel_name+"_cflow");
+                        cflow->set_domain("epsilon");
+                        if(current_submodel_name == "state"){
+                            cflow->set_init("epsilon");
+                        }
+                        unfold_model->add_place(cflow);
+                    }
                 }
             }else if(node->get_node_type() == LnaNodeTypePlace){
                 PlaceNodePtr place = std::static_pointer_cast<PlaceNode>(node);
@@ -195,16 +319,72 @@ StructuredNetNodePtr Unfolder::unfoldModelWithFreeContext(){
                 }
             }
         }
+
+        list_func.clear();
+
         for(size_t i = 0; i < cpn_model->num_transitions(); i++){
             LnaNodePtr node = cpn_model->get_transition(i);
             if(node->get_node_type() == LnaNodeTypeComment){
                 current_submodel_name = get_model_name_from_comment(std::static_pointer_cast<CommentNode>(node));
                 if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
                     unfold_model->add_transition(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
+                    if(std::find(list_func.begin(), list_func.end(), current_submodel_name) == list_func.end()){
+                        list_func.push_back(current_submodel_name);
+
+                        TransitionNodePtr transition = std::make_shared<TransitionNode>();
+                        transition->set_name(current_submodel_name);
+
+                        ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
+                        cflow_arc_in->set_placeName("state_cflow");
+                        cflow_arc_in->set_label("epsilon");
+                        transition->add_inArc(cflow_arc_in);
+
+                        ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
+                        cflow_arc_out->set_placeName(current_submodel_name+"_cflow");
+                        cflow_arc_out->set_label("epsilon");
+                        transition->add_outArc(cflow_arc_out);
+                        
+                        unfold_model->add_transition(transition);
+                    }
+                }else{
+                    unfold_model->add_transition(std::make_shared<CommentNode>("\n/*\n * Function: "+current_submodel_name+"\n */\n"));
+                    if(std::find(list_func.begin(), list_func.end(), current_submodel_name) == list_func.end()){
+                        list_func.push_back(current_submodel_name);
+
+                        TransitionNodePtr transition = std::make_shared<TransitionNode>();
+                        transition->set_name(current_submodel_name);
+
+                        ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
+                        cflow_arc_in->set_placeName("state_cflow");
+                        cflow_arc_in->set_label("epsilon");
+                        transition->add_inArc(cflow_arc_in);
+
+                        ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
+                        cflow_arc_out->set_placeName("state_cflow");
+                        cflow_arc_out->set_label("epsilon");
+                        transition->add_outArc(cflow_arc_out);
+
+                        unfold_model->add_transition(transition);
+                    }
                 }
             }else if(node->get_node_type() == LnaNodeTypeTransition){
                 TransitionNodePtr transition = std::static_pointer_cast<TransitionNode>(node);
                 if (std::find(unfolded_func.begin(), unfolded_func.end(), current_submodel_name) != unfolded_func.end()){
+
+                    if(transition->get_in_arc_by_name("S") != nullptr){
+                        ArcNodePtr cflow_arc_in = std::make_shared<ArcNode>();
+                        cflow_arc_in->set_placeName(current_submodel_name+"_cflow");
+                        cflow_arc_in->set_label("epsilon");
+                        transition->add_inArc(cflow_arc_in);
+                    }
+
+                    if(transition->get_out_arc_by_name("S") != nullptr){
+                        ArcNodePtr cflow_arc_out = std::make_shared<ArcNode>();
+                        cflow_arc_out->set_placeName("state_cflow");
+                        cflow_arc_out->set_label("epsilon");
+                        transition->add_outArc(cflow_arc_out);
+                    }
+
                     unfold_model->add_transition(transition);
                 }
             }
@@ -230,6 +410,7 @@ StructuredNetNodePtr Unfolder::unfoldModelWithDCRContext(){
         for(size_t i = 0; i < cpn_context->num_functions(); i++){
             unfold_model->add_function(cpn_context->get_function(i));
         }
+        
         for(size_t i = 0; i < cpn_context->num_places(); i++){
             LnaNodePtr node = cpn_context->get_place(i);
             if(node->get_node_type() == LnaNodeTypeComment){

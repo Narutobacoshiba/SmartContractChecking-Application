@@ -1,6 +1,7 @@
 import Index from "../views/Index.vue";
 import Login from "../views/Login.vue"
 import Register from "../views/Register.vue"
+import RoadMap from "../views/RoadMap.vue"
 
 import CheckedSCList from "../views/CheckedSCList.vue"
 
@@ -44,6 +45,12 @@ export const routes = [
     name: "Register",
     component: Register,
     meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | register` },
+  },
+  {
+    path: "/roadmap",
+    name: "RoadMap",
+    component: RoadMap,
+    meta: { requiresAuth: true, title: `${DOMAIN_TITLE} | roadmap` },
   },
   {
     path: "/check-vulnerabilities/",

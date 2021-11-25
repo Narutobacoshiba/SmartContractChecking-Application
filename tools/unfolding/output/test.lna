@@ -1,4 +1,4 @@
-etherGame(N := 2, cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10, v6 := 5) {
+EtherGame(N := 2, cb := 0, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10, v6 := 5, users := 5, claimReward_sdr := 11, play_sdr := 9) {
 
 /**************************
  *** Colour Definitions ***
@@ -23,6 +23,10 @@ type PLAY_RETURN : struct { USER sender;};
 type CLAIM_REWARD_RETURN : struct { USER sender;};
 type PLAY_STATE : struct { STATE state;PLAY_PAR playPar;};
 type CLAIM_REWARD_STATE : struct { STATE state;CLAIM_REWARD_PAR claimRewardPar;};
+type UINT_ARRAY : list[UINT] of UINT with capacity 1000;
+constant UINT_ARRAY user_balance:=|10,10,10,10,10|;
+constant UINT_ARRAY claimReward_sender_value:=|0,1,2,3,4,5,6,7,8,9,10|;
+constant UINT_ARRAY play_sender_value:=|1,2,3,4,5,6,7,8,9|;
 
 /****************************
  *** Function Definitions ***
@@ -106,9 +110,9 @@ place S {
 place play_cflow {
 	dom : epsilon;
 }
-place P_Play {
+place P_play {
 	dom : PLAY_PAR;
-	init : for (i in ADDRESS range 1 .. ADDRESS (users)) <( {{i , UINT(i*100)},UINT(1)} )>;
+	init : for (i in ADDRESS range 1 .. ADDRESS (users), j in UINT range 0 .. UINT(play_sdr)) <( {{i, UINT(user_balance[i])},play_sender_value[j]})>;
 }
 
 /*

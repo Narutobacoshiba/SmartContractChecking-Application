@@ -13,7 +13,9 @@ class GetAllContextAPIView(APIView):
 			
 			response = []
 			for c in contexts:
-				response.append({"ccid":c.ccid,"name":c.name,"description":c.description,"context_type":c.context_type,"content":c.content})				
+				if c.name != "free_context":
+					response.append({"ccid":c.ccid,"name":c.name,
+					    "description":c.description,"context_type":c.context_type,"content":c.content})				
 			return Response(response,status=status.HTTP_200_OK)
 		except:
 			return Response({"detail":{"message":"Some thing wrong!"}},status=status.HTTP_400_BAD_REQUEST) 

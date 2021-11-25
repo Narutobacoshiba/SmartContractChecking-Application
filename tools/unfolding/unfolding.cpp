@@ -26,6 +26,7 @@ int main(int argc, char** argv){
     string LTL_FILE_PATH; 
     string AST_FILE_PATH; 
     string LNA_JSON_FILE_PATH;
+    string IM_JSON_FILE_PATH;
 
     string OUT_FILE_PATH = "";
     string OUT_FILE_NAME = "";
@@ -49,6 +50,9 @@ int main(int argc, char** argv){
     app.add_option("--lna-json", LNA_JSON_FILE_PATH, "JSON file (.json), output of solidity2cpn tool")
         ->required()
         ->check(CLI::ExistingFile);
+    app.add_option("--im-json", IM_JSON_FILE_PATH, "JSON file (.json), initial marking settings")
+        ->required()
+        ->check(CLI::ExistingFile);
     app.add_option("--output_path", OUT_FILE_PATH, "Output file path");
     app.add_option("--output_name", OUT_FILE_NAME, "Output file name");
     CLI11_PARSE(app, argc, argv);
@@ -60,12 +64,14 @@ int main(int argc, char** argv){
     ifstream ltl_file_stream(LTL_FILE_PATH);
     ifstream ast_file_stream(AST_FILE_PATH);
     ifstream lna_json_file_stream(LNA_JSON_FILE_PATH);
+    ifstream im_json_file_stream(IM_JSON_FILE_PATH);
 
     stringstream model_lna_text_stream;
     stringstream ast_text_stream;
 
     string sol_json_content;
     string ltl_json_content;
+    string im_json_content;
 
     string new_line;
     /** 
@@ -88,9 +94,14 @@ int main(int argc, char** argv){
         sol_json_content = sol_json_content + new_line + "\n";
     }
 
+    while (getline(im_json_file_stream, new_line)) {
+        im_json_content = im_json_content + new_line + "\n";
+    }
+
     nlohmann::json ltl_json = nlohmann::json::parse(ltl_json_content);
     nlohmann::json sol_json = nlohmann::json::parse(sol_json_content);
-
+    nlohmann::json im_json = nlohmann::json::parse(im_json_content);
+   
     /**
      * name
      */
@@ -139,7 +150,7 @@ int main(int argc, char** argv){
     context_file.close();
 
 
-    Unfolder unfolder = Unfolder(context_net,model_lna_text_stream,sol_json,ltl_json);
+    Unfolder unfolder = Unfolder(context_net,model_lna_text_stream,sol_json,ltl_json,im_json);
     std::map<std::string,std::string> unfold_model = unfolder.UnfoldModel(CONTEXT_TYPE);
     
     ofstream lna_file;

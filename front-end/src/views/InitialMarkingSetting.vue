@@ -174,6 +174,7 @@ export default {
       this.selected_function = null
     },
     initInitialMarkingHolder(){
+      console.log(this.smart_contract_infors)
       this.init_marking = this.$store.getters["data/GetInitialMarking"]; 
       for(let i = 0; i < this.list_smart_contract.length; i++){
         let sm = this.list_smart_contract[i]

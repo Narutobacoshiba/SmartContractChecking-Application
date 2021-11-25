@@ -6,7 +6,7 @@
 *
 ******************************************************************************/
 
-etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10, v6 := 5) { */ /*  CONTRACT STATE initialization  */
+EtherGame {/*(cb := 0, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10, v6 := 5) { */ /*  CONTRACT STATE initialization  */
 
 
 
@@ -76,14 +76,13 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 /*
  * Function: play
  */
-   place P_Play {
+   place P_play {
    	dom : PLAY_PAR;
-   	init : for (i in ADDRESS range 1 .. ADDRESS (users)) <( {{i , UINT(i*100)},UINT(1)} )>;
    }
 /*
  * Function: claimReward
  */
-   place P_ClaimReward {
+   place P_claimReward {
    	dom : CLAIM_REWARD_PAR;
    }
 
@@ -144,7 +143,7 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 	transition PLAY_revert1 {
 		in {
 			S : <( s )>;
-			P_Play : <( p )>;
+			P_play : <( p )>;
 		}
 		out {
 			S : <( s )>;
@@ -154,7 +153,7 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 	transition PLAY_n_revert1 {
 		in {
 			S : <( s )>;
-			P_Play : <( p )>;
+			P_play : <( p )>;
 		}
 		out {
 			PLAY_P1 : <( {s,p} )>;
@@ -311,7 +310,7 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 	transition CLAIM_REWARD_revert1 {
 		in {
 			S : <( s )>;
-			P_ClaimReward : <( p )>;
+			P_claimReward : <( p )>;
 		}
 		out {
 			S : <( s )>;
@@ -321,7 +320,7 @@ etherGame {/*(cb := 0, users := 1, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10,
 	transition CLAIM_REWARD_n_revert1 {
 		in {
 			S : <( s )>;
-			P_ClaimReward : <( p )>;
+			P_claimReward : <( p )>;
 		}
 		out {
 			CLAIM_REWARD_P1 : <( {s,p} )>;

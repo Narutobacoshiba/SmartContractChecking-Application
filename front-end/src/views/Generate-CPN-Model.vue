@@ -156,8 +156,30 @@ export default ({
                 let selectedSc = this.$store.getters["data/GetSelectedSC"]
                 let selectedContext = this.$store.getters["data/GetSelectedContext"]
                 let selectedVulnerability = this.$store.getters["data/GetSelectedVulnerability"]
+                
                 let initialMarking = this.$store.getters["data/GetInitialMarking"]
-                let response = await ToolsServices.generateCpnModel(selectedSc,selectedContext,selectedVulnerability,initialMarking)
+                let ret_initialMarking = {"smart_contract":[],"balance":{},"NumberOfUser":""}
+                ret_initialMarking["NumberOfUser"] = initialMarking["NumberOfUser"]
+                ret_initialMarking["balance"] = initialMarking["Balance"]
+                for (const [key, value] of Object.entries(initialMarking["Funtion_params"])) {
+                    let sc = {}
+                    sc["id"] = key
+                    sc["name"] = value["name"]  
+                    sc["functions"] = []   
+
+                    let functions = value["functions"]
+                    for (const [fkey, fvalue] of Object.entries(functions)) {
+                        let func = {}
+                        func["id"] = fkey
+                        func["name"] = fvalue["name"]
+                        func["argument"] = fvalue["argument"]
+                        func["sender_value"] = fvalue["sender_value"]
+                        sc["functions"].push(func)
+                    }
+                    ret_initialMarking["smart_contract"].push(sc)
+                }
+                console.log(ret_initialMarking)
+                let response = await ToolsServices.generateCpnModel(selectedSc,selectedContext,selectedVulnerability,ret_initialMarking)
                 
                 this.response_message = "The generating process completed successfully"
                 this.wait_response = false
