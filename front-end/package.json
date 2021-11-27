@@ -19,6 +19,7 @@
     "vue-cookies": "^1.7.4",
     "vue-router": "^3.2.0",
     "vue2-ace-editor": "0.0.15",
+    "vue2-datepicker": "^3.10.3",
     "vuex": "^3.5.1",
     "vuex-persistedstate": "^4.0.0-beta.1"
   },

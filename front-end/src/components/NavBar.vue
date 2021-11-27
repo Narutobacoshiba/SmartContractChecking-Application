@@ -19,7 +19,7 @@
         <div id="dropdown-content">
           <p @click="goURL('list-sc')"><a>Smart Contracts</a></p>
           <p @click="goURL('list-context')"><a>Contexts</a></p>
-          <p @click="goURL('list-vul')"><a>LTL</a></p>
+          <p @click="goURL('list-ltl')"><a>LTL</a></p>
         </div>
       </div>
 

@@ -11,9 +11,12 @@
     </div>
     <div id="first-section"></div>
     <div id="second-section">
+      <div id="head"><a href="#">Home</a>> <a href="#">Context</a> >List</div>
+      <h2>Context List</h2>
       <div class="middle-section">
-        <div>
-          <label for="date-picker">Date</label>
+        <div id="date">
+          <h5>Date</h5>
+          <label for="date-picker"></label>
           <date-picker
             id="date-picker"
             v-model="time"
@@ -22,13 +25,11 @@
         </div>
         <div id="select-section">
           <div class="custom-select">
-            <label for="select-choice1" class="label select-1"
-              ><span class="selection-choice">Type</span>
-            </label>
+            <h5>Type</h5>
+            <label for="select-choice1" class="label select-1"> </label>
             <select id="select-choice1" class="select">
-              <option value="Choice 1">Common</option>
-              <option value="Choice 2">Private</option>
-              <option value="Choice 3">Pending</option>
+              <option value="Choice 1">DCR</option>
+              <option value="Choice 2">CPN</option>
             </select>
           </div>
         </div>
@@ -36,12 +37,11 @@
     </div>
     <div id="third-section">
       <div id="table-section">
-        <div id="table-name">
+        <!-- <div id="table-name">
           <div id="add-button" @click="addSmartContract" v-if="showAddButton">
             Add
           </div>
-          <p>Smart Contract List</p>
-        </div>
+        </div> -->
         <div id="table-body">
           <div id="table-header" class="table-row">
             <div class="index-cell table-cell">#</div>
@@ -53,12 +53,12 @@
           <div id="table-content">
             <div
               class="table-row"
-              v-for="(i, idx) in list_smart_contracts.common"
-              :key="i.id"
+              v-for="(i, idx) in list_context"
+              :key="i.ccid"
             >
               <div class="index-cell table-cell">{{ idx + 1 }}</div>
               <div class="name-cell table-cell">{{ i.name }}</div>
-              <div class="name-cell table-cell">{{ i.type }}</div>
+              <div class="name-cell table-cell">{{ i.context_type }}</div>
 
               <div class="date-modified-cell table-cell">
                 {{ convertDate(i.date_modified) }}
@@ -69,21 +69,17 @@
                   <i
                     class="material-icons"
                     @click="
-                      editSC(i.id, i.name, i.content, i.description, i.type)
+                      editContext(
+                        i.ccid,
+                        i.name,
+                        i.context_type,
+                        i.description,
+                        i.content
+                      )
                     "
                     >edit</i
                   >
-                  <i class="material-icons" @click="deleteSC(i.id)">delete</i>
-                  <i
-                    class="material-icons"
-                    @click="acceptPendingSC(sc.id, sc.name, sc.content)"
-                    >check_circle_outline</i
-                  >
-                  <i
-                    class="material-icons"
-                    @click="deleteSC(sc.id, sc.name, chosen_table)"
-                    >delete</i
-                  >
+                  <i class="material-icons" @click="deleteSC(i.ccid)">delete</i>
                 </div>
               </div>
             </div>
@@ -91,7 +87,7 @@
         </div>
       </div>
       <div id="amsb-footer"></div>
-      <button type="button" class="btn btn-primary" @click="routing('Add')">
+      <button type="button" class="btn btn-primary" @click="addContext()">
         Add
       </button>
     </div>
@@ -99,19 +95,16 @@
 </template>
 
 <script>
-import { SmartContractService } from "../../services/smartcontract.services";
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
+import { ContextService } from "../../services/context.services";
 export default {
+  name: "HelloWorld",
   components: { DatePicker },
   data() {
     return {
       chosen_table: "common",
-      list_smart_contracts: {
-        common: [],
-        private: [],
-        pending: [],
-      },
+      list_context: [],
       num_of_record: 7,
       num_of_page: 0,
       pageNum: 1,
@@ -125,79 +118,33 @@ export default {
     this.fetchData();
     //
   },
-  computed: {
-    GetTableName() {
-      if (this.chosen_table == "common") {
-        return "Common Smart Contracts";
-      }
-      if (this.chosen_table == "private") {
-        return "Private Smart Contracts";
-      }
-      if (this.chosen_table == "pending") {
-        return "Pending Smart Contracts";
-      }
-      return "Invalid Table";
-    },
-    showAddButton() {
-      return (
-        this.chosen_table != "pending" &&
-        (this.chosen_table != "common" ||
-          this.$store.state.user.currentUser.role == "admin")
-      );
-    },
-    isSuperior() {
-      return this.$store.state.user.currentUser.role == "admin";
-    },
-    getShowList() {
-      let ret = [];
-      for (
-        let i = 0;
-        i < this.list_smart_contracts[this.chosen_table].length;
-        i++
-      ) {
-        if (
-          (this.pageNum - 1) * this.num_of_record <= i &&
-          this.pageNum * this.num_of_record > i
-        ) {
-          ret.push(this.list_smart_contracts[this.chosen_table][i]);
-        }
-      }
-      return ret;
-    },
-    countPageNum() {
-      return "" + this.pageNum + "/" + this.numOfPage;
-    },
-    numOfItems() {
-      return this.list_smart_contracts[this.chosen_table].length;
-    },
-    numOfRecod() {
-      if (
-        this.list_smart_contracts[this.chosen_table].length <
-        this.num_of_record * this.pageNum
-      ) {
-        return (
-          this.list_smart_contracts[this.chosen_table].length -
-          this.num_of_record * (this.pageNum - 1)
-        );
-      }
-      return this.num_of_record;
-    },
-    numOfPage() {
-      return Math.ceil(this.numOfItems / this.num_of_record);
-    },
-  },
   methods: {
-    routing(param) {
-      if (param == "Add") {
-        this.$router.push({ name: "AddSC" });
+    addContext() {
+      this.$router.push({ name: "AddContext" });
+    },
+    async deleteSC(_id) {
+      const res = await ContextService.deleteContext(_id);
+      if (res.status == 200) {
+        this.fetchData();
+      } else {
+        alert("Fail!!!");
       }
+    },
+    editContext(_id, _name, _type, _description, _content) {
+      this.$router.push({
+        name: "EditContext",
+        params: {
+          c_id: _id,
+          name: _name,
+          content: _content,
+          description: _description,
+          type: _type,
+        },
+      });
     },
     async fetchData() {
-      const res = await SmartContractService.getAllSmartContract();
-      this.list_smart_contracts.common = res.data.filter(
-        (i) => i.type == "common"
-      );
-      console.log(this.list_smart_contracts.common);
+      const res = await ContextService.getAllContext();
+      this.list_context = res.data;
     },
     inc(value) {
       return value + 1;
@@ -208,11 +155,11 @@ export default {
       var monthstring = "" + (date.getMonth() + 1);
       var hourstring = "" + date.getHours();
       var minutestring = "" + date.getMinutes();
-      hourstring = hourstring.length == 1 ? "0" + hourstring : hourstring;
+      hourstring = hourstring.length === 1 ? "0" + hourstring : hourstring;
       minutestring =
-        minutestring.length == 1 ? "0" + minutestring : minutestring;
-      datestring = datestring.length == 1 ? "0" + datestring : datestring;
-      monthstring = monthstring.length == 1 ? "0" + monthstring : monthstring;
+        minutestring.length === 1 ? "0" + minutestring : minutestring;
+      datestring = datestring.length === 1 ? "0" + datestring : datestring;
+      monthstring = monthstring.length === 1 ? "0" + monthstring : monthstring;
       return (
         datestring +
         "/" +
@@ -224,74 +171,6 @@ export default {
         ":" +
         minutestring
       );
-    },
-    ChooseTable(value) {
-      this.chosen_table = value;
-      this.fetchData();
-    },
-    addSmartContract() {
-      this.$router.push({
-        name: "AddSc",
-        params: { options: this.chosen_table, parent_path: "/list-sc" },
-      });
-    },
-    async deleteSC(sc_id) {
-      const res = await SmartContractService.deleteSmartContract(sc_id);
-      if (res.status == 200) {
-        this.fetchData();
-      }
-    },
-    cfDeleteSC() {
-      let sc_id = this.scDelete.sc_id;
-      let option = this.scDelete.option;
-      //   DeleteSmartContracts(sc_id, option);
-      if (option == "common") {
-        let list_smart_contracts_afterdelete =
-          this.list_smart_contracts.common.filter((i) => {
-            return i.id != sc_id;
-          });
-        this.list_smart_contracts.common = list_smart_contracts_afterdelete;
-      } else if (option == "private") {
-        let list_smart_contracts_afterdelete =
-          this.list_smart_contracts.private.filter((i) => {
-            return i.id != sc_id;
-          });
-        this.list_smart_contracts.private = list_smart_contracts_afterdelete;
-      } else if (option == "pending") {
-        let list_smart_contracts_afterdelete =
-          this.list_smart_contracts.pending.filter((i) => {
-            return i.id != sc_id;
-          });
-        this.list_smart_contracts.pending = list_smart_contracts_afterdelete;
-      }
-
-      // this.fetchData();
-      this.closeConfirm();
-    },
-    closeConfirm() {
-      this.showConfirmation = false;
-    },
-    editSC(sc_id, sc_name, sc_code, sc_des, sc_type) {
-      this.$router.push({
-        name: "EditSc",
-        params: {
-          sc_id: sc_id,
-          name: sc_name,
-          code: sc_code,
-          description: sc_des,
-          type: sc_type,
-          parent_path: "/list-sc",
-        },
-      });
-    },
-    acceptPendingSC() {},
-    goPage(value) {
-      this.pageNum = value;
-    },
-  },
-  watch: {
-    chosen_table: function () {
-      this.pageNum = 1;
     },
   },
 };
@@ -317,6 +196,7 @@ export default {
   width: 100%;
   background-color: #ffffff;
   margin-top: -50px;
+  margin-bottom: 10%;
 }
 #third-section {
   height: 600px;
@@ -523,7 +403,7 @@ body {
   border: 0 none;
 }
 .label {
-  position: relative;
+  /* position: relative; */
   padding: 1em;
   border-radius: 0.5em;
   cursor: pointer;
@@ -532,9 +412,10 @@ body {
   content: "▼";
   position: absolute;
   right: 0;
-  top: 0;
+  bottom: 13px;
   padding: 1em;
-  border-left: 1px solid;
+  /* border-left: 1px solid; */
+  height: 1.5px;
 }
 .open .label::after {
   content: "▲";
@@ -543,5 +424,28 @@ body {
   border: 1px solid;
   background: #fcfcfc;
   border-bottom: 0.25em solid darken(#0bf09c, 10);
+}
+h2 {
+  text-align: center;
+  margin-bottom: 2%;
+}
+#head {
+  position: relative;
+  left: 8%;
+}
+#date {
+  position: relative;
+  right: 8%;
+}
+#select-section {
+  position: relative;
+  left: 8%;
+}
+.material-icons {
+  position: relative;
+  left: 25%;
+}
+button {
+  width: 15%;
 }
 </style>

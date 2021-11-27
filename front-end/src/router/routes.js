@@ -28,11 +28,23 @@ import CheckingResult from "../views/Checking-Result.vue"
 
 import ListSC from "../views/select-smart-contract/list-smartcontract.vue"
 
-// import AddSC from '../views/smartcontract-crud/AddSC.vue'
+import AddSC from '../views/select-smart-contract/add-smartcontract.vue'
 
-// import EditSC from '../views/smartcontract-crud/EditSC.vue'
+import EditSC from '../views/select-smart-contract/edit-smartcontract.vue'
+
+import ListLTL from '../views/ltl-template/list-ltl.vue'
+
+import EditLTL from '../views/ltl-template/edit-ltl.vue'
+
+import AddLTL from '../views/ltl-template/add-ltl.vue'
 
 import { DOMAIN_TITLE } from '../.env'
+
+import ListContext from '../views/context-crud/list-context.vue'
+
+import AddContext from '../views/context-crud/add-context.vue'
+
+import EditContext from '../views/context-crud/edit-context.vue'
 
 export const routes = [
   {
@@ -138,16 +150,52 @@ export const routes = [
     component: ListSC,
     meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | listsc` },
   },
-  // {
-  //   path: "/add-sc",
-  //   name: "AddSC",
-  //   component: AddSC,
-  //   meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | addsc` },
-  // },
-  // {
-  //   path: "/edit-sc",
-  //   name: "EditSc",
-  //   component: EditSC,
-  //   meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | editsc` },
-  // },
+  {
+    path: "/add-sc",
+    name: "AddSC",
+    component: AddSC,
+    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | addsc` },
+  },
+  {
+    path: "/edit-sc",
+    name: "EditSc",
+    component: EditSC,
+    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | editsc` },
+  },
+  {
+    path: '/list-ltl',
+    name: "ListLTL",
+    component: ListLTL,
+    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | list-ltl` },
+  },
+  {
+    path: '/add-ltl',
+    name: "AddLTLCom",
+    component: AddLTL,
+    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | add-ltl` },
+  },
+  {
+    path: '/edit-ltl',
+    name: "EditLTL",
+    component: EditLTL,
+    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | edit-ltl` },
+  },
+  {
+    path: '/list-context',
+    name: "ListContext",
+    component: ListContext,
+    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | edit-ltl` },
+  },
+  {
+    path: '/edit-conxtext',
+    name: "EditContext",
+    component: EditContext,
+    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | edit-ltl` },
+  },
+  {
+    path: '/add-context',
+    name: "AddContext",
+    component: AddContext,
+    meta: { requiresAuth: false, title: `${DOMAIN_TITLE} | edit-ltl` },
+  }
 ]
