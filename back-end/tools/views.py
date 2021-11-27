@@ -45,12 +45,12 @@ class GenerateCpnModelAPIView(APIView):
 		success = saveFileToTemp(full_path,context_name,context["data"]["content"],dtype="text") & success
 		success = saveFileToTemp(full_path,"vulnerability.json",vulnerability,dtype="json") & success
 		success = saveTempFile(full_path) & success
-		#saveFileToTemp(full_path,"initial_marking",initial_marking,dtype="json")
+		success = saveFileToTemp(full_path,"initial_marking.json",initial_marking,dtype="json")
 		if not success:
 			removeFolder(full_path)
 			return Response({"detail":"Generate file error!"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 			
-		output = unfolding(full_path,"EtherGame.lna",context_name,context["data"]["context_type"],"vulnerability.json","blindAuction.ast","etherGame.json")
+		output = unfolding(full_path,"EtherGame.lna",context_name,context["data"]["context_type"],"vulnerability.json","blindAuction.ast","etherGame.json","initial_marking.json")
 		
 		if len(output["err"]) > 0:
 			removeFolder(full_path)

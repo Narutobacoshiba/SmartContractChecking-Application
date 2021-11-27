@@ -90,8 +90,16 @@ export default ({
         },
         updateSelectValue() {
             if (this.temp_selection != "") {
-                let elemnet = document.getElementById(this.select_variable_id);
-                elemnet.innerText = "'"+this.temp_selection+"'";
+                let elements = document.getElementsByClassName(this.select_variable_id)
+                for(let i=0; i<elements.length; i++){
+                    let type = elements[i].type
+                    if(type == ""){
+                        type = "var"
+                    }
+                    if(type == this.select_variable_type){
+                        elements[i].innerText = "'"+this.temp_selection+"'"
+                    }
+                }
                 this.$emit("changeContent",this.getNodeValue())
             }
             this.select_variable_id = "";
@@ -114,10 +122,12 @@ export default ({
             var self = this;
             for (var i = 0; i < userSelection.length; i++) {
                 (function (index) {
-                userSelection[index].removeEventListener("click", function (event) {
+                userSelection[index].addEventListener("click", function (event) {
+                    let val = event.target.innerHTML
+                    let classList = event.target.classList
                     self.openSelectTable(
-                    event.target.id,
-                    event.target.innerHTML,
+                    classList[classList.length - 1],
+                    val,
                     event.target.type
                     );
                 });
@@ -129,11 +139,12 @@ export default ({
             var self = this;
             for (var i = 0; i < userSelection.length; i++) {
                 (function (index) {
-                userSelection[index].setAttribute("id", "select_var_" + i);
                 userSelection[index].addEventListener("click", function (event) {
+                    let val = event.target.innerHTML
+                    let classList = event.target.classList
                     self.openSelectTable(
-                    event.target.id,
-                    event.target.innerHTML,
+                    classList[classList.length - 1],
+                    val,
                     event.target.type
                     );
                 });

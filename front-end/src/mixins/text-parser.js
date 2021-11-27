@@ -35,7 +35,8 @@ function singleSelectionHighLight(str,spec){
     if(!(type == "var" || type == "func" || type == "arg")){
         type = ""
     }
-    return "<a class='select-variable' style='color:#c47635; cursor: pointer;' contenteditable='' type='"+type+"'>"+str+"</a>" + "<span style='color:#d2416e;' contenteditable=''>"+spec+"</span>"
+    let name = str.substring(1,str.length-1)
+    return "<a class='select-variable " + name + "-var' style='color:#c47635; cursor: pointer;' contenteditable='' type='"+type+"'>"+str+"</a>" + "<span style='color:#d2416e;' contenteditable=''>"+spec+"</span>"
 }
 
 function nonamePropositionHighLight(str){

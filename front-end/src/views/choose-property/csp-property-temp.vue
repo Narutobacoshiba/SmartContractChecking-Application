@@ -68,7 +68,6 @@
 <script>
 import LtlEditor from "../../components/LtlEditor.vue";
 import {LTLTemplate} from "../../services/ltlproperty.services"
-
 export default ({
     components: { LtlEditor},
     data(){
@@ -81,17 +80,14 @@ export default ({
     },
     beforeMount(){
         this.selected_vul = this.$store.getters["data/GetSelectedVulnerability"]
-
         if(!("name" in this.selected_vul.params)){
             this.selected_vul.params.name = ""
         }
-
         if(!("id" in this.selected_vul.params)){
             this.selected_vul.params.id = null
         }else{
             this.selected_template = this.selected_vul.params.id
         }
-
         if(!("description" in this.selected_vul.params)){
             this.selected_vul.params.description = ""
         }
@@ -202,7 +198,6 @@ export default ({
 .cspsn-second-cell{
     flex-basis: 80%;
 }
-
 #cspsn-row-name{
     height: 80px;
 }
@@ -212,7 +207,6 @@ export default ({
 #cspsn-row-description{
     height: 80px;
 }
-
 #cspsn-set-property-name{
     width: 80%;
     font-size: 14px;
@@ -221,24 +215,19 @@ export default ({
     border: 2px solid rgb(155, 154, 154);
     border-radius: 4px;
 }
-
 #cspsn-ltl-editor{
     width: 100%;
     height: 240px;
 }
-
 textarea{
     resize: none;
 }
-
 #cspsn-description-text-input{
     width: 100%;
     height: 80px;
     font-size: 14px;
     color: rgb(36, 34, 34);
 }
-
-
 /* select box */
 #select-box-base{
     width: 80%;
@@ -254,7 +243,6 @@ textarea{
     right: 0;
     left: 0;
 }
-
 #select-button
 {
     position: relative;
@@ -262,7 +250,6 @@ textarea{
     padding: 10px 8px;
     cursor: pointer;
 }
-
 #options-view-button
 {
     position: absolute;
@@ -277,7 +264,6 @@ textarea{
     cursor: pointer;
     z-index: 3;
 }
-
 #selected-value
 {
     font-size: 16px;
@@ -286,7 +272,6 @@ textarea{
     font-size: 13px;
     color: rgb(36, 34, 34);
 }
-
 #chevrons
 {
     position: absolute;
@@ -295,14 +280,12 @@ textarea{
     bottom: 0;
     padding-right: 6px;
 }
-
 #cheverons{
     display: block;
     height: 60%;
     color: rgb(202, 199, 199);
     mask-repeat: 20px;
 }
-
 #chevrons span
 {
     display: block;
@@ -311,12 +294,10 @@ textarea{
     font-size: 17px;
     text-align: right;
 }
-
 #options-view-button:checked + #select-button #chevrons span
 {
     color: rgb(73, 72, 72);
 }
-
 #options
 {
     top: 40px;
@@ -329,32 +310,27 @@ textarea{
     overflow-y: auto;
     display: none;
 }
-
 #options-view-button:checked ~ #options
 {
     border: 1px solid #e2eded;
     border-color: #eaf1f1 #e4eded #dbe7e7 #e4eded;
     display: block;
 }
-
 .label
 {
     display: none;
     cursor: pointer;
     font-size: 14px;
 }
-
 #options-view-button:checked ~ #options .label
 {
     display: block;
     padding: 6px 7px;    
 }
-
 .label:hover
 {
     background-color: #fafafa;
 }
-
 .selected_template_row{
     background-color: #ece6e6;
 }
@@ -387,16 +363,13 @@ textarea{
   -webkit-user-select: none;
   touch-action: manipulation;
 }
-
 .button-style:hover {
   background-color: rgb(249,250,251);
 }
-
 .button-style:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
-
 .button-style:focus-visible {
   box-shadow: none;
 }

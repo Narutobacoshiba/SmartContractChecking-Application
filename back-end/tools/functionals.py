@@ -32,18 +32,19 @@ def saveTempFile(folder_path):
 	except:
 		return False
 		
-def unfolding(folder_path,lna_name,context_name,context_type,ltl_name,sol_ast_name,lna_json_name):
+def unfolding(folder_path,lna_name,context_name,context_type,ltl_name,sol_ast_name,lna_json_name,initial_marking):
 	lna_PATH = folder_path + lna_name
 	context_PATH = folder_path + context_name
 	ltl_PATH = folder_path + ltl_name
 	sol_ast_PATH = folder_path + sol_ast_name
 	lna_json_PATH = folder_path + lna_json_name
+	initial_marking_PATH = folder_path + initial_marking
 	
 	output_PATH = folder_path
 	output_NAME = lna_name.split(".")[0] + "_HCPN"
 	
 	command = "./tools/tools/unfolding" + " --lna " + lna_PATH + " --context " + context_PATH + " --context-type " + context_type + \
-		  " --ltl " + ltl_PATH + " --sol-ast " + sol_ast_PATH + " --lna-json " + lna_json_PATH + \
+		  " --ltl " + ltl_PATH + " --sol-ast " + sol_ast_PATH + " --lna-json " + lna_json_PATH + " --im-json " + initial_marking_PATH + \
 		  " --output_path " + output_PATH + " --output_name " + output_NAME
 	
 	pathT = "./"

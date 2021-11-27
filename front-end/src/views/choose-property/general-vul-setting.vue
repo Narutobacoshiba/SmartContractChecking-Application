@@ -25,7 +25,9 @@
         <div id="gvs-content">
             <div id="gvsc-selec-vul">
                 <IouConfig v-if="getSelectedVul == 'iou'"/>
-                <img id="gvs-image-else" src="../../assets/dark-cloud.png" v-else>
+                <TdepConfig v-if="getSelectedVul == 'tdep'"/>
+                <SdesConfig v-if="getSelectedVul == 'sdes'"/>
+                <!-- <img id="gvs-image-else" src="../../assets/dark-cloud.png" v-else> -->
             </div>
             <div id="ssc-button">
                 <button class="button-style" role="button" @click="goNextPage">Next</button>
@@ -37,19 +39,38 @@
 
 <script>
 import IouConfig from "../../components/general-vul-setting/iou-config.vue"
+import TdepConfig from "../../components/general-vul-setting/tdep-config.vue"
+import SdesConfig from "../../components/general-vul-setting/sdes-config.vue"
+
 export default({
-    components: {IouConfig},
+    components: {IouConfig,TdepConfig,SdesConfig},
     data() {
         return{
             list_vulnerability: [{name:"Interger Overflow/Underflow",id:"iou"},{name:"Reetrancy",id:"ree"},{name:"Self-destruction",id:"sdes"},
                         {name:"Timestamp Dependence",id:"tdep"},{name:"Skip Empty String Literal",id:"sesl"},{name:"Uninitialized Storage Variable",id:"usv"},
                         {name:"Others",id:"oth"}],
-            selected_vul: "iou",
-            vulnerability_descriptions: {"iou":"outOfRange(x) = (x < minThreshold) V (x > maxThreshold)"},
+            selected_vul: "",
+            vulnerability_descriptions: {"iou":"outOfRange(x) = (x < minThreshold) V (x > maxThreshold)",
+                                         "sdes":"There are 2 options: \n   • The user chooses only one smart contract then the user needs to choose a function in the smart contract for the vulnerability. \n   • If the user chooses more than one smart contract and after choosing a function in the frst one the user chooses another smart contract, the system will go to option 2 of Self-destruction (2 functions). If the user does not choose any function, the system goes to option 1 (only one function is chosen)",
+                                         "tdep":"Since the execution on a Blockchain needs to be deterministic for all the miners to get the same results and reach a consensus, users usually resort to block-related variables such as timestamp as a source of entropy"},
         }
     },
     beforeMount(){
-        this.setOutData()
+        let temp = this.$store.getters["data/GetSelectedVulnerability"]
+        if(!("id" in temp.params)){
+            this.selected_vul = "iou"
+            this.setOutData()
+        }else{
+            let id = temp.params.id
+            this.selected_vul = id
+            if(id == "iou"){
+                this.setOutData()
+            }else if(id == "sdes"){
+                this.setSdesData()
+            }else if(id == "tdep"){
+                this.setTdepData()
+            }
+        }
     },
     computed: {
         getVulDescription(){
@@ -65,6 +86,10 @@ export default({
                 if(confirm("Current you choose iou vulnerability, did you want to reset it!") == true){
                     if(id == "iou"){
                         this.setOutData()
+                    }else if(id == "sdes"){
+                        this.setSdesData()
+                    }else if(id == "tdep"){
+                        this.setTdepData()
                     }
                     this.selected_vul = id
                 }
@@ -72,8 +97,22 @@ export default({
         },
         setOutData(){
             let temp = this.$store.getters["data/GetSelectedVulnerability"]
-            if(!("inputs" in temp.params)){
-                temp.params = {name:"under_over_flow",description:this.vulnerability_descriptions[this.selected_vul],inputs:{"min_threshold":"0","max_threshold":"65535","selected_variable":""}} 
+            if(!("inputs" in temp.params) || this.selected_vul != "iou"){
+                temp.params = {id:"iou",name:"under_over_flow",description:this.vulnerability_descriptions["iou"],inputs:{"min_threshold":"0","max_threshold":"65535","selected_variable":""}} 
+                this.$store.commit("data/SetSelectedVulnerability",temp)   
+            }
+        },
+        setSdesData(){
+            let temp = this.$store.getters["data/GetSelectedVulnerability"]
+            if(!("inputs" in temp.params) || this.selected_vul != "sdes"){
+                temp.params = {id:"sdes",name:"self_destruction",description:this.vulnerability_descriptions["sdes"],inputs:{"selected_function":""}} 
+                this.$store.commit("data/SetSelectedVulnerability",temp)   
+            }
+        },
+        setTdepData(){
+            let temp = this.$store.getters["data/GetSelectedVulnerability"]
+            if(!("inputs" in temp.params) || this.selected_vul != "tdep"){
+                temp.params = {id:"tdep",name:"timestamp_dependence",description:this.vulnerability_descriptions["tdep"],inputs:{"selected_function":""}} 
                 this.$store.commit("data/SetSelectedVulnerability",temp)   
             }
         },
@@ -140,11 +179,11 @@ export default({
 
 #gvs-vul-text{
     width: 96%;
-    height: 120px;
+    height: 140px;
     margin: 2% 2% 2% 2%;
     background-color: white;
     padding: 2% 2% 2% 2%;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .gvs-selected-row{

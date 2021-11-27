@@ -49,17 +49,17 @@ export default {
                    "GenerateCPNModel":5,
                    "CheckCPNModel":6,
                    "CheckingResult":7},
-    };
+    }
   },
    methods: {
     goHome(){
-      this.$router.push("/")
+      this.$router.push({ name: "Index" })
     },
     goList(){
       this.$router.push("/list-sc")
     },
     goRoadMap(){
-      this.$router.push("/roadmap")
+      this.$router.push({ name: "RoadMap" })
     }, 
     routing(page){
       if(page.id <= this.getRoadPageId && page.id != this.getCurrentPageId){
