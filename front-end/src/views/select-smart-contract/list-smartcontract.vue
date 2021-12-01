@@ -79,7 +79,7 @@
                   <i
                     class="material-icons"
                     @click="deleteSC(sc.id, sc.name, chosen_table)"
-                    >delete</i
+                    >next_plan</i
                   >
                 </div>
               </div>
@@ -192,7 +192,7 @@ export default {
     async fetchData() {
       const res = await SmartContractService.getAllSmartContract();
       this.list_smart_contracts.common = res.data.filter(
-        (i) => i.type == "common"
+        (i) => i.type == this.chosen_table
       );
       console.log(this.list_smart_contracts.common);
     },
