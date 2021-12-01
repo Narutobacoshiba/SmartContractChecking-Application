@@ -20,17 +20,14 @@
             valueType="format"
           ></date-picker>
         </div>
+
         <div id="select-section">
-          <div class="custom-select">
-            <label for="select-choice1" class="label select-1"
-              ><span class="selection-choice">Type</span>
-            </label>
-            <select id="select-choice1" class="select">
-              <option value="Choice 1">Common</option>
-              <option value="Choice 2">Private</option>
-              <option value="Choice 3">Pending</option>
-            </select>
-          </div>
+          <h5>Type</h5>
+          <select v-model="chosen_table" class="select-custom">
+            <option value="common">Common</option>
+            <option value="private">Private</option>
+            <option value="pending">Pending</option>
+          </select>
         </div>
       </div>
     </div>
@@ -246,22 +243,25 @@ export default {
       let option = this.scDelete.option;
       //   DeleteSmartContracts(sc_id, option);
       if (option == "common") {
-        let list_smart_contracts_afterdelete =
-          this.list_smart_contracts.common.filter((i) => {
+        let list_smart_contracts_afterdelete = this.list_smart_contracts.common.filter(
+          (i) => {
             return i.id != sc_id;
-          });
+          }
+        );
         this.list_smart_contracts.common = list_smart_contracts_afterdelete;
       } else if (option == "private") {
-        let list_smart_contracts_afterdelete =
-          this.list_smart_contracts.private.filter((i) => {
+        let list_smart_contracts_afterdelete = this.list_smart_contracts.private.filter(
+          (i) => {
             return i.id != sc_id;
-          });
+          }
+        );
         this.list_smart_contracts.private = list_smart_contracts_afterdelete;
       } else if (option == "pending") {
-        let list_smart_contracts_afterdelete =
-          this.list_smart_contracts.pending.filter((i) => {
+        let list_smart_contracts_afterdelete = this.list_smart_contracts.pending.filter(
+          (i) => {
             return i.id != sc_id;
-          });
+          }
+        );
         this.list_smart_contracts.pending = list_smart_contracts_afterdelete;
       }
 
@@ -502,46 +502,11 @@ body {
   color: #ffffff;
   font: 400 0.9em/1.9 "Open Sans", Calibri, Helvetica, Arial, sans-serif;
 }
-.custom-select {
-  position: relative;
-  width: 100%;
-  max-width: 25em;
-  cursor: pointer;
-}
-.select,
-.label {
-  display: block;
-}
-.select {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  padding: 1em;
-  height: 4em;
-  opacity: 0;
-  background: none transparent;
-  border: 0 none;
-}
-.label {
-  position: relative;
-  padding: 1em;
-  border-radius: 0.5em;
-  cursor: pointer;
-}
-.label::after {
-  content: "▼";
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 1em;
-  border-left: 1px solid;
-}
-.open .label::after {
-  content: "▲";
-}
-.select-1 {
-  border: 1px solid;
-  background: #fcfcfc;
-  border-bottom: 0.25em solid darken(#0bf09c, 10);
+
+.select-custom{
+  height: 35px;
+  width: 300px;
+  border-radius: 10px;
+  border:2px solid black;
 }
 </style>

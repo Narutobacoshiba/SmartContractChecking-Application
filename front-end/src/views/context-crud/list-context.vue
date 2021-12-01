@@ -11,7 +11,6 @@
     </div>
     <div id="first-section"></div>
     <div id="second-section">
-      <div id="head"><a href="#">Home</a>> <a href="#">Context</a> >List</div>
       <h2>Context List</h2>
       <div class="middle-section">
         <div id="date">
