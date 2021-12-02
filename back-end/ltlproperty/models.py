@@ -5,6 +5,8 @@ class LTLTemplate(models.Model):
 	name = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
 	template_type = models.CharField(max_length=200, db_collation='utf8_general_ci', blank=True, null=True)
 	formula = models.TextField(blank=True, null=True)
+	formula_text = models.TextField(blank=True, null=True)
+	created_timestamp = models.BigIntegerField(null=True)
 	description = models.TextField(blank=True, null=True)
 
 	class Meta:

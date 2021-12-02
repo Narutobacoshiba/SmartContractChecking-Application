@@ -15,7 +15,7 @@ const state = {
             },
           Funtion_params: {}
         },      
-        selectedContext: {used:false,data:{ccid:"",name:"",context_type:"",content:"",description:""}},
+        selectedContext: {used:false,data:{ccid:"",name:"",context_type:"",content:"",created_timestamp:null,description:""}},
         selectedVulnerability: {type:"",subtype:"",params:{}},
         generateModelData: {
             generated: false,

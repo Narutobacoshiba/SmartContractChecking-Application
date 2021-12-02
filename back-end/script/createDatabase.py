@@ -269,14 +269,17 @@ CREATE TABLE LTLTemplate (
 lteid nvarchar(64) primary key,
 name nvarchar(200),
 formula text,
+formula_text text,
+created_timestamp BIGINT,
 template_type nvarchar(200),
 description text
 )
 """)
 
-sqlFomular = "INSERT INTO LTLTemplate (lteid,name,formula,template_type,description) VALUES (%s,%s,%s,%s,%s)"
+sqlFomular = "INSERT INTO LTLTemplate (lteid,name,formula,formula_text,created_timestamp,template_type,description) VALUES (%s,%s,%s,%s,%s,%s,%s)"
 multi = [ 
-    ("82cc3c00eb933b3b679a02521d9863bbfbd14292cbb62d9ce688d2844c93b6fe","interger_overflow_underflow", "const minThreshold = 0;\nconst maxThreshold = 100;\nproposition outOfRange: ('variable' < minThreshold) | ('variable' > maxThreshold);\nproperty prop: G(! outOfRange);","type0","outOfRange(x) is a proposition defining the conditions for overflow and underflow for the variable x w.r.t the range of its type which we delimit by defining lower and higher thresholds (minThreshold and maxThreshold respec tively).")
+    ("82cc3c00eb933b3b679a02521d9863bbfbd14292cbb62d9ce688d2844c93b6fe","interger_overflow_underflow", "const minThreshold = 0;\nconst maxThreshold = 100;\nproposition outOfRange: ('variable' < minThreshold) | ('variable' > maxThreshold);\nproperty prop: G(! outOfRange);",
+    "test","1607110465663","type0","outOfRange(x) is a proposition defining the conditions for overflow and underflow for the variable x w.r.t the range of its type which we delimit by defining lower and higher thresholds (minThreshold and maxThreshold respec tively).")
 ]
 mycursor.executemany(sqlFomular,multi)
 

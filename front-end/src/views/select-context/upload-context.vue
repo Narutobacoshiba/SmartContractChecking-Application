@@ -111,7 +111,7 @@ export default ({
             if(this.is_uploaded){
                 let current_date = Date.now()
                 let user_id = this.$store.state.user.currentUser.id
-                let new_context = {ccid:this.hashValue("context"+current_date+user_id),name:this.context_name,context_type:this.selected_context_type,content:this.context_content,description:this.context_description}
+                let new_context = {ccid:this.hashValue("context"+current_date+user_id),name:this.context_name,context_type:this.selected_context_type,content:this.context_content,created_timestamp:current_date,description:this.context_description}
                 this.$store.commit("data/SetSelectedContext", new_context);
                 this.$router.push({ name: "LtlCheckingOptions"});
             }else{

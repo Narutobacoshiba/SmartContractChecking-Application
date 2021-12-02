@@ -46,6 +46,7 @@ ccid nvarchar(64) primary key,
 aid nvarchar(64) references Account(aid),
 name nvarchar(200),
 content text,
+created_timestamp BIGINT, 
 context_type nvarchar(50),
 description text
 )

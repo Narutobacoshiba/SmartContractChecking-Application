@@ -48,12 +48,9 @@ export default ({
             return ret
         },
         createSaveContext(){
-            let data = this.$store.getters["data/GetSelectedContext"].data
-            let cpnContextData = this.$store.getters["data/GetGenerateModelData"].data["context"]       
+            let data = this.$store.getters["data/GetSelectedContext"].data    
             let user_id = this.$store.state.user.currentUser.id
-            cpnContextData["ccid"] = data["ccid"]
-            cpnContextData["aid"] = user_id
-            cpnContextData["description"] = data["description"]
+            data["aid"] = user_id
             return cpnContextData
         },
         createSaveVulnerability(){

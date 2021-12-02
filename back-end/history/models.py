@@ -37,6 +37,7 @@ class CPNContext(models.Model):
 	aid = models.ForeignKey(Account, models.DO_NOTHING,db_column='aid')
 	name = models.CharField(max_length=200, db_collation='utf8_general_ci', null=True, blank=True)
 	content = models.TextField(blank=True, null=True)
+	created_timestamp = models.BigIntegerField(null=True)
 	context_type = models.CharField(max_length=50, db_collation='utf8_general_ci', null=True, blank=True)
 	description = models.TextField(blank=True, null=True)
 	

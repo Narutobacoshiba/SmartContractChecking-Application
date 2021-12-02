@@ -126,7 +126,7 @@ export default ({
         skipSelectContext(){
             let current_date = Date.now()
             let user_id = this.$store.state.user.currentUser.id
-            this.$store.commit("data/SetSelectedContext",{ccid:this.hashValue("context"+current_date+user_id),name:"free_context",context_type:"FREE",content:"",description:""})
+            this.$store.commit("data/SetSelectedContext",{ccid:this.hashValue("context"+current_date+user_id),name:"free_context",context_type:"FREE",content:"",created_timestamp:current_date,description:""})
             this.$router.push({ name: "LtlCheckingOptions" });
         },
         goNextPage(){
