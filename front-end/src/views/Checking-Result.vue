@@ -51,7 +51,7 @@ export default ({
             let data = this.$store.getters["data/GetSelectedContext"].data    
             let user_id = this.$store.state.user.currentUser.id
             data["aid"] = user_id
-            return cpnContextData
+            return data
         },
         createSaveVulnerability(){
             let selectedVulnerability = this.$store.getters["data/GetSelectedVulnerability"] 

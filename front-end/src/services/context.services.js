@@ -43,6 +43,7 @@ export class ContextService extends BaseService {
       context_type: _type,
       content: _content,
       description: _description,
+      created_timestamp: Date.now(),
       aid: "0863e75515b4efeba7216d384091be00d18f149a7fa822807901fae602d723d0"
     }
     try {

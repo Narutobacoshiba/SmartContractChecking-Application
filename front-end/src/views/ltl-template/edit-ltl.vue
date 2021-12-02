@@ -55,25 +55,26 @@ export default {
       name: this.$route.params.l_name,
       fomular: this.$route.params.l_fomular,
       description: this.$route.params.l_description,
+      fomular_text: this.$route.params.l_fomular_text,
     };
   },
   // components: { EditorSc },
   methods: {
     async clickHandler(action) {
       if (action === "save") {
-        console.log(this.id, this.name, this.fomular, this.description);
         const res = await LTLTemplate.updateLTLTemplate(
           this.id,
           this.name,
           this.fomular,
           "Type",
-          this.description
+          this.description,
+          this.fomular_text
         );
         console.log(res);
         if (res.status === 200) {
           this.$router.push({ name: "ListLTL" });
-        }else{
-          alert("Faill")
+        } else {
+          alert("Faill");
         }
       } else if (action === "cancel") {
         if (!this.$route.params.parent_path) this.$router.push("/");

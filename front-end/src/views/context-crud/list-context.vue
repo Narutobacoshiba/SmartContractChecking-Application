@@ -57,7 +57,7 @@
               <div class="name-cell table-cell">{{ i.context_type }}</div>
 
               <div class="date-modified-cell table-cell">
-                {{ convertDate(i.date_modified) }}
+                {{ convertDate(i.created_timestamp) }}
               </div>
               <div class="action-cell table-cell">
                 <div>
@@ -148,6 +148,7 @@ export default {
     async fetchData() {
       const res = await ContextService.getAllContext();
       this.list_context = res.data;
+      console.log(this.list_context)
     },
     inc(value) {
       return value + 1;

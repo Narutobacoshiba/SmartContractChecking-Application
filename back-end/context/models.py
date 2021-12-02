@@ -9,6 +9,7 @@ class CPNContext(models.Model):
     content = models.TextField(blank=True, null=True)
     context_type = models.CharField(max_length=50,blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    created_timestamp = models.BigIntegerField(null=True)
 
     class Meta:
         managed = False

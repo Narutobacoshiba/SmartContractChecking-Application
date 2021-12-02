@@ -10,12 +10,12 @@
         </div>
       </div>
       <div class="row" style="margin-bottom: 8%">
-        <div class="title col-3">Formular</div>
+        <div class="title col-3">Fomular Text</div>
         <div class="col-9">
           <textarea
             class="form-control"
             type="text"
-            v-model="formular"
+            v-model="formular_text"
           ></textarea>
         </div>
       </div>
@@ -48,15 +48,13 @@
 <script>
 import { LTLTemplate } from "../../services/ltlproperty.services";
 export default {
-  created() {
-    this.initData();
-  },
   data() {
     return {
       name: "",
-      formular: "",
+      formular_text: "",
       template_type: "",
       description: "",
+      fomular_code:"DemoFomularCode"
     };
   },
   methods: {
@@ -67,28 +65,27 @@ export default {
       if (l > 0) while (i < l) h = ((h << 5) - h + s.charCodeAt(i++)) | 0;
       return h;
     },
-    async initData() {},
     async clickHandler(action) {
       if (action === "save") {
         const res = await LTLTemplate.createLTLTemplate(
           this.hashCode(this.name),
           this.name,
-          this.formular,
+          this.formular_text,
           this.template_type,
-          this.description
+          this.description,
+          this.fomular_code
         );
         console.log(res);
-        if (res.status && res.status === 201) {
-          this.$router.push({ name: "ListLTL" });
-        } else {
-          alert("Fail");
-        }
+        // if (res.status && res.status === 201) {
+        //   this.$router.push({ name: "ListLTL" });
+        // } else {
+        //   alert("Fail");
+        // }
       } else if (action === "cancel") {
         if (!this.$route.params.parent_path) this.$router.push("/");
         else this.$router.push(this.$route.params.parent_path);
       }
     },
-    computed: {},
   },
 };
 </script>

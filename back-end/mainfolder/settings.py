@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'mainfolder.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'soliditycpn',
+        'NAME': 'solidityTocpn',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': '12345678',
         'HOST': 'localhost',
         'PORT': '3306',
     }

@@ -2,8 +2,8 @@ import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
     user="root",
-    passwd = '123456',
-    database="soliditycpn"
+    passwd = '12345678',
+    database="solidityTocpn"
 )
 mycursor = db.cursor()
 

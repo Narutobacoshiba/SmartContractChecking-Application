@@ -97,7 +97,6 @@ export default {
           this.type,
           this.content,
           this.description, 
-
         );
         console.log(res);
         this.$router.push(this.$router.push({ name: "ListContext" }));

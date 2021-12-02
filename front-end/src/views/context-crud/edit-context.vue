@@ -77,12 +77,13 @@ export default {
           this.context_id,
           this.name,
           this.content,
+          this.type,
           this.description
         );
         if (res.status == 200) {
           this.$router.push({ name: "ListContext" });
-        }else{
-          alert("Faill")
+        } else {
+          alert("Faill");
         }
       } else if (action === "cancel") {
         if (!this.$route.params.parent_path) this.$router.push("/");

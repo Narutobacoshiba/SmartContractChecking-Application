@@ -22,9 +22,7 @@
             valueType="format"
           ></date-picker>
         </div>
-        <div id="select-section">
-          
-        </div>
+        <div id="select-section"></div>
       </div>
     </div>
     <div id="third-section">
@@ -49,14 +47,14 @@
               <div class="name-cell table-cell">{{ i.template_type }}</div>
 
               <div class="date-modified-cell table-cell">
-                {{ convertDate(i.date_modified) }}
+                {{ convertDate(i.created_timestamp) }}
               </div>
               <div class="action-cell table-cell">
                 <div class="item">
                   <i>{{ i.description }}</i>
                   <i
                     class="material-icons"
-                    @click="editLTL(i.id, i.name, i.formula, i.description)"
+                    @click="editLTL(i.id, i.name, i.formula, i.description,i.formula_text)"
                     >edit</i
                   >
                   <i class="material-icons" @click="deleteSC(i.id)">delete</i>
@@ -102,11 +100,11 @@ export default {
       const res = await LTLTemplate.deleteLTLTemplate(_id);
       if (res.status === 200) {
         this.fetchData();
-      }else{
-        alert("FAill")
+      } else {
+        alert("FAill");
       }
     },
-    editLTL(_id, _name, _formular, _description) {
+    editLTL(_id, _name, _formular, _description, _f_text) {
       this.$router.push({
         name: "EditLTL",
         params: {
@@ -114,6 +112,7 @@ export default {
           l_name: _name,
           l_fomular: _formular,
           l_description: _description,
+          fomular_text: _f_text,
         },
       });
     },
@@ -123,6 +122,7 @@ export default {
     async fetchData() {
       const res = await LTLTemplate.getLTLTemplate();
       this.list_ltl = res.data;
+      console.log(this.list_ltl);
     },
     inc(value) {
       return value + 1;
