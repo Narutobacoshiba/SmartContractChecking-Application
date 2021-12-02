@@ -58,7 +58,10 @@
               <div class="date-modified-cell table-cell">
                 {{ convertDate(i.date_modified) }}
               </div>
-              <div class="action-cell table-cell">
+                         <div
+                class="action-cell table-cell"
+                v-if="chosen_table == 'pending'"
+              >
                 <div>
                   <i>{{ i.description }}</i>
                   <i
@@ -71,14 +74,31 @@
                   <i class="material-icons" @click="deleteSC(i.id)">delete</i>
                   <i
                     class="material-icons"
-                    @click="acceptPendingSC(sc.id, sc.name, sc.content)"
+                    @click="
+                      acceptPendingSC(i.id, i.name, i.content, i.description)
+                    "
                     >check_circle_outline</i
                   >
                   <i
                     class="material-icons"
-                    @click="deleteSC(sc.id, sc.name, chosen_table)"
+                    @click="
+                      refusePendingSC(i.id, i.name, i.content, i.description)
+                    "
                     >next_plan</i
                   >
+                </div>
+              </div>
+              <div class="action-cell table-cell" v-else>
+                <div>
+                  <i>{{ i.description }}</i>
+                  <i
+                    class="material-icons"
+                    @click="
+                      editSC(i.id, i.name, i.content, i.description, i.type)
+                    "
+                    >edit</i
+                  >
+                  <i class="material-icons" @click="deleteSC(i.id)">delete</i>
                 </div>
               </div>
             </div>
@@ -290,7 +310,40 @@ export default {
         },
       });
     },
-    acceptPendingSC() {},
+     async acceptPendingSC(sc_id, sc_name, sc_code, sc_des) {
+      confirm(
+        "Do you want to change the Smart Contract type from Private to Common?"
+      );
+      const res = await SmartContractService.editSmartContract(
+        sc_id,
+        sc_name,
+        sc_code,
+        "common",
+        sc_des
+      );
+      console.log(res);
+      if (res.status === 202) {
+        this.fetchData();
+      } else {
+        alert("Something Wrong!!!");
+      }
+    },
+    async refusePendingSC(sc_id, sc_name, sc_code, sc_des) {
+      confirm("Are you sure to refuse the change from Private to Common?");
+      const res = await SmartContractService.editSmartContract(
+        sc_id,
+        sc_name,
+        sc_code,
+        "private",
+        sc_des
+      );
+      console.log(res);
+      if (res.status === 202) {
+        this.fetchData();
+      } else {
+        alert("Something Wrong!!!");
+      }
+    },
     goPage(value) {
       this.pageNum = value;
     },
