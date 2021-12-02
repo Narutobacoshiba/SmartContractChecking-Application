@@ -1,5 +1,6 @@
 <template>
   <div id="main">
+    <div id="head"><a href="#">Home</a>>Add</div>
     <div id="header">Create a new Context</div>
     <div class="body">
       <div class="row" id="name-section">
@@ -11,9 +12,9 @@
       <div class="row" id="name-section">
         <div class="col-3">Smart Contract Type</div>
         <div class="col-9">
-          <select name="" class="form-control" id="">
-            <option value="1">DCR</option>
-            <option value="2">BPMN</option>
+          <select name="" class="form-control" id="" v-model="type">
+            <option value="DCR">DCR</option>
+            <option value="BPMN">BPMN</option>
           </select>
         </div>
       </div>
@@ -61,7 +62,7 @@ export default {
   },
   data() {
     return {
-      context_id: this.$route.params.context_id,
+      type: "",
       code: "",
       content: "C:/abc/xyz/Context.xml",
       name: "Context ABC",
@@ -71,6 +72,13 @@ export default {
   },
   // components: { EditorSc },
   methods: {
+    hashCode(s) {
+      var h = 0,
+        l = s.length,
+        i = 0;
+      if (l > 0) while (i < l) h = ((h << 5) - h + s.charCodeAt(i++)) | 0;
+      return h;
+    },
     async initData() {
       // const data = await GetContextById(this.context_id)
       // this.initModelContext(data)
@@ -82,12 +90,19 @@ export default {
       // return UpdateContext(this.context_id, this.name, this.description)
     },
     async clickHandler(action) {
-      if (action === "save") {
-        const res = await ContextService.createContext();
+      if (action == "save") {
+        const res = await ContextService.createContext(
+          this.hashCode(this.name), 
+          this.name, 
+          this.type,
+          this.content,
+          this.description, 
+
+        );
         console.log(res);
-      } else if (action === "cancel") {
-        if (!this.$route.params.parent_path) this.$router.push("/");
-        else this.$router.push(this.$route.params.parent_path);
+        this.$router.push(this.$router.push({ name: "ListContext" }));
+      } else if (action == "cancel") {
+        this.$router.push(this.$router.push({ name: "ListContext" }));
       }
     },
     initModelContext(modelContext) {
