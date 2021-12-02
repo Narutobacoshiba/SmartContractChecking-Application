@@ -23,14 +23,7 @@
           ></date-picker>
         </div>
         <div id="select-section">
-          <div class="custom-select">
-            <h5>Type</h5>
-            <label for="select-choice1" class="label select-1"> </label>
-            <select id="select-choice1" class="select">
-              <option value="Choice 1">CSP</option>
-              <option value="Choice 2">Vulnerability</option>
-            </select>
-          </div>
+          
         </div>
       </div>
     </div>
