@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <div id="head"><a href="#">Home</a>>Edit</div>
     <div id="header">Create a new Context</div>
     <div class="body">
       <div class="row" id="name-section">

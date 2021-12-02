@@ -23,14 +23,11 @@
           ></date-picker>
         </div>
         <div id="select-section">
-          <div class="custom-select">
-            <h5>Type</h5>
-            <label for="select-choice1" class="label select-1"> </label>
-            <select id="select-choice1" class="select">
-              <option value="Choice 1">DCR</option>
-              <option value="Choice 2">CPN</option>
-            </select>
-          </div>
+          <h5>Type</h5>
+          <select v-model="chosen_table" class="select-custom">
+            <option value="DCR">DCR</option>
+            <option value="CPN">CPN</option>
+          </select>
         </div>
       </div>
     </div>
@@ -102,7 +99,7 @@ export default {
   components: { DatePicker },
   data() {
     return {
-      chosen_table: "common",
+      chosen_table: "DCR",
       list_context: [],
       num_of_record: 7,
       num_of_page: 0,
@@ -122,11 +119,13 @@ export default {
       this.$router.push({ name: "AddContext" });
     },
     async deleteSC(_id) {
-      const res = await ContextService.deleteContext(_id);
-      if (res.status == 200) {
-        this.fetchData();
-      } else {
-        alert("Fail!!!");
+      if (confirm("Do you really want to delete?")) {
+        const res = await ContextService.deleteContext(_id);
+        if (res.status == 200) {
+          this.fetchData();
+        } else {
+          alert("Fail!!!");
+        }
       }
     },
     editContext(_id, _name, _type, _description, _content) {
@@ -381,49 +380,7 @@ body {
   color: #ffffff;
   font: 400 0.9em/1.9 "Open Sans", Calibri, Helvetica, Arial, sans-serif;
 }
-.custom-select {
-  position: relative;
-  width: 100%;
-  max-width: 25em;
-  cursor: pointer;
-}
-.select,
-.label {
-  display: block;
-}
-.select {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  padding: 1em;
-  height: 4em;
-  opacity: 0;
-  background: none transparent;
-  border: 0 none;
-}
-.label {
-  /* position: relative; */
-  padding: 1em;
-  border-radius: 0.5em;
-  cursor: pointer;
-}
-.label::after {
-  content: "▼";
-  position: absolute;
-  right: 0;
-  bottom: 13px;
-  padding: 1em;
-  /* border-left: 1px solid; */
-  height: 1.5px;
-}
-.open .label::after {
-  content: "▲";
-}
-.select-1 {
-  border: 1px solid;
-  background: #fcfcfc;
-  border-bottom: 0.25em solid darken(#0bf09c, 10);
-}
+
 h2 {
   text-align: center;
   margin-bottom: 2%;
@@ -439,6 +396,12 @@ h2 {
 #select-section {
   position: relative;
   left: 8%;
+}
+.select-custom {
+  height: 35px;
+  width: 300px;
+  border-radius: 10px;
+  border: 2px solid black;
 }
 .material-icons {
   position: relative;

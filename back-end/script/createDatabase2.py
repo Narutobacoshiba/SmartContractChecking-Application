@@ -1,14 +1,14 @@
 import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
-    user="admin",
+    user="root",
     passwd = '123456',
-    database="solidityTocpn"
+    database="soliditycpn"
 )
 mycursor = db.cursor()
 
 #CheckedBatchSC table
-mycursor.execute("DROP TABLE CheckedBatchSC")
+
 mycursor.execute("""
 CREATE TABLE CheckedBatchSC (
 cbsid nvarchar(64) primary key,
@@ -25,7 +25,6 @@ result text
 """)
 
 #VulnerabilitySetting table
-mycursor.execute("DROP TABLE VulnerabilitySetting")
 mycursor.execute("""
 CREATE TABLE VulnerabilitySetting (
 vusid nvarchar(64) primary key,
@@ -40,7 +39,7 @@ formula_content text
 """)
 
 #CPNContext table
-mycursor.execute("DROP TABLE CPNContext")
+
 mycursor.execute("""
 CREATE TABLE CPNContext (
 ccid nvarchar(64) primary key,
@@ -53,7 +52,7 @@ description text
 """)
 
 #CheckedSmartContractDetail table
-mycursor.execute("DROP TABLE CheckedSmartContractDetail")
+
 mycursor.execute("""
 CREATE TABLE CheckedSmartContractDetail (
 cscid int primary key AUTO_INCREMENT,
@@ -63,7 +62,7 @@ cbsid nvarchar(64) references CheckedBatchSC(cbsid)
 """)
 
 #LNAFile table
-mycursor.execute("DROP TABLE LNAFile")
+
 mycursor.execute("""
 CREATE TABLE LNAFile (
 lnid nvarchar(64) primary key,
@@ -75,7 +74,7 @@ prop_content text
 """)
 
 #InitialMarking table
-mycursor.execute("DROP TABLE InitialMarking")
+
 mycursor.execute("""
 CREATE TABLE InitialMarking (
 imid nvarchar(64) primary key,
@@ -85,7 +84,7 @@ IM_type nvarchar(50)
 """)
 
 #Balance table
-mycursor.execute("DROP TABLE Balance")
+
 mycursor.execute("""
 CREATE TABLE Balance (
 blid int primary key AUTO_INCREMENT,
@@ -99,7 +98,7 @@ imid nvarchar(64) references InitialMarking(imid)
 """)
 
 #IMFunction table
-mycursor.execute("DROP TABLE IMFunction")
+
 mycursor.execute("""
 CREATE TABLE IMFunction (
 imfid nvarchar(64) primary key,
@@ -112,7 +111,7 @@ imid nvarchar(64) references InitialMarking(imid)
 """)
 
 #IMArgument table
-mycursor.execute("DROP TABLE IMArgument")
+
 mycursor.execute("""
 CREATE TABLE IMArgument (
 imaid int primary key AUTO_INCREMENT,

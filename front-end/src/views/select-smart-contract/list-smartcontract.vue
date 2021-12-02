@@ -12,8 +12,9 @@
     <div id="first-section"></div>
     <div id="second-section">
       <div class="middle-section">
-        <div>
-          <label for="date-picker">Date</label>
+        <div id="date">
+          <h5>Date</h5>
+          <label for="date-picker"></label>
           <date-picker
             id="date-picker"
             v-model="time"
@@ -34,9 +35,6 @@
     <div id="third-section">
       <div id="table-section">
         <div id="table-name">
-          <div id="add-button" @click="addSmartContract" v-if="showAddButton">
-            Add
-          </div>
           <p>Smart Contract List</p>
         </div>
         <div id="table-body">
@@ -50,7 +48,7 @@
           <div id="table-content">
             <div
               class="table-row"
-              v-for="(i, idx) in list_smart_contracts.common"
+              v-for="(i, idx) in this.listdata"
               :key="i.id"
             >
               <div class="index-cell table-cell">{{ idx + 1 }}</div>
@@ -135,13 +133,6 @@ export default {
       }
       return "Invalid Table";
     },
-    showAddButton() {
-      return (
-        this.chosen_table != "pending" &&
-        (this.chosen_table != "common" ||
-          this.$store.state.user.currentUser.role == "admin")
-      );
-    },
     isSuperior() {
       return this.$store.state.user.currentUser.role == "admin";
     },
@@ -182,6 +173,13 @@ export default {
     numOfPage() {
       return Math.ceil(this.numOfItems / this.num_of_record);
     },
+    listdata() {
+      console.log("ditt con me cm");
+      if (this.chosen_table == "common") return this.list_smart_contracts.common;
+      if (this.chosen_table == "private") return this.list_smart_contracts.private;
+      if (this.chosen_table == "pending") return this.list_smart_contracts.pending;
+      return [];
+    },
   },
   methods: {
     routing(param) {
@@ -192,9 +190,15 @@ export default {
     async fetchData() {
       const res = await SmartContractService.getAllSmartContract();
       this.list_smart_contracts.common = res.data.filter(
-        (i) => i.type == this.chosen_table
+        (i) => i.type == "common"
       );
-      console.log(this.list_smart_contracts.common);
+      this.list_smart_contracts.private = res.data.filter(
+        (i) => i.type == "private"
+      );
+      this.list_smart_contracts.pending = res.data.filter(
+        (i) => i.type == "pending"
+      );
+      console.log("oke");
     },
     inc(value) {
       return value + 1;
@@ -233,9 +237,11 @@ export default {
       });
     },
     async deleteSC(sc_id) {
-      const res = await SmartContractService.deleteSmartContract(sc_id);
-      if (res.status == 200) {
-        this.fetchData();
+      if (confirm("Do you really want to delete?")) {
+        const res = await SmartContractService.deleteSmartContract(sc_id);
+        if (res.status == 200) {
+          this.fetchData();
+        }
       }
     },
     cfDeleteSC() {
@@ -503,10 +509,10 @@ body {
   font: 400 0.9em/1.9 "Open Sans", Calibri, Helvetica, Arial, sans-serif;
 }
 
-.select-custom{
+.select-custom {
   height: 35px;
   width: 300px;
   border-radius: 10px;
-  border:2px solid black;
+  border: 2px solid black;
 }
 </style>

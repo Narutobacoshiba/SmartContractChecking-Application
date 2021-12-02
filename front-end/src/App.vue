@@ -12,7 +12,7 @@ export default {
   components: {NavBar},
   data(){
     return{
-      sngPage: {"Index":true,"Login":true, "Register": true, "RoadMap": true, "ListSC":true, "ListContext":true, "ListLTL":true}
+      sngPage: {"Index":true,"Login":true, "Register": true, "RoadMap": true, "ListSC":true, "ListContext":true, "ListLTL":true, "AddSC":true}
     }
   },
   computed: {
