@@ -14,7 +14,7 @@
         <div class="col-9">
           <select name="" class="form-control" id="" v-model="type">
             <option value="DCR">DCR</option>
-            <option value="BPMN">BPMN</option>
+            <option value="CPN">CPN</option>
           </select>
         </div>
       </div>

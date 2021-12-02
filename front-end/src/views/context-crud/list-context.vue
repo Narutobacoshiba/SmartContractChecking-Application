@@ -49,7 +49,7 @@
           <div id="table-content">
             <div
               class="table-row"
-              v-for="(i, idx) in list_context"
+              v-for="(i, idx) in listdata"
               :key="i.ccid"
             >
               <div class="index-cell table-cell">{{ idx + 1 }}</div>
@@ -109,6 +109,11 @@ export default {
       scDelete: null,
       time: null,
     };
+  },
+  computed: {
+    listdata(){
+      return this.list_context.filter((item) => item.context_type == this.chosen_table)
+    }
   },
   mounted() {
     this.fetchData();
