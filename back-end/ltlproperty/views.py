@@ -21,6 +21,7 @@ class GetLTLTemplateAPIView(APIView):
                 temp_el["id"] = temp.lteid
                 temp_el["name"] = temp.name
                 temp_el["formula"] = temp.formula
+                temp_el["formula_text"] = temp.formula_text
                 temp_el["template_type"] = temp.template_type
                 temp_el["description"] = temp.description
                 ret.append(temp_el)

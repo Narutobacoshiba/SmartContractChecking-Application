@@ -63,7 +63,7 @@ class GetCheckedBatchAPIView(APIView):
 				try:	
 					context = CPNContext.objects.get(ccid=checkedbatch.ccid)
 					ret["selected-context"] = {"ccid":context.ccid,"name":context.name,"context_type":context.context_type,
-						                   "content":context.content,"description":context.description}
+						                   "content":context.content,"created_timestamp":context.created_timestamp,"description":context.description}
 				except:
 					pass
 					
