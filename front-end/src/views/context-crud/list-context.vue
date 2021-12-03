@@ -206,7 +206,7 @@ export default {
   height: 600px;
   width: 86%;
   margin: 0 auto;
-  margin-top: -500px;
+  margin-top: -606px;
   background-color: transparent;
 }
 #select-section {

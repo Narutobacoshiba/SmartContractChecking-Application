@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <div id="head"><a href="#">Home</a>>Add</div>
     <div id="header">Create a new Context</div>
     <div class="body">
       <div class="row" id="name-section">
@@ -31,7 +30,7 @@
       <div class="row" id="name-section">
         <div class="title col-3">Content</div>
         <div class="col-9">
-          <input class="form-control" type="text" v-model="content" />
+          <textarea name="" id="" cols="30" rows="10" class="form-control" type="text" v-model="content"></textarea>
         </div>
       </div>
       <!-- <div class="editor-area">

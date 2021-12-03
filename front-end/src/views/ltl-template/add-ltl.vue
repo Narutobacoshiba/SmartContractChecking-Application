@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <div id="head"><a href="#">Home</a>><a href="#">LTL</a>>Add</div>
     <div id="header">Create a new LTL Property Template</div>
     <div class="body">
       <div class="row" id="name-section">

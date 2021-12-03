@@ -58,7 +58,7 @@
               <div class="date-modified-cell table-cell">
                 {{ convertDate(i.date_modified) }}
               </div>
-                         <div
+              <div
                 class="action-cell table-cell"
                 v-if="chosen_table == 'pending'"
               >
@@ -194,10 +194,12 @@ export default {
       return Math.ceil(this.numOfItems / this.num_of_record);
     },
     listdata() {
-      console.log("ditt con me cm");
-      if (this.chosen_table == "common") return this.list_smart_contracts.common;
-      if (this.chosen_table == "private") return this.list_smart_contracts.private;
-      if (this.chosen_table == "pending") return this.list_smart_contracts.pending;
+      if (this.chosen_table == "common")
+        return this.list_smart_contracts.common;
+      if (this.chosen_table == "private")
+        return this.list_smart_contracts.private;
+      if (this.chosen_table == "pending")
+        return this.list_smart_contracts.pending;
       return [];
     },
   },
@@ -218,7 +220,6 @@ export default {
       this.list_smart_contracts.pending = res.data.filter(
         (i) => i.type == "pending"
       );
-      console.log("oke");
     },
     inc(value) {
       return value + 1;
@@ -269,25 +270,22 @@ export default {
       let option = this.scDelete.option;
       //   DeleteSmartContracts(sc_id, option);
       if (option == "common") {
-        let list_smart_contracts_afterdelete = this.list_smart_contracts.common.filter(
-          (i) => {
+        let list_smart_contracts_afterdelete =
+          this.list_smart_contracts.common.filter((i) => {
             return i.id != sc_id;
-          }
-        );
+          });
         this.list_smart_contracts.common = list_smart_contracts_afterdelete;
       } else if (option == "private") {
-        let list_smart_contracts_afterdelete = this.list_smart_contracts.private.filter(
-          (i) => {
+        let list_smart_contracts_afterdelete =
+          this.list_smart_contracts.private.filter((i) => {
             return i.id != sc_id;
-          }
-        );
+          });
         this.list_smart_contracts.private = list_smart_contracts_afterdelete;
       } else if (option == "pending") {
-        let list_smart_contracts_afterdelete = this.list_smart_contracts.pending.filter(
-          (i) => {
+        let list_smart_contracts_afterdelete =
+          this.list_smart_contracts.pending.filter((i) => {
             return i.id != sc_id;
-          }
-        );
+          });
         this.list_smart_contracts.pending = list_smart_contracts_afterdelete;
       }
 
@@ -310,7 +308,7 @@ export default {
         },
       });
     },
-     async acceptPendingSC(sc_id, sc_name, sc_code, sc_des) {
+    async acceptPendingSC(sc_id, sc_name, sc_code, sc_des) {
       confirm(
         "Do you want to change the Smart Contract type from Private to Common?"
       );
@@ -416,6 +414,9 @@ export default {
   border: 1px solid #d8d7d7;
   border-radius: 8px;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}
+button {
+  width: 15%;
 }
 #table-name {
   width: 100%;
