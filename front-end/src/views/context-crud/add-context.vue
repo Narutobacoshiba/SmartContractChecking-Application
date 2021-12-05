@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="row" id="name-section">
-        <div class="col-3">Smart Contract Type</div>
+        <div class="col-3">Context Type</div>
         <div class="col-9">
           <select name="" class="form-control" id="" v-model="type">
             <option value="DCR">DCR</option>
@@ -61,7 +61,7 @@ export default {
   },
   data() {
     return {
-      type: "",
+      type: "DCR",
       code: "",
       content: "C:/abc/xyz/Context.xml",
       name: "Context ABC",

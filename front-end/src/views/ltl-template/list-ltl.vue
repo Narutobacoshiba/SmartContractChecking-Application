@@ -163,7 +163,7 @@ export default {
   min-width: 750px;
 }
 #first-section {
-  height: 100px;
+  height: 60px;
   width: 100%;
   background-color: #fafafa;
   border-bottom: 1px solid #d8d7d7;

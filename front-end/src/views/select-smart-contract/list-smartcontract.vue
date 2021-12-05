@@ -9,7 +9,11 @@
         />
       </div>
     </div>
-    <div id="first-section"></div>
+    <div id="first-section">
+      <div id="table-name">
+        <p>Smart Contract List</p>
+      </div>
+    </div>
     <div id="second-section">
       <div class="middle-section">
         <div id="date">
@@ -34,9 +38,6 @@
     </div>
     <div id="third-section">
       <div id="table-section">
-        <div id="table-name">
-          <p>Smart Contract List</p>
-        </div>
         <div id="table-body">
           <div id="table-header" class="table-row">
             <div class="index-cell table-cell">#</div>
@@ -363,7 +364,7 @@ export default {
   min-width: 750px;
 }
 #first-section {
-  height: 100px;
+  height: 130px;
   width: 100%;
   background-color: #fafafa;
   border-bottom: 1px solid #d8d7d7;
@@ -423,7 +424,6 @@ button {
   height: 80px;
   border-bottom: 1px solid #d8d7d7;
   text-align: center;
-  color: #6b6e73;
   padding: 12px;
 }
 #table-name p {
@@ -546,10 +546,11 @@ button {
   margin-top: 200px;
 }
 .middle-section {
-  width: 100%;
+  width: 1300px;
   display: inline-flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+  margin-left: 10%;
 }
 </style>
 

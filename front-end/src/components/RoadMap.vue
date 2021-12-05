@@ -18,8 +18,15 @@
       </div>
     </div>
     <div id="icon-section">
-      <div id="list-icon" class="ic-icon" @click="goList">
+      <div id="dropdown">
+        <div id="list-icon" class="ic-icon">
         <i class="material-icons">view_list</i>
+      </div>
+        <div id="dropdown-content">
+          <p @click="goURL('/list-sc')"><a>Smart Contracts</a></p>
+          <p @click="goURL('/list-context')"><a>Contexts</a></p>
+          <p @click="goURL('/list-ltl')"><a>LTL</a></p>
+        </div>
       </div>
       <div id="ic-separator"></div>
       <div id="roadmap-icon" class="ic-icon" @click="goRoadMap">
@@ -55,8 +62,10 @@ export default {
     goHome(){
       this.$router.push({ name: "Index" })
     },
-    goList(){
-      this.$router.push("/list-sc")
+    goURL(url) {
+      if (this.$route.path != url) {
+        this.$router.push(url);
+      }
     },
     goRoadMap(){
       this.$router.push({ name: "RoadMap" })
@@ -116,7 +125,6 @@ export default {
   background-color: white;
   z-index: 1000;
 }
-
 /* ---- section I ---- */
 #home-section{
   width: 225px;
@@ -133,7 +141,6 @@ export default {
 #progressbar-section{
   width: calc(100% - 386px);
   height: 100%;
-
   border-left: 2px solid #eaedf0;
   border-right: 2px solid #eaedf0;
 }
@@ -161,10 +168,8 @@ export default {
   line-height: 19px;
   font-weight: 500;
 }
-
 #ps-roadmap{
   width: 100%;
-
   margin-top: 10px;
   display: flex;
   justify-content: center;
@@ -177,7 +182,6 @@ export default {
   text-align: center;
   list-style-type: none;
 }
-
 #ps-roadmap li:before {
   content: counter(step);
   counter-increment: step;
@@ -239,7 +243,6 @@ export default {
   height: 100%;
   display: flex;
 }
-
 #ic-separator{
   width: 1px;
   height: 50%;
@@ -256,5 +259,29 @@ export default {
 }
 .ic-icon:hover {
   color: #747779;
+}
+#dropdown{
+  margin-top: 28px;
+}
+#dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 0;
+  z-index: 1;
+}
+#dropdown:hover #dropdown-content {
+  display: block;
+}
+#dropdown-content p {
+  width: 100%;
+  cursor: pointer;
+  margin: 0;
+  padding: 8px 16px;
+}
+#dropdown p:hover {
+  background-color: #f9f9f9;
 }
 </style>
