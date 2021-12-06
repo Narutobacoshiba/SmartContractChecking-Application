@@ -174,7 +174,7 @@ export default {
   width: 100%;
   background-color: #ffffff;
   margin-top: -50px;
-  margin-bottom: 10%;
+  margin-bottom: 11%;
 }
 #third-section {
   height: 600px;

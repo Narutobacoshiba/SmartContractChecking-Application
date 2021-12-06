@@ -9,12 +9,9 @@
         />
       </div>
     </div>
-    <div id="first-section">
-      <div id="table-name">
-        <p>Smart Contract List</p>
-      </div>
-    </div>
+    <div id="first-section"></div>
     <div id="second-section">
+            <h2>Smart Contract List</h2>
       <div class="middle-section">
         <div id="date">
           <h5>Date</h5>
@@ -364,7 +361,7 @@ export default {
   min-width: 750px;
 }
 #first-section {
-  height: 130px;
+  height: 60px;
   width: 100%;
   background-color: #fafafa;
   border-bottom: 1px solid #d8d7d7;
@@ -375,12 +372,13 @@ export default {
   width: 100%;
   background-color: #ffffff;
   margin-top: -50px;
+  margin-bottom: 11%;
 }
 #third-section {
   height: 600px;
   width: 86%;
   margin: 0 auto;
-  margin-top: -500px;
+  margin-top: -606px;
   background-color: transparent;
 }
 #select-section {
@@ -416,14 +414,12 @@ export default {
   border-radius: 8px;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
 }
-button {
-  width: 15%;
-}
 #table-name {
   width: 100%;
   height: 80px;
   border-bottom: 1px solid #d8d7d7;
   text-align: center;
+  color: #6b6e73;
   padding: 12px;
 }
 #table-name p {
@@ -546,11 +542,10 @@ button {
   margin-top: 200px;
 }
 .middle-section {
-  width: 1300px;
+  width: 100%;
   display: inline-flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  margin-left: 10%;
 }
 </style>
 
@@ -564,10 +559,33 @@ body {
   font: 400 0.9em/1.9 "Open Sans", Calibri, Helvetica, Arial, sans-serif;
 }
 
+h2 {
+  text-align: center;
+  margin-bottom: 2%;
+}
+#head {
+  position: relative;
+  left: 8%;
+}
+#date {
+  position: relative;
+  right: 8%;
+}
+#select-section {
+  position: relative;
+  left: 8%;
+}
 .select-custom {
   height: 35px;
   width: 300px;
   border-radius: 10px;
   border: 2px solid black;
+}
+.material-icons {
+  position: relative;
+  left: 25%;
+}
+button {
+  width: 15%;
 }
 </style>

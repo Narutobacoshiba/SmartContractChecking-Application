@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="row" style="margin-bottom: 8%">
-        <div class="title col-3">Formular</div>
+        <div class="title col-3">Formula Text</div>
         <div class="col-9">
           <textarea
             class="form-control"
