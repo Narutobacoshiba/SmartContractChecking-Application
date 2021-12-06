@@ -53,7 +53,7 @@ export default {
       formular_text: "",
       template_type: "",
       description: "",
-      fomular_code:"DemoFomularCode"
+      fomular_code: "DemoFomularCode",
     };
   },
   methods: {
@@ -75,11 +75,11 @@ export default {
           this.fomular_code
         );
         console.log(res);
-        // if (res.status && res.status === 201) {
-        //   this.$router.push({ name: "ListLTL" });
-        // } else {
-        //   alert("Fail");
-        // }
+        if (res.status && res.status === 201) {
+          this.$router.push({ name: "ListLTL" });
+        } else {
+          alert("Fail");
+        }
       } else if (action === "cancel") {
         if (!this.$route.params.parent_path) this.$router.push("/");
         else this.$router.push(this.$route.params.parent_path);
