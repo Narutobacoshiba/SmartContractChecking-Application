@@ -11,6 +11,7 @@
     </div>
     <div id="first-section"></div>
     <div id="second-section">
+            <h2>Smart Contract List</h2>
       <div class="middle-section">
         <div id="date">
           <h5>Date</h5>
@@ -34,9 +35,6 @@
     </div>
     <div id="third-section">
       <div id="table-section">
-        <div id="table-name">
-          <p>Smart Contract List</p>
-        </div>
         <div id="table-body">
           <div id="table-header" class="table-row">
             <div class="index-cell table-cell">#</div>
@@ -58,7 +56,7 @@
               <div class="date-modified-cell table-cell">
                 {{ convertDate(i.date_modified) }}
               </div>
-                         <div
+              <div
                 class="action-cell table-cell"
                 v-if="chosen_table == 'pending'"
               >
@@ -194,10 +192,12 @@ export default {
       return Math.ceil(this.numOfItems / this.num_of_record);
     },
     listdata() {
-      console.log("ditt con me cm");
-      if (this.chosen_table == "common") return this.list_smart_contracts.common;
-      if (this.chosen_table == "private") return this.list_smart_contracts.private;
-      if (this.chosen_table == "pending") return this.list_smart_contracts.pending;
+      if (this.chosen_table == "common")
+        return this.list_smart_contracts.common;
+      if (this.chosen_table == "private")
+        return this.list_smart_contracts.private;
+      if (this.chosen_table == "pending")
+        return this.list_smart_contracts.pending;
       return [];
     },
   },
@@ -218,7 +218,6 @@ export default {
       this.list_smart_contracts.pending = res.data.filter(
         (i) => i.type == "pending"
       );
-      console.log("oke");
     },
     inc(value) {
       return value + 1;
@@ -269,25 +268,22 @@ export default {
       let option = this.scDelete.option;
       //   DeleteSmartContracts(sc_id, option);
       if (option == "common") {
-        let list_smart_contracts_afterdelete = this.list_smart_contracts.common.filter(
-          (i) => {
+        let list_smart_contracts_afterdelete =
+          this.list_smart_contracts.common.filter((i) => {
             return i.id != sc_id;
-          }
-        );
+          });
         this.list_smart_contracts.common = list_smart_contracts_afterdelete;
       } else if (option == "private") {
-        let list_smart_contracts_afterdelete = this.list_smart_contracts.private.filter(
-          (i) => {
+        let list_smart_contracts_afterdelete =
+          this.list_smart_contracts.private.filter((i) => {
             return i.id != sc_id;
-          }
-        );
+          });
         this.list_smart_contracts.private = list_smart_contracts_afterdelete;
       } else if (option == "pending") {
-        let list_smart_contracts_afterdelete = this.list_smart_contracts.pending.filter(
-          (i) => {
+        let list_smart_contracts_afterdelete =
+          this.list_smart_contracts.pending.filter((i) => {
             return i.id != sc_id;
-          }
-        );
+          });
         this.list_smart_contracts.pending = list_smart_contracts_afterdelete;
       }
 
@@ -310,7 +306,7 @@ export default {
         },
       });
     },
-     async acceptPendingSC(sc_id, sc_name, sc_code, sc_des) {
+    async acceptPendingSC(sc_id, sc_name, sc_code, sc_des) {
       confirm(
         "Do you want to change the Smart Contract type from Private to Common?"
       );
@@ -365,7 +361,7 @@ export default {
   min-width: 750px;
 }
 #first-section {
-  height: 100px;
+  height: 60px;
   width: 100%;
   background-color: #fafafa;
   border-bottom: 1px solid #d8d7d7;
@@ -376,12 +372,13 @@ export default {
   width: 100%;
   background-color: #ffffff;
   margin-top: -50px;
+  margin-bottom: 11%;
 }
 #third-section {
   height: 600px;
   width: 86%;
   margin: 0 auto;
-  margin-top: -500px;
+  margin-top: -606px;
   background-color: transparent;
 }
 #select-section {
@@ -562,10 +559,33 @@ body {
   font: 400 0.9em/1.9 "Open Sans", Calibri, Helvetica, Arial, sans-serif;
 }
 
+h2 {
+  text-align: center;
+  margin-bottom: 2%;
+}
+#head {
+  position: relative;
+  left: 8%;
+}
+#date {
+  position: relative;
+  right: 8%;
+}
+#select-section {
+  position: relative;
+  left: 8%;
+}
 .select-custom {
   height: 35px;
   width: 300px;
   border-radius: 10px;
   border: 2px solid black;
+}
+.material-icons {
+  position: relative;
+  left: 25%;
+}
+button {
+  width: 15%;
 }
 </style>

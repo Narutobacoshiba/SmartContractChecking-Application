@@ -125,7 +125,6 @@ export default {
   background-color: white;
   z-index: 1000;
 }
-
 /* ---- section I ---- */
 #home-section{
   width: 225px;
@@ -142,7 +141,6 @@ export default {
 #progressbar-section{
   width: calc(100% - 386px);
   height: 100%;
-
   border-left: 2px solid #eaedf0;
   border-right: 2px solid #eaedf0;
 }
@@ -170,10 +168,8 @@ export default {
   line-height: 19px;
   font-weight: 500;
 }
-
 #ps-roadmap{
   width: 100%;
-
   margin-top: 10px;
   display: flex;
   justify-content: center;
@@ -186,7 +182,6 @@ export default {
   text-align: center;
   list-style-type: none;
 }
-
 #ps-roadmap li:before {
   content: counter(step);
   counter-increment: step;
@@ -248,7 +243,6 @@ export default {
   height: 100%;
   display: flex;
 }
-
 #ic-separator{
   width: 1px;
   height: 50%;

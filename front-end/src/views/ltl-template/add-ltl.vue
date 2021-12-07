@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <div id="head"><a href="#">Home</a>><a href="#">LTL</a>>Add</div>
     <div id="header">Create a new LTL Property Template</div>
     <div class="body">
       <div class="row" id="name-section">
@@ -10,7 +9,7 @@
         </div>
       </div>
       <div class="row" style="margin-bottom: 8%">
-        <div class="title col-3">Fomular Text</div>
+        <div class="title col-3">Formula Text</div>
         <div class="col-9">
           <textarea
             class="form-control"
@@ -54,7 +53,7 @@ export default {
       formular_text: "",
       template_type: "",
       description: "",
-      fomular_code:"DemoFomularCode"
+      fomular_code: "DemoFomularCode",
     };
   },
   methods: {
@@ -76,11 +75,11 @@ export default {
           this.fomular_code
         );
         console.log(res);
-        // if (res.status && res.status === 201) {
-        //   this.$router.push({ name: "ListLTL" });
-        // } else {
-        //   alert("Fail");
-        // }
+        if (res.status && res.status === 201) {
+          this.$router.push({ name: "ListLTL" });
+        } else {
+          alert("Fail");
+        }
       } else if (action === "cancel") {
         if (!this.$route.params.parent_path) this.$router.push("/");
         else this.$router.push(this.$route.params.parent_path);

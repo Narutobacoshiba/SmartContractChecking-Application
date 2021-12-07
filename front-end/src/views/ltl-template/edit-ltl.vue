@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <div id="head"><a href="#">Home</a>><a href="#">LTL</a>>Edit</div>
     <div id="header">Update the LTL Property Template</div>
     <div class="body">
       <div class="row" id="name-section">
@@ -10,7 +9,7 @@
         </div>
       </div>
       <div class="row" style="margin-bottom: 8%">
-        <div class="title col-3">Formular</div>
+        <div class="title col-3">Formula Text</div>
         <div class="col-9">
           <textarea
             class="form-control"

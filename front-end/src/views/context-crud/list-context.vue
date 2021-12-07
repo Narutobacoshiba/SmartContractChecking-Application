@@ -189,7 +189,7 @@ export default {
   min-width: 750px;
 }
 #first-section {
-  height: 100px;
+  height: 60px;
   width: 100%;
   background-color: #fafafa;
   border-bottom: 1px solid #d8d7d7;
@@ -200,13 +200,13 @@ export default {
   width: 100%;
   background-color: #ffffff;
   margin-top: -50px;
-  margin-bottom: 10%;
+  margin-bottom: 11%;
 }
 #third-section {
   height: 600px;
   width: 86%;
   margin: 0 auto;
-  margin-top: -500px;
+  margin-top: -606px;
   background-color: transparent;
 }
 #select-section {
