@@ -112,7 +112,7 @@ place play_cflow {
 }
 place P_play {
 	dom : PLAY_PAR;
-	init : for (i in ADDRESS range 1 .. ADDRESS (users), j in UINT range 0 .. UINT(play_sdr)) <( {{i, UINT(user_balance[i])},play_sender_value[j]})>;
+	init : for (i in ADDRESS range 1 .. ADDRESS (users), j in UINT range 0 .. UINT(play_sdr-1)) <( {{i, UINT(user_balance[UINT(i-1)])},play_sender_value[j]})>;
 }
 
 /*
@@ -189,7 +189,7 @@ transition claimReward {
 transition PLAY_revert1 {
 	in {
 		S : <( s )>;
-		P_Play : <( p )>;
+		P_play : <( p )>;
 		play_cflow : epsilon;
 	}
 	out {
@@ -201,7 +201,7 @@ transition PLAY_revert1 {
 transition PLAY_n_revert1 {
 	in {
 		S : <( s )>;
-		P_Play : <( p )>;
+		P_play : <( p )>;
 		play_cflow : epsilon;
 	}
 	out {
@@ -359,7 +359,7 @@ transition PLAY_return {
 	}
 }
 proposition outOfRange:
-	exists (t in PLAY_currentBalance | t->1 < 0) or exists (t in PLAY_currentBalance | t->1 > 10);
+	play_cflow'card > 0;
 
 
 }

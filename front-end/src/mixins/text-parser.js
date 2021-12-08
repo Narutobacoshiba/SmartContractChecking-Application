@@ -7,7 +7,7 @@ function isEscapeCharacter(ch){
 function isOperatorString(str){
     return typeof str === "string"
            && (str == "F" || str == "G" || str == "U" || str == "!" || str == "|" || str == "&" || str == "=>" ||
-               str == ">" || str == "<" || str == ">=" || str == "<=" || str == "==" || str == "!=")
+               str == ">" || str == "<" || str == ">=" || str == "<=" || str == "==" || str == "!=" || str == "run" || str == "exec")
 }
 
 function isDefaultString(str) {

@@ -48,10 +48,14 @@ const std::list<std::string> BooleanOperator = {
 const std::string GLOBAL_OP = "G";
 const std::string FINNALY_OP = "F";
 const std::string UNTIL_OP = "U";
+const std::string RUN_OP = "run";
+const std::string EXEC_OP = "exec";
 const std::list<std::string> LTLOperator = {
     GLOBAL_OP,
     FINNALY_OP,
-    UNTIL_OP
+    UNTIL_OP,
+    RUN_OP,
+    EXEC_OP
 };
 
 const std::string OR_OP_PROP = "or";
@@ -60,6 +64,8 @@ const std::string NOT_OP_PROP = "not";
 const std::string GLOBAL_OP_PROP = "[]";
 const std::string FINNALY_OP_PROP = "<>";
 const std::string UNTIL_OP_PROP = "until";
+
+
 
 const std::string PROPOSITION_AREA = "proposition";
 

@@ -2,6 +2,6 @@
     "type": "specific",
     "params": {
         "name": "under_over_flow",
-        "formula": "const minThreshold = 0;\nconst maxThreshold = 10;\nproposition outOfRange: ('currentBalance' < minThreshold) | ('currentBalance' > maxThreshold);\nproperty prop: G(! outOfRange);"
+        "formula": "const minThreshold = 0;\nconst maxThreshold = 10\nproposition outOfRange: run 'play'.func\nproperty prop: G(! outOfRange)"
     }
 }

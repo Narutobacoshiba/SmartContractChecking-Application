@@ -92,10 +92,10 @@ export default ({
             this.selected_vul.params.description = ""
         }
         
-        if(!("formula" in this.selected_vul.params)){
-            this.selected_vul.params.formula = "* Please select the template to edit. *"
+        if(!("formula_text" in this.selected_vul.params)){
+            this.selected_vul.params.formula_text = "* Please select the template to edit. *"
         }else{
-            this.formula = this.selected_vul.params.formula
+            this.formula = this.selected_vul.params.formula_text
         }
     },
     mounted(){
@@ -103,7 +103,7 @@ export default ({
     },
     watch: {
         formula(val){
-            this.selected_vul.params.formula = val
+            this.selected_vul.params.formula_text = val
         },
         selected_vul: {
             handler(val){
@@ -141,7 +141,6 @@ export default ({
             try{
                 let response = await LTLTemplate.getLTLTemplate()
                 this.list_template = response.data
-      
             }catch(error){
                 console.log(error)
             }

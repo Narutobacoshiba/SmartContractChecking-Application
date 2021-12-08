@@ -3,7 +3,7 @@
 
 
 int precedence_of_op(std::string _op){
-    if(_op == NOT_OP || _op == GLOBAL_OP || _op == FINNALY_OP){
+    if(_op == NOT_OP || _op == GLOBAL_OP || _op == FINNALY_OP || _op == RUN_OP || _op == EXEC_OP){
         return 2;
     }else if(_op == OR_OP || _op == AND_OP || _op == UNTIL_OP || 
             std::find(ComparisonOperator.begin(), ComparisonOperator.end(), _op) != ComparisonOperator.end()){
@@ -193,9 +193,8 @@ std::vector<std::string> LTLTranslator::getListVariableFromFormula(const std::st
                 std::vector<std::string> expression = splitExpression(prop_def);
                 for(auto it = expression.begin(); it != expression.end(); ++it){
                     std::string op = *it;
-                    if(op.find("'") != std::string::npos){
-                        std::string variable = substr_by_edge(op,"'","'");
-                        ret.push_back(variable);
+                    if(op[0] == '\''){
+                        ret.push_back(op);
                     }
                 }
             }
@@ -250,6 +249,7 @@ std::string LTLTranslator::analysePropositionExpression(const std::string& _exp)
     std::vector<std::string> opr;
     for(auto it = expression.begin(); it != expression.end(); ++it){
         std::string op = *it;
+        
         if(MappingOp.find(op) != MappingOp.end()){
             op = MappingOp[op];
         }
@@ -336,6 +336,34 @@ std::string LTLTranslator::analysePropositionExpression(const std::string& _exp)
                 opr.pop_back();
 
                 opr.push_back(op + " " + first_opr);
+            }else{
+                //error
+            }
+        }else if(*it == RUN_OP){
+            if(opr.size() >= 1){
+                std::string first_opr = opr.back();
+                opr.pop_back();
+                
+                std::string opr_type;
+                std::vector<std::string> temp_split = split_ex(first_opr,".",2);
+                if(temp_split.size() == 2){
+                    opr_type = temp_split[1];
+                }else{
+                    opr_type = "var";
+                }
+
+                std::string opr_name = substr_by_edge(first_opr,"'","'");
+                std::string temp_exp;
+
+                if (opr_type == "var"){
+                    if(is_local_variable(opr_name)){
+                        std::string v = get_local_variable_placetype(opr_name);
+                        temp_exp += v + "'card > 0";
+                    }
+                }else if(opr_type == "func"){
+                    temp_exp += opr_name + "_cflow" + "'card > 0";
+                }
+                opr.push_back(temp_exp);
             }else{
                 //error
             }
@@ -434,7 +462,7 @@ std::vector<std::string> LTLTranslator::splitExpression(const std::string& _exp)
             }  
 
             result.push_back(std::string(1,_exp[cout]));
-        }else if(_exp[cout] == ' ' || _exp[cout] == ';'){
+        }else if(_exp[cout] == ' ' || _exp[cout] == '\n'){
             if(temp.size() > 0){
                 result.push_back(std::string(temp.begin(), temp.end()));
                 temp.clear();

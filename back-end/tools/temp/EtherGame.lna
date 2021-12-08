@@ -175,7 +175,6 @@ EtherGame {/*(cb := 0, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10, v6 := 5) { 
 			PLAY_currentBalance : <( currentBalance )>;
 		}
 		out {
-			PLAY_currentBalance : <( currentBalance )>;
 			S : <( sp.state )>;			
 		}
 		guard : not (currentBalance <= sp.state.finalMileStone);
@@ -299,9 +298,11 @@ EtherGame {/*(cb := 0, v1 := 3, v2 := 2, v3 := 5, v4 := 3, v5 := 10, v6 := 5) { 
 	transition PLAY_return {
 		in {
 			PLAY_P4 : <( sp )>;
+			PLAY_currentBalance : <( currentBalance )>;
 		}
 		out {
-			//S : <( sp.state )>;
+			S : <( sp.state )>;
+			PLAY_currentBalance : <( currentBalance )>;
 		}
 	}
 /*

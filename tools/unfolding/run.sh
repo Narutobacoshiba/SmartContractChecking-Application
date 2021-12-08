@@ -10,3 +10,5 @@ output_PATH='./output/'
 output_NAME='test'
 
 ./unfolding --lna "$lna_PATH" --context "$context_PATH" --context-type "$context_TYPE" --ltl "$ltl_PATH" --sol-ast "$sol_ast_PATH" --lna-json "$lna_json_PATH" --im-json "$im_json_PATH" --output_path "$output_PATH" --output_name "$output_NAME"
+
+#cmd -k

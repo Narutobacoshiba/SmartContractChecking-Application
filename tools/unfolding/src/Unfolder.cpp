@@ -27,7 +27,25 @@ std::vector<std::string> Unfolder::FindUnfoldedFunction(){
             list_required_variables.push_back(variable);
         }
     }else if(ltl_type == "specific"){
-        list_required_variables = LTLTranslator::getListVariableFromFormula(ltl_param.at("formula"));
+        std::vector<std::string> temp = LTLTranslator::getListVariableFromFormula(ltl_param.at("formula"));
+        for(auto it = temp.begin(); it != temp.end(); it++){
+            std::string op = *it;
+            std::string opr_type;
+            std::vector<std::string> temp_split = split_ex(op,".",2);
+            if(temp_split.size() == 2){
+                opr_type = temp_split[1];
+            }else{
+                opr_type = "var";
+            }
+
+            std::string opr_name = substr_by_edge(op,"'","'");
+
+            if(opr_type == "func"){
+                unfolded_func.push_back(opr_name);
+            }else if(opr_type == "var"){
+                list_required_variables.push_back(opr_name);
+            }
+        }
     } 
 
     std::map<std::string, std::string> global_variables;
@@ -57,7 +75,9 @@ std::vector<std::string> Unfolder::FindUnfoldedFunction(){
 
     for(auto it = list_required_variables.begin(); it != list_required_variables.end(); ++it){
         if(global_variables.find(*it) != global_variables.end()){
-            unfolded_func.clear();
+            for(size_t i = 0; i < functions.size(); i++){
+                unfolded_func.push_back(functions[i].at("name"));
+            }
             break;
         }
     }
