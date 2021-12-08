@@ -8,6 +8,13 @@
           <input class="form-control" type="text" v-model="name" />
         </div>
       </div>
+
+      <div class="row" style="margin-bottom: 8%">
+        <div class="title col-3">Formula</div>
+        <div class="col-9" id="formula">
+          <LtlEditor :ltlcode="getLTLContent" @changeContent="getContent" />
+        </div>
+      </div>
       <div class="row" style="margin-bottom: 8%">
         <div class="title col-3">Formula Text</div>
         <div class="col-9">
@@ -46,17 +53,23 @@
 
 <script>
 import { LTLTemplate } from "../../services/ltlproperty.services";
+import LtlEditor from "../../components/LtlEditor.vue";
 export default {
   data() {
     return {
       name: "",
       formular_text: "",
-      template_type: "",
+      formular: "",
+      template_type: "Type0",
       description: "",
       fomular_code: "DemoFomularCode",
     };
   },
+  components: { LtlEditor },
   methods: {
+    getContent(e) {
+      this.formular = e;
+    },
     hashCode(s) {
       var h = 0,
         l = s.length,
@@ -69,10 +82,11 @@ export default {
         const res = await LTLTemplate.createLTLTemplate(
           this.hashCode(this.name),
           this.name,
+          this.formular,
           this.formular_text,
           this.template_type,
           this.description,
-          this.fomular_code
+          //this.fomular_code,
         );
         console.log(res);
         if (res.status && res.status === 201) {
@@ -151,5 +165,8 @@ textarea {
 #head {
   position: relative;
   left: 6%;
+}
+#formula {
+  height: 240px;
 }
 </style>

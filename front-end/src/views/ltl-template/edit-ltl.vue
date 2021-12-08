@@ -9,12 +9,18 @@
         </div>
       </div>
       <div class="row" style="margin-bottom: 8%">
+        <div class="title col-3">Formula</div>
+        <div class="col-9" id="formula">
+          <LtlEditor :ltlcode="getLTLContent" @changeContent="getContent" />
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 8%">
         <div class="title col-3">Formula Text</div>
         <div class="col-9">
           <textarea
             class="form-control"
             type="text"
-            v-model="fomular"
+            v-model="fomular_text"
           ></textarea>
         </div>
       </div>
@@ -47,17 +53,19 @@
 
 <script>
 import { LTLTemplate } from "../../services/ltlproperty.services";
+import LtlEditor from "../../components/LtlEditor.vue";
 export default {
   data() {
     return {
       id: this.$route.params.l_id,
       name: this.$route.params.l_name,
       fomular: this.$route.params.l_fomular,
+      fomular_text: this.$route.params.fomular_text,
       description: this.$route.params.l_description,
-      fomular_text: this.$route.params.l_fomular_text,
     };
   },
   // components: { EditorSc },
+  components: { LtlEditor },
   methods: {
     async clickHandler(action) {
       if (action === "save") {
@@ -80,8 +88,15 @@ export default {
         else this.$router.push(this.$route.params.parent_path);
       }
     },
+    getContent(e){
+            this.fomular = e
+        },
   },
-  computed: {},
+  computed: {
+    getLTLContent(){
+            return this.fomular
+        },
+  },
 };
 </script>
 <style scoped>
@@ -147,5 +162,8 @@ textarea {
 #head {
   position: relative;
   left: 6%;
+}
+#formula {
+  height: 240px;
 }
 </style>

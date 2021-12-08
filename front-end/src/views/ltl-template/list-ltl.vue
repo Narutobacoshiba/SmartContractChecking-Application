@@ -50,14 +50,26 @@
                 {{ convertDate(i.created_timestamp) }}
               </div>
               <div class="action-cell table-cell">
-                <div class="item">
-                  <i>{{ i.description }}</i>
-                  <i
-                    class="material-icons"
-                    @click="editLTL(i.id, i.name, i.formula, i.description,i.formula_text)"
-                    >edit</i
-                  >
-                  <i class="material-icons" @click="deleteSC(i.id)">delete</i>
+                <div class="row item">
+                  <div class="col-8">
+                    <i>{{ i.description }}</i>
+                  </div>
+                  <div class="col-4">
+                    <i
+                      class="material-icons"
+                      @click="
+                        editLTL(
+                          i.id,
+                          i.name,
+                          i.formula,
+                          i.formula_text,
+                          i.description,
+                        )
+                      "
+                      >edit</i
+                    >
+                    <i class="material-icons" @click="deleteSC(i.id)">delete</i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -97,22 +109,24 @@ export default {
   },
   methods: {
     async deleteSC(_id) {
-      const res = await LTLTemplate.deleteLTLTemplate(_id);
-      if (res.status === 200) {
-        this.fetchData();
-      } else {
-        alert("FAill");
+      if (confirm("Do you really want to delete?")) {
+        const res = await LTLTemplate.deleteLTLTemplate(_id);
+        if (res.status === 200) {
+          this.fetchData();
+        } else {
+          alert("FAill");
+        }
       }
     },
-    editLTL(_id, _name, _formular, _description, _f_text) {
+    editLTL(_id, _name, _formular, _formular_text, _description) {
       this.$router.push({
         name: "EditLTL",
         params: {
           l_id: _id,
           l_name: _name,
           l_fomular: _formular,
+          fomular_text: _formular_text,
           l_description: _description,
-          fomular_text: _f_text,
         },
       });
     },

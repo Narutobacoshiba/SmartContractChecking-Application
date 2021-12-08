@@ -13,12 +13,12 @@ export class LTLTemplate extends BaseService {
       throw new ErrorWrapper(error)
     }
   }
-  static async createLTLTemplate(id, l_name, l_formula, l_template_type, l_description, fomular_code) {
+  static async createLTLTemplate(id, l_name, formular, l_formula, l_template_type, l_description,) {
     const param = {
       lteid: id,
       name: l_name,
-      formula: l_formula,
-      formula_text: fomular_code,
+      formula: formular,
+      formula_text: l_formula,
       template_type: l_template_type,
       description: l_description,
       created_timestamp: Date.now()
