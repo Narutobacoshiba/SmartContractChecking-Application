@@ -47,11 +47,7 @@
             <div class="action-cell table-cell">Description</div>
           </div>
           <div id="table-content">
-            <div
-              class="table-row"
-              v-for="(i, idx) in listdata"
-              :key="i.ccid"
-            >
+            <div class="table-row" v-for="(i, idx) in listdata" :key="i.ccid">
               <div class="index-cell table-cell">{{ idx + 1 }}</div>
               <div class="name-cell table-cell">{{ i.name }}</div>
               <div class="name-cell table-cell">{{ i.context_type }}</div>
@@ -60,22 +56,28 @@
                 {{ convertDate(i.created_timestamp) }}
               </div>
               <div class="action-cell table-cell">
-                <div>
-                  <i>{{ i.description }}</i>
-                  <i
-                    class="material-icons"
-                    @click="
-                      editContext(
-                        i.ccid,
-                        i.name,
-                        i.context_type,
-                        i.description,
-                        i.content
-                      )
-                    "
-                    >edit</i
-                  >
-                  <i class="material-icons" @click="deleteSC(i.ccid)">delete</i>
+                <div class="row item">
+                  <div class="col-8">
+                    <i>{{ i.description }}</i>
+                  </div>
+                  <div class="col-4">
+                    <i
+                      class="material-icons"
+                      @click="
+                        editContext(
+                          i.ccid,
+                          i.name,
+                          i.context_type,
+                          i.description,
+                          i.content
+                        )
+                      "
+                      >edit</i
+                    >
+                    <i class="material-icons" @click="deleteSC(i.ccid)"
+                      >delete</i
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -111,9 +113,11 @@ export default {
     };
   },
   computed: {
-    listdata(){
-      return this.list_context.filter((item) => item.context_type == this.chosen_table)
-    }
+    listdata() {
+      return this.list_context.filter(
+        (item) => item.context_type == this.chosen_table
+      );
+    },
   },
   mounted() {
     this.fetchData();
@@ -148,7 +152,7 @@ export default {
     async fetchData() {
       const res = await ContextService.getAllContext();
       this.list_context = res.data;
-      console.log(this.list_context)
+      console.log(this.list_context);
     },
     inc(value) {
       return value + 1;
@@ -310,6 +314,11 @@ export default {
   padding: 8px;
   color: #858383;
   cursor: pointer;
+}
+.item {
+  display: flex;
+  flex-direction: row;
+  width: 76%;
 }
 .table-cell {
   overflow: hidden;

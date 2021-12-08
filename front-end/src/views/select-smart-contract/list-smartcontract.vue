@@ -11,7 +11,7 @@
     </div>
     <div id="first-section"></div>
     <div id="second-section">
-            <h2>Smart Contract List</h2>
+      <h2>Smart Contract List</h2>
       <div class="middle-section">
         <div id="date">
           <h5>Date</h5>
@@ -87,16 +87,20 @@
                 </div>
               </div>
               <div class="action-cell table-cell" v-else>
-                <div>
-                  <i>{{ i.description }}</i>
-                  <i
-                    class="material-icons"
-                    @click="
-                      editSC(i.id, i.name, i.content, i.description, i.type)
-                    "
-                    >edit</i
-                  >
-                  <i class="material-icons" @click="deleteSC(i.id)">delete</i>
+                <div class="row item">
+                  <div class="col-8">
+                    <i>{{ i.description }}</i>
+                  </div>
+                  <div class="col-4">
+                    <i
+                      class="material-icons"
+                      @click="
+                        editSC(i.id, i.name, i.content, i.description, i.type)
+                      "
+                      >edit</i
+                    >
+                    <i class="material-icons" @click="deleteSC(i.id)">delete</i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -459,6 +463,11 @@ export default {
   align-items: center;
   color: #585858;
   border-bottom: 0.5px solid #d8d7d7;
+}
+.item {
+  display: flex;
+  flex-direction: row;
+  width: 76%;
 }
 .index-cell {
   height: 24px;

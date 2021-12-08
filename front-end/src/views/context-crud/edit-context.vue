@@ -30,7 +30,7 @@
       <div class="row" id="name-section">
         <div class="title col-3">Content</div>
         <div class="col-9">
-          <input class="form-control" type="text" v-model="content" />
+          <textarea v-model="content" name="" id="" class="form-control" cols="30" rows="10"></textarea>
         </div>
       </div>
       <!-- <div class="editor-area">

@@ -85,7 +85,7 @@ export default {
           this.formular,
           this.formular_text,
           this.template_type,
-          this.description,
+          this.description
           //this.fomular_code,
         );
         console.log(res);
@@ -121,6 +121,7 @@ export default {
   flex-direction: column;
   width: 700px;
   margin: auto;
+  padding-bottom: 50px;
 }
 .title {
   font-size: 18px;
