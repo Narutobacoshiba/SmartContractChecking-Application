@@ -178,7 +178,7 @@ export default ({
                     }
                     ret_initialMarking["smart_contract"].push(sc)
                 }
-                console.log(ret_initialMarking)
+                
                 let response = await ToolsServices.generateCpnModel(selectedSc,selectedContext,selectedVulnerability,ret_initialMarking)
                 
                 this.response_message = "The generating process completed successfully"

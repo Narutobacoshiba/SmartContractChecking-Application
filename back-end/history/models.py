@@ -27,6 +27,7 @@ class VulnerabilitySetting(models.Model):
 	formula_name = models.CharField(max_length=200, db_collation='utf8_general_ci', null=True, blank=True)
 	formula_description = models.TextField(blank=True, null=True)
 	formula_content = models.TextField(blank=True, null=True)
+	formula_text = models.TextField(blank=True, null=True)
 	
 	class Meta:
 		managed = False

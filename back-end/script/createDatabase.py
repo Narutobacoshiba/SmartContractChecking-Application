@@ -1,9 +1,9 @@
 import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
-    user="root",
+    user="hadt",
     passwd = '123456',
-    database="soliditycpn"
+    database="solidityTocpn"
 )
 mycursor = db.cursor()
 
@@ -279,7 +279,7 @@ description text
 sqlFomular = "INSERT INTO LTLTemplate (lteid,name,formula,formula_text,created_timestamp,template_type,description) VALUES (%s,%s,%s,%s,%s,%s,%s)"
 multi = [ 
     ("82cc3c00eb933b3b679a02521d9863bbfbd14292cbb62d9ce688d2844c93b6fe","interger_overflow_underflow", "const minThreshold = 0;\nconst maxThreshold = 100;\nproposition outOfRange: ('variable' < minThreshold) | ('variable' > maxThreshold);\nproperty prop: G(! outOfRange);",
-    "test","1607110465663","type0","outOfRange(x) is a proposition defining the conditions for overflow and underflow for the variable x w.r.t the range of its type which we delimit by defining lower and higher thresholds (minThreshold and maxThreshold respec tively).")
+    "the case where 'variable' is greater than 100 or less than 0 will never happen","1607110465663","type0","outOfRange(x) is a proposition defining the conditions for overflow and underflow for the variable x w.r.t the range of its type which we delimit by defining lower and higher thresholds (minThreshold and maxThreshold respec tively).")
 ]
 mycursor.executemany(sqlFomular,multi)
 

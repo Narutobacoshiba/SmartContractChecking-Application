@@ -1,9 +1,9 @@
 import mysql.connector
 db = mysql.connector.connect(
     host = "localhost",
-    user="root",
+    user="hadt",
     passwd = '123456',
-    database="soliditycpn"
+    database="solidityTocpn"
 )
 mycursor = db.cursor()
 
@@ -34,7 +34,8 @@ subtype nvarchar(50),
 formula_id nvarchar(64),
 formula_name nvarchar(200), 
 formula_description text,
-formula_content text
+formula_content text,
+formula_text text
 )
 """)
 

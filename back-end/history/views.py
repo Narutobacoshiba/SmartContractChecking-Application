@@ -72,7 +72,7 @@ class GetCheckedBatchAPIView(APIView):
 					vulnerability = VulnerabilitySetting.objects.get(vusid=checkedbatch.vusid)
 					ret["selected-vulnerability"] = {"type":vulnerability.type,"subtype":vulnerability.subtype,
 						                         "id":vulnerability.formula_id,"name":vulnerability.formula_name,
-						                         "description":vulnerability.formula_description,"content":vulnerability.formula_content}
+						                         "description":vulnerability.formula_description,"content":vulnerability.formula_content,"content_text":vulnerability.formula_text}
 				except:
 					pass
 				            

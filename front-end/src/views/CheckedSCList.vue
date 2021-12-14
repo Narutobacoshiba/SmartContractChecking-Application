@@ -131,11 +131,11 @@ export default({
             vul_set.subtype = vul.subtype
             vul_set.params["name"] = vul.name
             if(vul_set.type == "general"){
-                console.log(JSON.parse(vul.content))
                 vul_set.params["inputs"] = JSON.parse(vul.content)
             }else if(vul_set.type == "specific"){
                 vul_set.params["description"] = vul.description
                 vul_set.params["formula"] = vul.content
+                vul_set.params["formula_text"] = vul.content_text
                 if(vul_set.subtype == "temp"){
                     vul_set.params["id"] = vul.id
                 }

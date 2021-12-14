@@ -23,5 +23,6 @@ export default {
   position: absolute;
   margin-top: 90px;
   width: 100%;
+  min-width: 900px;
 }
 </style>

@@ -71,11 +71,13 @@ export default ({
                 ret["formula_name"] = selectedVulnerability.params.name
                 ret["formula_description"] = selectedVulnerability.params.description
                 ret["formula_content"] = selectedVulnerability.params.formula
+                ret["formula_text"] = selectedVulnerability.params.formula_text
             }else{
                 ret["formula_name"] = selectedVulnerability.params.name
                 ret["formula_id"] = ""
                 ret["formula_description"] = selectedVulnerability.params.description
                 ret["formula_content"] = JSON.stringify(selectedVulnerability.params.inputs)
+                ret["formula_text"] = ""
             }
             
             return ret

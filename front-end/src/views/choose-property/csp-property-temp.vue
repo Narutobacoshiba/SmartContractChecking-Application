@@ -41,9 +41,9 @@
                 <div class="cspsn-first-cell">
                     <p>Formula</p>
                 </div>
-                <div class="cspsn-second-cell">
+                <div class="cspsn-second-cell over-flow-cell">
                     <div id="cspsn-ltl-editor">
-                        <LtlEditor :ltlcode="getLTLContent" @changeContent="getContent"/>
+                        <LtlEditor :ltlcode="getLTLContent" :ltlcodetext="getLTLTextContent" @changeContent="getContent"/>
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
 
 
 <script>
-import LtlEditor from "../../components/LtlEditor.vue";
+import LtlEditor from "../../components/LtlTextEditor.vue";
 import {LTLTemplate} from "../../services/ltlproperty.services"
 export default ({
     components: { LtlEditor},
@@ -75,7 +75,7 @@ export default ({
             selected_vul: {},
             selected_template: null,
             list_template: [],
-            formula: "* Please select the template to edit. *",
+            formula: {raw:"* Please select the template to edit. *",text:"* Please select the template to edit. *"},
         }
     },
     beforeMount(){
@@ -95,15 +95,25 @@ export default ({
         if(!("formula_text" in this.selected_vul.params)){
             this.selected_vul.params.formula_text = "* Please select the template to edit. *"
         }else{
-            this.formula = this.selected_vul.params.formula_text
+            this.formula['text'] = this.selected_vul.params.formula_text
+        }
+
+        if(!("formula" in this.selected_vul.params)){
+            this.selected_vul.params.formula = "* Please select the template to edit. *"
+        }else{
+            this.formula['raw'] = this.selected_vul.params.formula
         }
     },
     mounted(){
         this.getLTLTemplate()
     },
     watch: {
-        formula(val){
-            this.selected_vul.params.formula_text = val
+        formula: {
+            handler(val){
+                this.selected_vul.params.formula_text = val['text']
+                this.selected_vul.params.formula = val['raw']
+            },
+            deep: true
         },
         selected_vul: {
             handler(val){
@@ -125,7 +135,12 @@ export default ({
             return ""
         },
         getLTLContent(){
-            return this.formula
+            return this.formula['raw']
+            /* return this.formula */
+        },
+        getLTLTextContent(){
+            return this.formula['text']
+            /* return this.formula */
         },
         getLTLDescription(){
             for(let i=0; i<this.list_template.length; i++){
@@ -141,6 +156,7 @@ export default ({
             try{
                 let response = await LTLTemplate.getLTLTemplate()
                 this.list_template = response.data
+                console.log(this.list_template)
             }catch(error){
                 console.log(error)
             }
@@ -150,7 +166,8 @@ export default ({
                 this.selected_template = id
                 for(let i=0; i<this.list_template.length; i++){
                     if(this.list_template[i].id == this.selected_template){
-                        this.formula = this.list_template[i].formula
+                        this.formula['raw'] = this.list_template[i].formula
+                        this.formula['text'] = this.list_template[i].formula_text
                         this.selected_vul.params.description = this.list_template[i].description
                         this.selected_vul.params.id = this.list_template[i].id
                         break
@@ -158,8 +175,9 @@ export default ({
                 }
             }
         },
-        getContent(e){
-            this.formula = e
+        getContent(raw, text){
+            this.formula['raw'] = raw
+            this.formula['text'] = text
         },
         goNextPage(){
             this.$router.push({ name: "InitialMarkingSetting"})
@@ -197,6 +215,11 @@ export default ({
 .cspsn-second-cell{
     flex-basis: 80%;
 }
+.over-flow-cell{
+    overflow: auto;
+}
+
+
 #cspsn-row-name{
     height: 80px;
 }

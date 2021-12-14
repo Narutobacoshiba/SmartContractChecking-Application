@@ -18,12 +18,12 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("auth/", include("account.urls")),
-    path("smartcontract/", include("smartcontract.urls")),
-    path("tools/", include("tools.urls")),
-    path("ltlproperty/", include("ltlproperty.urls")),
-    path("history/", include("history.urls")),
-    path("context/", include("context.urls")),
+    path("api/auth/", include("account.urls")),
+    path("api/smartcontract/", include("smartcontract.urls")),
+    path("api/tools/", include("tools.urls")),
+    path("api/ltlproperty/", include("ltlproperty.urls")),
+    path("api/history/", include("history.urls")),
+    path("api/context/", include("context.urls")),
 ]
 
 

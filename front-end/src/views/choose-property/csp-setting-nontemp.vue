@@ -16,7 +16,7 @@
                 <div class="cspsn-first-cell">
                     <p>Formula</p>
                 </div>
-                <div class="cspsn-second-cell">
+                <div class="cspsn-second-cell over-flow-cell">
                     <div id="cspsn-ltl-editor">
                         <LtlEditor :ltlcode="selected_vul.params.formula" @changeContent="getContent"/>
                     </div>
@@ -109,6 +109,9 @@ export default ({
 }
 .cspsn-second-cell{
     flex-basis: 80%;
+}
+.over-flow-cell{
+    overflow: auto;
 }
 
 #cspsn-row-name{
