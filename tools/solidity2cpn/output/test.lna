@@ -1,0 +1,340 @@
+EtherGame {
+
+/**************************
+ *** Colour Definitions ***
+ **************************/
+
+// DEFAULT COLORS DEFINITIONS
+type ADDRESS : range 0 .. 100;
+type UINT : range 0 .. (int'last);
+type USER : struct { ADDRESS adr;UINT balance;};
+
+// SMARTCONTRACT COLORS DEFINITIONS
+type STRUCT_REDEEMABLEETHER : struct { ADDRESS adr;UINT uint;};
+type LIST_REDEEMABLEETHER : list[nat] of STRUCT_REDEEMABLEETHER with capacity 50;
+type STATE : struct { UINT finalMileStone;UINT finalReward;UINT mileStone1Reward;UINT mileStone2Reward;UINT payoutMileStone1;UINT payoutMileStone2;LIST_REDEEMABLEETHER redeemableEther;};
+type PLAY_PAR : struct { USER sender;UINT value;};
+type PLAY_STATE : struct { STATE state;PLAY_PAR par;};
+type CLAIMREWARD_PAR : struct { USER sender;UINT value;};
+type CLAIMREWARD_STATE : struct { STATE state;CLAIMREWARD_PAR par;};
+
+/****************************
+ *** Function Definitions ***
+ ****************************/
+function getLIST_REDEEMABLEETHERIndex (LIST_REDEEMABLEETHER gis, ADDRESS adr) -> int{
+	int i := 0;
+	while (i<gis'size and gis[i].adr!=adr) i := i+1;
+	if(i<gis'size)
+		return i;
+	else
+		return -1;
+}
+function getLIST_REDEEMABLEETHERIndex (LIST_REDEEMABLEETHER gis, ADDRESS adr) -> int{
+	int i := 0;
+	while (i<gis'size and gis[i].adr!=adr) i := i+1;
+	if(i<gis'size)
+		return i;
+	else
+		return -1;
+}
+function getLIST_REDEEMABLEETHERIndex (LIST_REDEEMABLEETHER gis, ADDRESS adr) -> int{
+	int i := 0;
+	while (i<gis'size and gis[i].adr!=adr) i := i+1;
+	if(i<gis'size)
+		return i;
+	else
+		return -1;
+}
+function getLIST_REDEEMABLEETHERIndex (LIST_REDEEMABLEETHER gis, ADDRESS adr) -> int{
+	int i := 0;
+	while (i<gis'size and gis[i].adr!=adr) i := i+1;
+	if(i<gis'size)
+		return i;
+	else
+		return -1;
+}
+function getLIST_REDEEMABLEETHERIndex (LIST_REDEEMABLEETHER gis, ADDRESS adr) -> int{
+	int i := 0;
+	while (i<gis'size and gis[i].adr!=adr) i := i+1;
+	if(i<gis'size)
+		return i;
+	else
+		return -1;
+}
+
+/*************************
+ *** Place Definitions ***
+ *************************/
+
+/*
+ * Function: state
+ */
+place S {
+	dom : STATE;
+	init : <({20 ether,10 ether,4 ether,6 ether,6 ether,10 ether,})>;
+}
+
+/*
+ * Function: play
+ */
+place PLAY_P1 {
+	dom : PLAY_STATE;
+}
+place PLAY_VD1 {
+	dom : PLAY_STATE;
+}
+place PLAY_currentBalance {
+	dom : UINT;
+}
+place PLAY_P2 {
+	dom : PLAY_STATE;
+}
+place PLAY_PT1 {
+	dom : PLAY_STATE;
+}
+place PLAY_PF1 {
+	dom : PLAY_STATE;
+}
+place PLAY_AS1 {
+	dom : PLAY_STATE;
+}
+place PLAY_PT2 {
+	dom : PLAY_STATE;
+}
+place PLAY_PF2 {
+	dom : PLAY_STATE;
+}
+place PLAY_AS2 {
+	dom : PLAY_STATE;
+}
+place PLAY_PT3 {
+	dom : PLAY_STATE;
+}
+place PLAY_PF3 {
+	dom : PLAY_STATE;
+}
+place PLAY_AS3 {
+	dom : PLAY_STATE;
+}
+
+/*
+ * Function: claimReward
+ */
+place CLAIMREWARD_P1 {
+	dom : CLAIMREWARD_STATE;
+}
+place CLAIMREWARD_P2 {
+	dom : CLAIMREWARD_STATE;
+}
+place CLAIMREWARD_AS1 {
+	dom : CLAIMREWARD_STATE;
+}
+
+/******************************
+ *** Transition Definitions ***
+ ******************************/
+
+/*
+ * Function: play
+ */
+transition PLAY_revert1 {
+	in {
+		P_PLAY : <(p)>;
+		S : <(s)>;
+	}
+	out {
+		S : <(s)>;
+	}
+	guard : not((p.value) = (1 ether));
+}
+transition PLAY_n_revert1 {
+	in {
+		P_PLAY : <(p)>;
+		S : <(s)>;
+	}
+	out {
+		PLAY_P1 : <({s,p})>;
+	}
+	guard : (p.value) = (1 ether);
+}
+transition PLAY_vd1 {
+	in {
+		PLAY_P1 : <(sp)>;
+	}
+	out {
+		PLAY_VD1 : <(sp)>;
+		PLAY_currentBalance : <((.balance) + (sp.par.value))>;
+	}
+}
+transition PLAY_revert2 {
+	in {
+		PLAY_currentBalance : <(currentBalance)>;
+		PLAY_VD1 : <(sp)>;
+	}
+	out {
+		S : <(sp.state)>;
+	}
+	guard : not((currentBalance) <= (sp.state.finalMileStone));
+}
+transition PLAY_n_revert2 {
+	in {
+		PLAY_currentBalance : <(currentBalance)>;
+		PLAY_VD1 : <(sp)>;
+	}
+	out {
+		PLAY_P2 : <(sp)>;
+	}
+	guard : (currentBalance) <= (sp.state.finalMileStone);
+}
+transition PLAY_tT1 {
+	in {
+		PLAY_currentBalance : <(currentBalance)>;
+		PLAY_P2 : <(sp)>;
+	}
+	out {
+		PLAY_PT1 : <(sp)>;
+	}
+	guard : (currentBalance) = (sp.state.payoutMileStone1);
+}
+transition PLAY_as1 {
+	in {
+		PLAY_PT1 : <(sp)>;
+	}
+	out {
+		PLAY_AS1 : <(sp_temp)>;
+	}
+	let {
+		PLAY_STATE sp_temp := sp;
+		sp_temp.state.redeemableEther[getLIST_REDEEMABLEETHERIndex(sp.state.redeemableEther,sp.par.sender.adr)].uint := sp_temp.state.redeemableEther[getLIST_REDEEMABLEETHERIndex(sp.state.redeemableEther,sp.par.sender.adr)].uint + sp.state.mileStone1Reward;
+		}
+}
+transition PLAY_tF1 {
+	in {
+		PLAY_currentBalance : <(currentBalance)>;
+		PLAY_P2 : <(sp)>;
+	}
+	out {
+		PLAY_PF1 : <(sp)>;
+	}
+	guard : not((currentBalance) = (sp.state.payoutMileStone1));
+}
+transition PLAY_tT2 {
+	in {
+		PLAY_currentBalance : <(currentBalance)>;
+		PLAY_PF1 : <(sp)>;
+	}
+	out {
+		PLAY_PT2 : <(sp)>;
+	}
+	guard : (currentBalance) = (sp.state.payoutMileStone2);
+}
+transition PLAY_as2 {
+	in {
+		PLAY_PT2 : <(sp)>;
+	}
+	out {
+		PLAY_AS2 : <(sp_temp)>;
+	}
+	let {
+		PLAY_STATE sp_temp := sp;
+		sp_temp.state.redeemableEther[getLIST_REDEEMABLEETHERIndex(sp.state.redeemableEther,sp.par.sender.adr)].uint := sp_temp.state.redeemableEther[getLIST_REDEEMABLEETHERIndex(sp.state.redeemableEther,sp.par.sender.adr)].uint + sp.state.mileStone2Reward;
+		}
+}
+transition PLAY_tF2 {
+	in {
+		PLAY_currentBalance : <(currentBalance)>;
+		PLAY_PF1 : <(sp)>;
+	}
+	out {
+		PLAY_PF2 : <(sp)>;
+	}
+	guard : not((currentBalance) = (sp.state.payoutMileStone2));
+}
+transition PLAY_tT3 {
+	in {
+		PLAY_currentBalance : <(currentBalance)>;
+		PLAY_PF2 : <(sp)>;
+	}
+	out {
+		PLAY_PT3 : <(sp)>;
+	}
+	guard : (currentBalance) = (sp.state.finalMileStone);
+}
+transition PLAY_as3 {
+	in {
+		PLAY_PT3 : <(sp)>;
+	}
+	out {
+		PLAY_AS3 : <(sp_temp)>;
+	}
+	let {
+		PLAY_STATE sp_temp := sp;
+		sp_temp.state.redeemableEther[getLIST_REDEEMABLEETHERIndex(sp.state.redeemableEther,sp.par.sender.adr)].uint := sp_temp.state.redeemableEther[getLIST_REDEEMABLEETHERIndex(sp.state.redeemableEther,sp.par.sender.adr)].uint + sp.state.finalReward;
+		}
+}
+transition PLAY_tF3 {
+	in {
+		PLAY_currentBalance : <(currentBalance)>;
+		PLAY_PF2 : <(sp)>;
+	}
+	out {
+		PLAY_PF3 : <(sp)>;
+	}
+	guard : not((currentBalance) = (sp.state.finalMileStone));
+}
+
+/*
+ * Function: claimReward
+ */
+transition CLAIMREWARD_revert1 {
+	in {
+		P_CLAIMREWARD : <(p)>;
+		S : <(s)>;
+	}
+	out {
+		S : <(s)>;
+	}
+	guard : not((.balance) = (s.finalMileStone));
+}
+transition CLAIMREWARD_n_revert1 {
+	in {
+		P_CLAIMREWARD : <(p)>;
+		S : <(s)>;
+	}
+	out {
+		CLAIMREWARD_P1 : <({s,p})>;
+	}
+	guard : (.balance) = (s.finalMileStone);
+}
+transition CLAIMREWARD_revert2 {
+	in {
+		CLAIMREWARD_P1 : <(sp)>;
+	}
+	out {
+		S : <(sp.state)>;
+	}
+	guard : not((sp.state.redeemableEther[getLIST_REDEEMABLEETHERIndex(sp.state.redeemableEther,sp.par.sender.adr)].uint) > (0));
+}
+transition CLAIMREWARD_n_revert2 {
+	in {
+		CLAIMREWARD_P1 : <(sp)>;
+	}
+	out {
+		CLAIMREWARD_P2 : <(sp)>;
+	}
+	guard : (sp.state.redeemableEther[getLIST_REDEEMABLEETHERIndex(sp.state.redeemableEther,sp.par.sender.adr)].uint) > (0);
+}
+transition CLAIMREWARD_as1 {
+	in {
+		CLAIMREWARD_P2 : <(sp)>;
+	}
+	out {
+		CLAIMREWARD_AS1 : <(sp_temp)>;
+	}
+	let {
+		CLAIMREWARD_STATE sp_temp := sp;
+		sp_temp.state.redeemableEther[getLIST_REDEEMABLEETHERIndex(sp.state.redeemableEther,sp.par.sender.adr)].uint := 0;
+		}
+}
+
+}
