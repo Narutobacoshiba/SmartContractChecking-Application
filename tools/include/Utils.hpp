@@ -51,4 +51,7 @@ std::map<std::string, std::string> parse_visitor_args(const std::string& _args);
 
 std::string get_first_alpha_only_string(const std::string& _str);
 
+std::string to_upper_copy(const std::string& _str);
+
+std::string join(const std::vector<std::string> &lst, const std::string &delim);
 #endif 

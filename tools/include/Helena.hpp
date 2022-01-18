@@ -480,6 +480,8 @@ typedef std::shared_ptr<CommentNode> CommentNodePtr;
 class ColorNode : public LnaNode {
 public:
     ColorNode() : LnaNode(LnaNodeTypeColor) {}
+    ColorNode(LnaNodeType NodeType): LnaNode(NodeType) {}
+
     std::string source_code();
 
     void set_name(const std::string& _name);
@@ -497,10 +499,10 @@ protected:
 };
 typedef std::shared_ptr<ColorNode> ColorNodePtr;
 
-class SubColorNode : public LnaNode, public ColorNode {
+class SubColorNode : public ColorNode {
 public:
-    SubColorNode() : LnaNode(LnaNodeTypeSub_Color) {}
-    SubColorNode(ColorNodePtr _supColor) : LnaNode(LnaNodeTypeSub_Color), supColor(_supColor) {}
+    SubColorNode() : ColorNode(LnaNodeTypeSub_Color) {}
+    SubColorNode(ColorNodePtr _supColor) : ColorNode(LnaNodeTypeSub_Color), supColor(_supColor) {}
     std::string source_code();
 
     void set_supColor(const ColorNodePtr _supColor);
@@ -530,9 +532,9 @@ private:
 };
 typedef std::shared_ptr<ComponentNode> ComponentNodePtr;
 
-class StructColorNode : public LnaNode, public ColorNode {
+class StructColorNode : public ColorNode {
 public:
-    StructColorNode() : LnaNode(LnaNodeTypeStruct_Color) {}
+    StructColorNode() : ColorNode(LnaNodeTypeStruct_Color) {}
     std::string source_code();
 
     void add_component(const ComponentNodePtr& _component);
@@ -547,9 +549,9 @@ private:
 };
 typedef std::shared_ptr<StructColorNode> StructColorNodePtr;
 
-class ListColorNode : public LnaNode, public ColorNode {
+class ListColorNode : public ColorNode {
 public:
-    ListColorNode() : LnaNode(LnaNodeTypeListColor) {}
+    ListColorNode() : ColorNode(LnaNodeTypeListColor) {}
     std::string source_code();
 
     void set_index_type(const std::string& _name);

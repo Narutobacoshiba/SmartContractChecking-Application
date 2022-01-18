@@ -306,6 +306,16 @@ void ColorNode::set_typeDef(const std::string& _typeDef) {
 std::string ColorNode::get_typeDef() const {
     return typeDef;
 }
+/** Set init value
+ */
+void ColorNode::set_init_value(const std::string& _value) {
+    init_value = _value;
+}
+/** Get type definition
+ */
+std::string ColorNode::get_init_value() const {
+    return init_value;
+}
 /** Connect the information for the Component node
  */
 std::string ComponentNode::source_code() {

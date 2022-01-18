@@ -189,3 +189,21 @@ std::string get_first_alpha_only_string(const std::string& _str){
     }
     return str.substr(0,pos);
 }
+
+std::string to_upper_copy(const std::string& _str){
+    std::string new_str = _str;
+    std::transform(new_str.begin(), new_str.end(), new_str.begin(),[](unsigned char c){ return std::toupper(c); });
+    return new_str;
+}
+
+
+std::string join(const std::vector<std::string> &lst, const std::string &delim)
+{
+    std::string ret;
+    for(const auto &s : lst) {
+        if(!ret.empty())
+            ret += delim;
+        ret += s;
+    }
+    return ret;
+}
