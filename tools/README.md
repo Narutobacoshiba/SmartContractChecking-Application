@@ -1,10 +1,14 @@
 # Tools structure
 
-## 2. doxygen: 
+## 1. include:
 ```
-to generate document from comments
+file list to include in the tools. need to compile before pulling down in new machine
+
+compile:
+    - cd tools/include
+    - g++ -c ./*.cpp
 ```
-## 5. unfolding: 
+## 2. unfolding: 
 ```
 to unfold the context based on inputed functions
 
@@ -17,11 +21,7 @@ compile:
 run:
     - run.sh 
 ```
-## include:
+## 3. doxygen: 
 ```
-file list to include in the tools. need to compile before pulling down in new machine
-
-compile:
-    - cd tools/include
-    - g++ -c ./*.cpp
+to generate document from comments
 ```
