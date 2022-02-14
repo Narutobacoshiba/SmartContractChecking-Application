@@ -7,6 +7,7 @@ import CheckedSCList from "../views/CheckedSCList.vue"
 
 import CheckVunerabilities from "../views/Check-Vulnerabilities.vue"
 import SmartContractSelection from "../views/select-smart-contract/smart-contract-selection.vue"
+import UploadSmartContract from "../views/select-smart-contract/upload-smartcontract.vue"
 
 import ContextSelection from "../views/select-context/context-selection.vue"
 import UploadContext from "../views/select-context/upload-context.vue"
@@ -85,6 +86,11 @@ export const routes = [
         path: 'select-smart-contract',
         name: 'SmartContractSelection',
         component: SmartContractSelection
+      },
+      {
+        path: 'upload-smartcontract',
+        name: 'UploadSmartContract',
+        component: UploadSmartContract
       },
       {
         path: 'select-context',

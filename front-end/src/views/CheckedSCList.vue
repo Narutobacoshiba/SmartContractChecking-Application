@@ -121,6 +121,7 @@ export default({
             this.$store.commit("data/ResetAllData")
 
             this.$store.commit("data/SetSelectedSC",data["selected-sc"])
+           
             await this.updateAllSc(data["selected-sc"])
 
             this.$store.commit("data/SetSelectedContext",data["selected-context"])

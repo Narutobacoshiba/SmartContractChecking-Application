@@ -99,7 +99,7 @@
         </div>
         <div id="ssc-button">
             <button class="button-style" role="button" @click="goNextPage">Next</button>
-            <button class="button-style" role="button" >Upload Smart Contract File</button>
+            <button class="button-style" role="button" @click="goUploadSmartContract">Upload Smart Contract File</button>
             <button class="button-style" role="button" @click="goPrePage">Back</button>
         </div>
     </div>
@@ -132,7 +132,6 @@ export default ({
     },
     mounted(){
         this.getSmartContract()
-        
     },
     watch: {
         type_selection: function(){
@@ -181,12 +180,16 @@ export default ({
                 
                 this.list_sc = response.data   
                 this.selected_sc = this.$store.getters["data/GetSelectedSC"]
-
+                
                 this.pre_selected_sc = this.selected_sc
                 this.filtername_items = this.list_sc
                 
                 this.filterListItems()
-                this.sortItems(this.sort_selection)      
+                this.sortItems(this.sort_selection)    
+                
+                /* if(this.selected_sc.length > 0){
+                    this.selected_selection = "selected"
+                } */
             } catch (error) {
                 this.list_sc = []
                 this.error_handler = error.detail
@@ -303,11 +306,17 @@ export default ({
             this.$store.commit("data/SetSelectedSC", this.selected_sc);
             this.pre_selected_sc = this.selected_sc
         },
+        goPage(value){
+            this.pageNum = value
+        },
         goNextPage(){
             this.$router.push({ name: "ContextSelection" });
         },
         goPrePage(){
             this.$router.push({ name: "CheckedSCList" });
+        },
+        goUploadSmartContract(){
+            this.$router.push({ name: "UploadSmartContract" });
         }
     }
 })

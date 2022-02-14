@@ -11,7 +11,7 @@ class CrudSmartContract(APIView):
     def post(self, request):
         if request.method == 'POST':
             try:
-                request.data['aid'] = "0863e75515b4efeba7216d384091be00d18f149a7fa822807901fae602d723d0"
+                request.data['aid'] = request.user.aid
                 serializeClient = GetSmartConstractSerializer(
                     data=request.data)
                 if serializeClient.is_valid():
@@ -27,7 +27,7 @@ class CrudSmartContract(APIView):
             try:
                 if request.method == 'PUT':
                     idClient = request.data['sid']
-                    request.data['aid'] = "0863e75515b4efeba7216d384091be00d18f149a7fa822807901fae602d723d0"
+                    request.data['aid'] = request.user.aid
                     SmartConstractByID = Smartcontract.objects.get(
                         sid=idClient)
                     serializeUpdate = GetSmartConstractSerializer(

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="uc-header">
-            <p>Upload Context</p>
+            <p>Upload SmartContract</p>
         </div>
         <div id="uc-body">
             <div class="uc-row">
@@ -9,7 +9,7 @@
                     <p>Upload</p>
                 </div>
                 <div class="uc-second-cell">
-                    <div class="uc-show-context-info">
+                    <div class="uc-show-smartcontract-info">
                         <input type="file" id="uc-upload-file" spellcheck="false" @change="uploadFile">
                     </div>
                 </div>
@@ -19,7 +19,7 @@
                     <p>Name</p>
                 </div>
                 <div class="uc-second-cell">
-                    <input class="uc-show-context-info" id="uc-set-context-name" type="text" v-model="context_name" />
+                    <input class="uc-show-smartcontract-info" id="uc-set-smartcontract-name" type="text" v-model="smartcontract_name" />
                 </div>
             </div>
             <div class="uc-row" id="uc-select-type">
@@ -27,12 +27,12 @@
                     <p>Type</p>
                 </div>
                 <div class="uc-second-cell">
-                    <div class="uc-show-context-info">
+                    <div class="uc-show-smartcontract-info">
                         <div id="select-box">
                             <input type="checkbox" id="options-view-button">
                             <div id="select-button">
                                 <div id="selected-value">
-                                    <span>{{getSelectContextType}}</span>
+                                    <span>{{getSelectSmartContractType}}</span>
                                 </div>
                                 <div id="chevrons">
                                     <span class="material-icons">expand_less</span>
@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                             <div id="options">
-                                <span v-for="c in list_contexts_type" :key="c" class="label" @click="selected_context_type = c" :class="{selected_context_type_row: c == selected_context_type}">{{c}}</span>
+                                <span v-for="c in list_smartcontracts_type" :key="c" class="label" @click="selected_smartcontract_type = c" :class="{selected_smartcontract_type_row: c == selected_smartcontract_type}">{{c}}</span>
                             </div>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                     <p>Description</p>
                 </div>
                 <div class="uc-second-cell">
-                    <textarea id="uc-description-text-input" spellcheck="false" v-model="context_description" />
+                    <textarea id="uc-description-text-input" spellcheck="false" v-model="smartcontract_description" />
                 </div>
             </div>
         </div>
@@ -64,22 +64,24 @@
 </template>
 
 <script>
+import { SmartContractService } from "../../services/smartcontract.services";
+
 export default ({
     data(){
         return{
-            context_description: "",
-            context_name: "",
-            context_content: "",
+            smartcontract_description: "",
+            smartcontract_name: "",
+            smartcontract_content: "",
 
-            list_contexts_type: ["DCR","CPN","BPMN"],
-            selected_context_type: "DCR",
+            list_smartcontracts_type: ["common","private"],
+            selected_smartcontract_type: "common",
             file: null,
             is_uploaded: false
         }
     },
     computed: {
-        getSelectContextType(){
-            return this.selected_context_type
+        getSelectSmartContractType(){
+            return this.selected_smartcontract_type
         }
     },
     methods: {
@@ -89,17 +91,17 @@ export default ({
             let file_name = this.file.name
             let holder = file_name.split(".")
             holder.pop()
-            this.context_name = holder.join(".")
+            this.smartcontract_name = holder.join(".")
         },
         async saveUploadFile(){
             if(this.file == null){
                 alert("You have to select the file to upload!")
-            }else if(this.fileupload_name == '' || this.selected_context_type == '')
+            }else if(this.fileupload_name == '' || this.selected_smartcontract_type == '')
             {
                 alert("You cannot leave the name field and the type field blank!")
             }else{
                 try{
-                    this.context_content = await this.file.text();
+                    this.smartcontract_content = await this.file.text();
                     this.is_uploaded = true
                 }
                 catch (error){
@@ -107,19 +109,45 @@ export default ({
                 }
             }
         },
-        okEvent(){
+        async okEvent(){
             if(this.is_uploaded){
-                let current_date = Date.now()
-                let user_id = this.$store.state.user.currentUser.id
-                let new_context = {ccid:this.hashValue("context"+current_date+user_id),name:this.context_name,context_type:this.selected_context_type,content:this.context_content,created_timestamp:current_date,description:this.context_description}
-                this.$store.commit("data/SetSelectedContext", new_context);
-                this.$router.push({ name: "LtlCheckingOptions"});
+                try{
+                    let current_date = Date.now()
+                    let user_id = this.$store.state.user.currentUser.id
+                    let s_id = this.hashValue(this.smartcontract_name+current_date+user_id)
+
+                    const res = await SmartContractService.createAllSmartContract(
+                        s_id,
+                        this.smartcontract_name,
+                        this.selected_smartcontract_type,
+                        current_date,
+                        this.smartcontract_content,
+                        this.smartcontract_description
+                    )
+                
+                    this.selected_sc = this.$store.getters["data/GetSelectedSC"]
+                    this.selected_sc.push({
+                        id: s_id,
+                        name: this.smartcontract_name,
+                        description: this.smartcontract_description,
+                        type: this.selected_smartcontract_type,
+                        date_modified: current_date,
+                        content: this.smartcontract_content
+                    })
+                    this.$store.commit("data/SetSelectedSC", this.selected_sc);
+                    
+                    console.log(res)
+
+                    this.$router.push({ name: "SmartContractSelection"});
+                }catch(error){
+                    alert("failed to upload smart contract")
+                }
             }else{
                 alert("You have to upload the file first!")
             }
         },
         cancelEvent(){
-            this.$router.push({ name: "ContextSelection"});
+            this.$router.push({ name: "SmartContractSelection"});
         }
     }
 })
@@ -156,7 +184,7 @@ textarea{
 .uc-second-cell{
     flex-basis: 80%;
 }
-.uc-show-context-info{
+.uc-show-smartcontract-info{
     width: 100%;
     height: 36px;
     border: 2px solid rgb(155, 154, 154);
@@ -167,7 +195,7 @@ textarea{
     font-size: 13px;
     color: rgb(36, 34, 34);
 }
-.selected_context_type_row{
+.selected_smartcontract_type_row{
     background-color: #ece6e6;
 }
 
@@ -177,7 +205,7 @@ textarea{
     margin: 4px 8px;
 }
 
-#uc-set-context-name{
+#uc-set-smartcontract-name{
     padding-left: 8px;
     font-size: 13px;
     color: rgb(36, 34, 34);

@@ -56,8 +56,7 @@
       </div>
       <div class="editor-area area">
         <ace-editor
-          v-bind:codeSC="demoEditSC"
-          @changeSC="updateContent($event)"
+          @changeSC="updateContent()"
         />
       </div>
       <div class="button-area area">
@@ -88,34 +87,34 @@ export default {
   data() {
     return {
       smartcontract_name: "",
-      nameSc: "",
       options: this.$route.params.options,
       code: "",
-      demoEditSC: "test add sc",
+      SCcontent: "",
     };
   },
   methods: {
-    hashCode(s) {
-      var h = 0,
-        l = s.length,
-        i = 0;
-      if (l > 0) while (i < l) h = ((h << 5) - h + s.charCodeAt(i++)) | 0;
-      return h;
-    },
     updateContent(value) {
-      this.demoEditSC = value;
+      this.SCcontent = value;
     },
     async clickHandler(action) {
       if (action == "save") {
-        const res = await SmartContractService.createAllSmartContract(
-          this.hashCode(this.smartcontract_name),
-          this.smartcontract_name,
-          this.options,
-          this.demoEditSC,
-          "This is description"
-        );
-        console.log(res);
-        this.$router.push({ name: "ListSC" });
+        try{
+          let current_date = Date.now()
+          let user_id = this.$store.state.user.currentUser.id
+          const res = await SmartContractService.createAllSmartContract(
+            this.hashValue(this.smartcontract_name+current_date+user_id),
+            this.smartcontract_name,
+            this.options,
+            current_date,
+            this.SCcontent,
+            "This is description"
+          );
+          console.log(res)
+          this.$router.push({ name: "ListSC" });
+        }catch(error){
+          alert("failed to create smart contract")
+        }
+        
       } else if (action == "cancel") {
         this.$router.push({ name: "ListSC" });
       }

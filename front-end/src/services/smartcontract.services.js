@@ -13,17 +13,16 @@ export class SmartContractService extends BaseService {
       throw new ErrorWrapper(error)
     }
   }
-  static async createAllSmartContract(s_id, s_name, s_type, s_content, s_description) {
+  static async createAllSmartContract(s_id, s_name, s_type, s_date, s_content, s_description) {
     const param = {
       sid: s_id,
       name: s_name,
       type: s_type,
+      created_timestamp: s_date,
       content: s_content,
       description: s_description,
-      created_timestamp: "1608110465663",
-      aid: "0863e75515b4efeba7216d384091be00d18f149a7fa822807901fae602d723d0"
     }
-    console.log(param)
+    
     try {
       const response = await this.request({ auth: true }).post(`${this.entity}/crud-sc`, param)
       return new ResponseWrapper(response, response.data)
@@ -49,7 +48,6 @@ export class SmartContractService extends BaseService {
       description: sc_description,
       content: sc_content
     }
-    console.log(param)
     try {
       const response = await this.request({ auth: true }).put(`${this.entity}/crud-sc`, param)
       return new ResponseWrapper(response, response.data)

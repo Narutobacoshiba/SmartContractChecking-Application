@@ -1,6 +1,5 @@
 <template>
   <div id="ace-editor">
-    <!-- <h1>Hello demo {{codeSC}}</h1> -->
     <div class="tool-bar"></div>
     <editor
       v-model="contentSC"
@@ -15,22 +14,17 @@
 
 <script>
 export default {
+  props:["codeSC"],
   data() {
     return {
       contentSC:"//add your code here"
     };
   },
   watch:{
-    codeSC:function(newVal, oldVal){
-      console.log(`propchange oldVal:${oldVal}, newVal:${newVal}`)
-      this.contentSC = this.codeSC
-    },
-    contentSC:function(newVal, oldVal){
-      console.log(`propchange oldVal:${oldVal}, newVal:${newVal}`)
+    contentSC:function(newVal){
       this.$emit('changeSC',newVal)
     },
   },
-  props:["codeSC"],
   components: {
     editor: require("vue2-ace-editor"),
   },
